@@ -5,7 +5,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from rapidnbt._NBT import TagType, SnbtFormat, CompoundTagVariant, Tag, EndTag
+from rapidnbt._NBT import TagType, SnbtFormat, CompoundTagVariant, Tag, EndTag, ByteTag
 
 __all__ = [
     "TagType",
@@ -13,4 +13,5 @@ __all__ = [
     "CompoundTagVariant",
     "Tag",
     "EndTag",
+    "ByteTag",
 ]

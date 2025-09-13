@@ -9,13 +9,6 @@
 
 namespace rapidnbt {
 
-PYBIND11_MODULE(_NBT, m) {
-    m.doc() = "Python bindings for NBT library";
-    bindEnums(m);
-    bindCompoundTagVariant(m);
-    bindTag(m);
-    bindEndTag(m);
-    bindByteTag(m);
-}
+//
 
-} // namespace rapidnbt
+}

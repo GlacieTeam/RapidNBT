@@ -92,7 +92,7 @@ void bindTag(py::module& m) {
 
         .def("__str__", [](const nbt::Tag& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); })
         .def("__repr__", [](const nbt::Tag& self) {
-            return std::format("<nbt.Tag type={}>", magic_enum::enum_name(self.getType()));
+            return std::format("<rapidnbt.Tag type={}>", magic_enum::enum_name(self.getType()));
         });
 }
 
