@@ -1,8 +1,9 @@
 from rapidnbt import *
+import ctypes
 
 
 def main() -> None:
-    tag = EndTag()
+    tag = CompoundTagVariant(EndTag())
     print(tag.to_snbt())
 
 

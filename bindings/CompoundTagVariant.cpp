@@ -9,40 +9,6 @@
 
 namespace rapidnbt {
 
-namespace {
-
-py::module& get_ctypes() {
-    static auto instance = py::module::import("ctypes");
-    return instance;
-}
-
-bool is_cint8(py::object const& obj) {
-    return py::isinstance(obj, get_ctypes().attr("c_int8")) || py::isinstance(obj, get_ctypes().attr("c_uint8"))
-        || py::isinstance<py::bool_>(obj);
-}
-
-bool is_cint16(py::object const& obj) {
-    return py::isinstance(obj, get_ctypes().attr("c_int16")) || py::isinstance(obj, get_ctypes().attr("c_uint16"));
-}
-
-bool is_cint32(py::object const& obj) {
-    return py::isinstance(obj, get_ctypes().attr("c_int32")) || py::isinstance(obj, get_ctypes().attr("c_uint32"))
-        || (py::isinstance<py::int_>(obj) && !py::isinstance<py::bool_>(obj));
-}
-
-bool is_cint64(py::object const& obj) {
-    return py::isinstance(obj, get_ctypes().attr("c_int64")) || py::isinstance(obj, get_ctypes().attr("c_uint64"));
-}
-
-bool is_cfloat(py::object const& obj) {
-    return py::isinstance(obj, get_ctypes().attr("c_float")) || py::isinstance<py::float_>(obj);
-}
-
-bool is_cdouble(py::object const& obj) { return py::isinstance(obj, get_ctypes().attr("c_double")); }
-
-} // namespace
-
-
 void bindCompoundTagVariant(py::module& m) {
     py::class_<nbt::CompoundTagVariant> variant(m, "CompoundTagVariant");
 
@@ -62,26 +28,35 @@ void bindCompoundTagVariant(py::module& m) {
     // 构造函数绑定
     variant.def(py::init<>())
         .def(py::init([](py::object const& obj) {
-            if (is_cint8(obj)) {
+            auto ctypes = py::module::import("ctypes");
+            if (py::isinstance<nbt::Tag>(obj)) {
+                return new nbt::CompoundTagVariant(*obj.cast<nbt::Tag*>());
+            } else if (py::isinstance<py::bool_>(obj)) {
                 return new nbt::CompoundTagVariant(obj.cast<uint8_t>());
-            } else if (is_cint16(obj)) {
-                return new nbt::CompoundTagVariant(obj.cast<short>());
-            } else if (is_cint32(obj)) {
+            } else if (py::isinstance<py::int_>(obj)) {
                 return new nbt::CompoundTagVariant(obj.cast<int>());
-            } else if (is_cint64(obj)) {
-                return new nbt::CompoundTagVariant(obj.cast<int64_t>());
-            } else if (is_cfloat(obj)) {
+            } else if (py::isinstance<py::float_>(obj)) {
                 return new nbt::CompoundTagVariant(obj.cast<float>());
-            } else if (is_cdouble(obj)) {
-                return new nbt::CompoundTagVariant(obj.cast<double>());
+            } else if (py::isinstance(obj, ctypes.attr("c_int8")) || py::isinstance(obj, ctypes.attr("c_uint8"))) {
+                return new nbt::CompoundTagVariant(obj.attr("value").cast<uint8_t>());
+            } else if (py::isinstance(obj, ctypes.attr("c_int16")) || py::isinstance(obj, ctypes.attr("c_uint16"))) {
+                return new nbt::CompoundTagVariant(obj.attr("value").cast<short>());
+            } else if (py::isinstance(obj, ctypes.attr("c_int32")) || py::isinstance(obj, ctypes.attr("c_uint32"))) {
+                return new nbt::CompoundTagVariant(obj.attr("value").cast<int>());
+            } else if (py::isinstance(obj, ctypes.attr("c_int64")) || py::isinstance(obj, ctypes.attr("c_uint64"))) {
+                return new nbt::CompoundTagVariant(obj.attr("value").cast<int64_t>());
+            } else if (py::isinstance(obj, ctypes.attr("c_float"))) {
+                return new nbt::CompoundTagVariant(obj.attr("value").cast<float>());
+            } else if (py::isinstance(obj, ctypes.attr("c_double"))) {
+                return new nbt::CompoundTagVariant(obj.attr("value").cast<double>());
             } else if (py::isinstance<py::str>(obj)) {
                 return new nbt::CompoundTagVariant(obj.cast<std::string>());
             } else if (py::isinstance<py::bytes>(obj) || py::isinstance<py::bytearray>(obj)) {
                 return new nbt::CompoundTagVariant(nbt::ByteArrayTag(obj.cast<std::string>()));
             } else if (py::isinstance<py::dict>(obj)) {
-                //
+                // TODO
             } else if (py::isinstance<py::list>(obj)) {
-                //
+                // TODO
             }
             return new nbt::CompoundTagVariant(nullptr);
         }))
@@ -191,27 +166,9 @@ void bindCompoundTagVariant(py::module& m) {
             },
             py::return_value_policy::reference_internal
         )
-        .def(
-            "__eq__",
-            [](nbt::CompoundTagVariant const& self, nbt::CompoundTagVariant const& other) { return self == other; }
-        )
-
-        .def_static(
-            "object",
-            &nbt::CompoundTagVariant::object,
-            py::arg("init") = std::initializer_list<nbt::CompoundTag::TagMap::value_type>{}
-        )
-        .def_static(
-            "array",
-            &nbt::CompoundTagVariant::array,
-            py::arg("init") = std::initializer_list<nbt::CompoundTagVariant>{}
-        )
-        .def_static(
-            "parse",
-            &nbt::CompoundTagVariant::parse,
-            py::arg("snbt"),
-            py::arg("parsed_length") = std::optional<size_t>{}
-        );
+        .def("__eq__", [](nbt::CompoundTagVariant const& self, nbt::CompoundTagVariant const& other) {
+            return self == other;
+        });
 }
 
 } // namespace rapidnbt
