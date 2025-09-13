@@ -16,7 +16,7 @@ void bindByteTag(py::module& m) {
 
         .def(
             "assign",
-            [](nbt::ByteTag& self, int value) -> nbt::ByteTag& {
+            [](nbt::ByteTag& self, uint8_t value) -> nbt::ByteTag& {
                 self = value;
                 return self;
             },
@@ -24,8 +24,8 @@ void bindByteTag(py::module& m) {
             py::return_value_policy::reference_internal
         )
 
-        .def("__int__", [](const nbt::ByteTag& self) { return static_cast<int>(self); })
-        .def("__index__", [](const nbt::ByteTag& self) { return static_cast<int>(self); })
+        .def("__int__", [](const nbt::ByteTag& self) { return static_cast<uint8_t>(self); })
+        .def("__index__", [](const nbt::ByteTag& self) { return static_cast<uint8_t>(self); })
         .def("__pos__", &nbt::ByteTag::operator+)
 
         .def("getType", &nbt::ByteTag::getType)
@@ -46,8 +46,8 @@ void bindByteTag(py::module& m) {
 
         .def_property(
             "value",
-            [](nbt::ByteTag& self) -> int { return self.storage(); },
-            [](nbt::ByteTag& self, int value) { self.storage() = static_cast<uint8_t>(value); }
+            [](nbt::ByteTag& self) -> uint8_t { return self.storage(); },
+            [](nbt::ByteTag& self, uint8_t value) { self.storage() = static_cast<uint8_t>(value); }
         )
 
         .def("__str__", [](const nbt::ByteTag& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); })

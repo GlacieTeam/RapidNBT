@@ -26,5 +26,8 @@ void bindCompoundTagVariant(py::module& m);
 void bindTag(py::module& m);
 void bindEndTag(py::module& m);
 void bindByteTag(py::module& m);
+void bindShortTag(py::module& m);
+void bindIntTag(py::module& m);
+void bindInt64Tag(py::module& m);
 
 } // namespace rapidnbt

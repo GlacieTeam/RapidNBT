@@ -3,7 +3,7 @@ import ctypes
 
 
 def main() -> None:
-    tag = CompoundTagVariant(EndTag())
+    tag = CompoundTagVariant(ByteTag(11))
     print(tag.to_snbt())
 
 
