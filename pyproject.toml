@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel", "xmake"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rapidnbt"
+version = "1.0.0"
+authors = [{ name = "GlacieTeam" }]
+description = "Python bindings for High-Performance NBT library"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MPL-2.0" }
+classifiers = [
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: C++",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/GlacieTeam/RapidNBT"
+
+
+[tool.setuptools]
+include-package-data = true
+packages = ["rapidnbt"]
+
+[tool.setuptools.package-data]
+rapidnbt = ["*.pyd", "*.so"]
+
+[tool.cibuildwheel]
+build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
+manylinux-x86_64-image = "manylinux2014"
+manylinux-i686-image = "manylinux2014"
+manylinux-aarch64-image = "manylinux2014"
+manylinux-ppc64le-image = "manylinux2014"
+manylinux-s390x-image = "manylinux2014"
