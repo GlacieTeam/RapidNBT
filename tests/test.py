@@ -2,7 +2,8 @@ from rapidnbt import *
 
 
 def main() -> None:
-    tag = Tag()
+    tag = EndTag()
+    print(tag.to_snbt())
 
 
 if __name__ == "__main__":

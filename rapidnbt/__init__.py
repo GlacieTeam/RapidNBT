@@ -5,11 +5,12 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from rapidnbt._NBT import TagType, SnbtFormat, Tag
+from rapidnbt._NBT import TagType, SnbtFormat, Tag, EndTag
 
 __all__ = [
     "TagType",
     "SnbtFormat",
-    "Tag",
-]
 
+    "Tag",
+    "EndTag",
+]

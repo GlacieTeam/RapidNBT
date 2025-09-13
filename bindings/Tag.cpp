@@ -66,17 +66,7 @@ void bindTag(py::module& m) {
         )
         .def(
             "__getitem__",
-            [](nbt::Tag& self, std::string_view key) -> nbt::CompoundTagVariant& {
-                return dynamic_cast<nbt::CompoundTagVariant&>(self[key]);
-            },
-            py::arg("key"),
-            py::return_value_policy::reference_internal
-        )
-        .def(
-            "__getitem__",
-            [](nbt::Tag& self, const char* key) -> nbt::CompoundTagVariant& {
-                return dynamic_cast<nbt::CompoundTagVariant&>(self[key]);
-            },
+            [](nbt::Tag& self, std::string_view key) -> nbt::CompoundTagVariant& { return self[key]; },
             py::arg("key"),
             py::return_value_policy::reference_internal
         )

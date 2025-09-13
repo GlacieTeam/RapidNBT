@@ -29,6 +29,7 @@ target("_NBT")
     )
     add_includedirs("bindings")
     add_files("bindings/**.cpp")
+    add_defines("PYBIND11_DETAILED_ERROR_MESSAGES")
     if is_plat("windows") then
         add_defines(
             "NOMINMAX",

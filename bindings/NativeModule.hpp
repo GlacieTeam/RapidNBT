@@ -22,6 +22,8 @@ inline py::bytes to_pybytes(std::string_view sv) { return py::bytes(sv.data(), s
 inline py::bytes to_pybytes(std::string const& s) { return py::bytes(s); }
 
 void bindEnums(py::module& m);
+void bindCompoundTagVariant(py::module& m);
 void bindTag(py::module& m);
+void bindEndTag(py::module& m);
 
 } // namespace rapidnbt

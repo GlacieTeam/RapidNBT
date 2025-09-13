@@ -43,7 +43,7 @@ bool is_cdouble(py::object const& obj) { return py::isinstance(obj, get_ctypes()
 } // namespace
 
 
-void bind_compound_tag_variant(py::module& m) {
+void bindCompoundTagVariant(py::module& m) {
     py::class_<nbt::CompoundTagVariant> variant(m, "CompoundTagVariant");
 
     py::class_<nbt::CompoundTagVariant::iterator>(variant, "Iterator")
@@ -82,9 +82,8 @@ void bind_compound_tag_variant(py::module& m) {
                 //
             } else if (py::isinstance<py::list>(obj)) {
                 //
-            } else {
-                return new nbt::CompoundTagVariant(nullptr);
             }
+            return new nbt::CompoundTagVariant(nullptr);
         }))
 
         .def("get_type", &nbt::CompoundTagVariant::getType)
