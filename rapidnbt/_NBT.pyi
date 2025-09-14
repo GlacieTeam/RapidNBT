@@ -4,7 +4,7 @@ Python bindings for NBT library
 from __future__ import annotations
 import collections.abc
 import typing
-__all__: list[str] = ['AlwaysLineFeed', 'ArrayLineFeed', 'Byte', 'ByteArray', 'ByteArrayTag', 'ByteTag', 'Classic', 'CommentMarks', 'Compound', 'CompoundTagVariant', 'Double', 'DoubleTag', 'End', 'EndTag', 'Float', 'FloatTag', 'ForceAscii', 'ForceQuote', 'Int', 'Int64', 'Int64Tag', 'IntArray', 'IntTag', 'Jsonify', 'List', 'LongArray', 'Minimize', 'NumTagTypes', 'PrettyFilePrint', 'Short', 'ShortTag', 'SnbtFormat', 'String', 'Tag', 'TagType']
+__all__: list[str] = ['AlwaysLineFeed', 'ArrayLineFeed', 'Byte', 'ByteArray', 'ByteArrayTag', 'ByteTag', 'Classic', 'CommentMarks', 'Compound', 'CompoundTagVariant', 'Double', 'DoubleTag', 'End', 'EndTag', 'Float', 'FloatTag', 'ForceAscii', 'ForceQuote', 'Int', 'Int64', 'Int64Tag', 'IntArray', 'IntTag', 'Jsonify', 'List', 'LongArray', 'Minimize', 'NumTagTypes', 'PrettyFilePrint', 'Short', 'ShortTag', 'SnbtFormat', 'String', 'StringTag', 'Tag', 'TagType']
 class ByteArrayTag(Tag):
     def __bytes__(self) -> bytes:
         """
@@ -50,7 +50,7 @@ class ByteArrayTag(Tag):
         """
     def __str__(self) -> str:
         """
-        Human-readable string representation
+        String representation (SNBT minimized format)
         """
     def assign(self, bytes: collections.abc.Buffer) -> ByteArrayTag:
         """
@@ -741,6 +741,77 @@ class SnbtFormat:
         ...
     @property
     def value(self) -> int:
+        ...
+class StringTag(Tag):
+    def __eq__(self, other: StringTag) -> bool:
+        """
+        Equality operator (==), case-sensitive comparison
+        """
+    def __getitem__(self, index: typing.SupportsInt) -> str:
+        """
+        Get character at specified position
+        """
+    def __hash__(self) -> int:
+        """
+        Compute hash value for Python hashing operations
+        """
+    @typing.overload
+    def __init__(self) -> None:
+        """
+        Construct an empty StringTag
+        """
+    @typing.overload
+    def __init__(self, str: str) -> None:
+        """
+        Construct from a Python string
+        """
+    def __len__(self) -> int:
+        """
+        Get the length of the string in bytes
+        """
+    def __repr__(self) -> str:
+        """
+        Official representation with quoted content
+        """
+    def __str__(self) -> str:
+        """
+        String representation (SNBT minimized format)
+        """
+    def copy(self) -> Tag:
+        """
+        Create a deep copy of this tag
+        """
+    def equals(self, other: Tag) -> bool:
+        """
+        Check if this tag equals another tag (same content and type)
+        """
+    def getType(self) -> TagType:
+        """
+        Get the NBT type ID (String)
+        """
+    def hash(self) -> int:
+        """
+        Compute hash value of this tag (based on string content)
+        """
+    def load(self, stream: ...) -> None:
+        """
+        Load tag value from a binary stream (UTF-8)
+        """
+    def size(self) -> int:
+        """
+        Get the length of the string in bytes
+        """
+    def write(self, stream: ...) -> None:
+        """
+        Write tag to a binary stream (UTF-8 encoded)
+        """
+    @property
+    def value(self) -> str:
+        """
+        Access the string content of this tag
+        """
+    @value.setter
+    def value(self, arg1: str) -> None:
         ...
 class Tag:
     """

@@ -116,7 +116,7 @@ void bindByteArrayTag(py::module& m) {
 
         .def(
             "__bytes__",
-            [](const nbt::ByteArrayTag& self) {
+            [](nbt::ByteArrayTag const& self) {
                 return py::bytes(reinterpret_cast<const char*>(self.data()), self.size());
             },
             "Convert to Python bytes object"
@@ -132,12 +132,12 @@ void bindByteArrayTag(py::module& m) {
         .def("__hash__", &nbt::ByteArrayTag::hash, "Compute hash value for Python hashing operations")
         .def(
             "__str__",
-            [](const nbt::ByteArrayTag& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },
-            "Human-readable string representation"
+            [](nbt::ByteArrayTag const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },
+            "String representation (SNBT minimized format)"
         )
         .def(
             "__repr__",
-            [](const nbt::ByteArrayTag& self) { return std::format("ByteArrayTag(size={})", self.size()); },
+            [](nbt::ByteArrayTag const& self) { return std::format("ByteArrayTag(size={})", self.size()); },
             "Official string representation"
         );
 }

@@ -9,6 +9,78 @@
 
 namespace rapidnbt {
 
-//
+void bindStringTag(py::module& m) {
+    py::class_<nbt::StringTag, nbt::Tag>(m, "StringTag")
+        .def(py::init<>(), "Construct an empty StringTag")
+        .def(py::init<std::string>(), py::arg("str"), "Construct from a Python string")
 
+        .def("getType", &nbt::StringTag::getType, "Get the NBT type ID (String)")
+        .def(
+            "equals",
+            &nbt::StringTag::equals,
+            py::arg("other"),
+            "Check if this tag equals another tag (same content and type)"
+        )
+        .def("copy", &nbt::StringTag::copy, "Create a deep copy of this tag")
+        .def("hash", &nbt::StringTag::hash, "Compute hash value of this tag (based on string content)")
+
+        .def(
+            "write",
+            [](nbt::StringTag& self, bstream::BinaryStream& stream) { self.write(stream); },
+            py::arg("stream"),
+            "Write tag to a binary stream (UTF-8 encoded)"
+        )
+        .def(
+            "load",
+            [](nbt::StringTag& self, bstream::ReadOnlyBinaryStream& stream) { self.load(stream); },
+            py::arg("stream"),
+            "Load tag value from a binary stream (UTF-8)"
+        )
+
+        .def_property(
+            "value",
+            [](nbt::StringTag& self) -> std::string { return self.storage(); },
+            [](nbt::StringTag& self, std::string value) { self.storage() = std::move(value); },
+            "Access the string content of this tag"
+        )
+
+        .def(
+            "size",
+            [](nbt::StringTag const& self) { return self.storage().size(); },
+            "Get the length of the string in bytes"
+        )
+
+        .def(
+            "__len__",
+            [](nbt::StringTag const& self) { return self.storage().size(); },
+            "Get the length of the string in bytes"
+        )
+        .def(
+            "__getitem__",
+            [](nbt::StringTag const& self, size_t index) -> char {
+                if (index >= self.storage().size()) { throw py::index_error("Index out of range"); }
+                return self.storage()[index];
+            },
+            py::arg("index"),
+            "Get character at specified position"
+        )
+        .def(
+            "__eq__",
+            [](nbt::StringTag const& self, const nbt::StringTag& other) { return self.equals(other); },
+            py::arg("other"),
+            "Equality operator (==), case-sensitive comparison"
+        )
+        .def("__hash__", &nbt::StringTag::hash, "Compute hash value for Python hashing operations")
+        .def(
+            "__str__",
+            [](nbt::StringTag const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },
+            "String representation (SNBT minimized format)"
+        )
+        .def(
+            "__repr__",
+            [](nbt::StringTag const& self) { return std::format("StringTag({})", self.storage()); },
+            "Official representation with quoted content"
+        );
 }
+
+} // namespace rapidnbt

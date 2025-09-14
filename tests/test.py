@@ -2,7 +2,7 @@ from rapidnbt import *
 
 
 def test1():
-    tag = CompoundTagVariant(ByteArrayTag([11, 13, 63, 87]))
+    tag = CompoundTagVariant(StringTag("homo114514"))
     print(tag.to_snbt())
 
 
