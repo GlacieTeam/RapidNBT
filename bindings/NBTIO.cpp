@@ -6,3 +6,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
 #include "NativeModule.hpp"
+
+namespace rapidnbt {
+
+//
+
+} // namespace rapidnbt

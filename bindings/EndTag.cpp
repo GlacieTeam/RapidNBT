@@ -5,26 +5,45 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-#include "NativeModule.hpp"
+#include "NativeModule.hpp" // 包含模块绑定基础设施
 
 namespace rapidnbt {
 
 void bindEndTag(py::module& m) {
     py::class_<nbt::EndTag, nbt::Tag>(m, "EndTag")
-        .def(py::init<>())
+        .def(py::init<>(), "Construct an EndTag")
 
-        .def("getType", &nbt::EndTag::getType)
-        .def("equals", &nbt::EndTag::equals)
-        .def("copy", &nbt::EndTag::copy)
-        .def("hash", &nbt::EndTag::hash)
-        .def("write", [](nbt::EndTag& self, bstream::BinaryStream& stream) { self.write(stream); })
-        .def("load", [](nbt::EndTag& self, bstream::ReadOnlyBinaryStream& stream) { self.load(stream); })
+        .def("getType", &nbt::EndTag::getType, "Get the NBT type ID (End)")
+        .def(
+            "equals",
+            &nbt::EndTag::equals,
+            py::arg("other"),
+            "Check if this tag equals another tag (all EndTags are equal)"
+        )
+        .def("copy", &nbt::EndTag::copy, "Create a deep copy of this tag")
+        .def("hash", &nbt::EndTag::hash, "Compute hash value of this tag")
+        .def(
+            "write",
+            [](nbt::EndTag& self, bstream::BinaryStream& stream) { self.write(stream); },
+            py::arg("stream"),
+            "Write tag to a binary stream (no data for EndTag)"
+        )
+        .def(
+            "load",
+            [](nbt::EndTag& self, bstream::ReadOnlyBinaryStream& stream) { self.load(stream); },
+            py::arg("stream"),
+            "Load tag value from a binary stream (no data for EndTag)"
+        )
 
-        .def("__str__", [](nbt::EndTag&) { return "EndTag"; })
-        .def("__repr__", [](nbt::EndTag&) { return "EndTag"; })
-        .def("__eq__", &nbt::EndTag::equals)
-        .def("__ne__", [](nbt::EndTag& self, nbt::Tag& other) { return !self.equals(other); })
-        .def("__hash__", &nbt::EndTag::hash);
+
+        .def("__eq__", &nbt::EndTag::equals, py::arg("other"), "Equality operator (==), all EndTags are equal")
+        .def("__hash__", &nbt::EndTag::hash, "Compute hash value for Python hashing operations")
+        .def(
+            "__str__",
+            [](nbt::EndTag const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },
+            "String representation (SNBT minimized format)"
+        )
+        .def("__repr__", [](nbt::EndTag const&) { return "rapidnbt.EndTag"; }, "Official string representation");
 }
 
 } // namespace rapidnbt

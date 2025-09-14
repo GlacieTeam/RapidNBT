@@ -3,21 +3,17 @@ add_rules("mode.debug", "mode.release")
 add_repositories("groupmountain-repo https://github.com/GroupMountain/xmake-repo.git")
 
 add_requires(
-    "nbt 2.3.1",
+    "nbt 2.3.2",
     "pybind11 3.0.1",
     "magic_enum 0.9.7"
 )
 
-if is_plat("windows") then
-    if not has_config("vs_runtime") then
-        set_runtimes("MD")
-    end
-else
-    set_toolchains("clang")
+if is_plat("windows") and not has_config("vs_runtime") then
+    set_runtimes("MD")
 end
 
 target("_NBT")
-    set_languages("cxx23")
+    set_languages("c++23")
     set_kind("shared")
     set_targetdir("./build/bin")
     set_prefixname("")
@@ -29,7 +25,6 @@ target("_NBT")
     )
     add_includedirs("bindings")
     add_files("bindings/**.cpp")
-    add_defines("PYBIND11_DETAILED_ERROR_MESSAGES")
     if is_plat("windows") then
         add_defines(
             "NOMINMAX",
@@ -47,16 +42,13 @@ target("_NBT")
             "-Wall",
             "-pedantic",
             "-fexceptions",
-            "-stdlib=libc++",
             "-fPIC",
             "-O3",
             "-fvisibility=hidden",
             "-fvisibility-inlines-hidden"
         )
         add_shflags(
-            "-stdlib=libc++",
             "-static-libstdc++",
             "-static-libgcc"
         )
-        add_syslinks("libc++.a", "libc++abi.a")       
     end

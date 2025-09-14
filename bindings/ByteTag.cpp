@@ -11,8 +11,8 @@ namespace rapidnbt {
 
 void bindByteTag(py::module& m) {
     py::class_<nbt::ByteTag, nbt::Tag>(m, "ByteTag")
-        .def(py::init<>())
-        .def(py::init<int>(), py::arg("value"))
+        .def(py::init<>(), "Construct an ByteTag with default value (0)")
+        .def(py::init<int>(), py::arg("value"), "Construct an ByteTag from an integer value")
 
         .def(
             "assign",
@@ -21,37 +21,52 @@ void bindByteTag(py::module& m) {
                 return self;
             },
             py::arg("value"),
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Assign a new integer value to this tag"
         )
-
-        .def("__int__", [](const nbt::ByteTag& self) { return static_cast<uint8_t>(self); })
-        .def("__index__", [](const nbt::ByteTag& self) { return static_cast<uint8_t>(self); })
-        .def("__pos__", &nbt::ByteTag::operator+)
-
-        .def("getType", &nbt::ByteTag::getType)
-        .def("equals", &nbt::ByteTag::equals)
-        .def("copy", &nbt::ByteTag::copy)
-        .def("hash", &nbt::ByteTag::hash)
+        .def("getType", &nbt::ByteTag::getType, "Get the NBT type ID (int64)")
+        .def("equals", &nbt::ByteTag::equals, py::arg("other"), "Check if this tag equals another tag")
+        .def("copy", &nbt::ByteTag::copy, "Create a deep copy of this tag")
+        .def("hash", &nbt::ByteTag::hash, "Compute hash value of this tag")
 
         .def(
             "write",
             [](nbt::ByteTag& self, bstream::BinaryStream& stream) { self.write(stream); },
-            py::arg("stream")
+            py::arg("stream"),
+            "Write tag to a binary stream"
         )
         .def(
             "load",
             [](nbt::ByteTag& self, bstream::ReadOnlyBinaryStream& stream) { self.load(stream); },
-            py::arg("stream")
+            py::arg("stream"),
+            "Load tag value from a binary stream"
         )
 
         .def_property(
             "value",
             [](nbt::ByteTag& self) -> uint8_t { return self.storage(); },
-            [](nbt::ByteTag& self, uint8_t value) { self.storage() = static_cast<uint8_t>(value); }
+            [](nbt::ByteTag& self, uint8_t value) { self.storage() = static_cast<uint8_t>(value); },
+            "Access the integer value of this tag"
         )
 
-        .def("__str__", [](const nbt::ByteTag& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); })
-        .def("__repr__", [](const nbt::ByteTag& self) { return std::format("rapidnbt.ByteTag({})", self.storage()); });
+        .def(
+            "__int__",
+            [](nbt::ByteTag const& self) { return static_cast<uint8_t>(self); },
+            "Convert to Python int"
+        )
+        .def("__pos__", &nbt::ByteTag::operator+, "Unary plus operator (+)")
+        .def("__eq__", &nbt::ByteTag::equals, py::arg("other"), "Equality operator (==)")
+        .def("__hash__", &nbt::ByteTag::hash, "Compute hash value for Python hashing operations")
+        .def(
+            "__str__",
+            [](nbt::ByteTag const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },
+            "String representation (SNBT minimized format)"
+        )
+        .def(
+            "__repr__",
+            [](nbt::ByteTag const& self) { return std::format("rapidnbt.ByteTag({})", self.storage()); },
+            "Official string representation"
+        );
 }
 
 } // namespace rapidnbt

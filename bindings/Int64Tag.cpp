@@ -11,8 +11,8 @@ namespace rapidnbt {
 
 void bindInt64Tag(py::module& m) {
     py::class_<nbt::Int64Tag, nbt::Tag>(m, "Int64Tag")
-        .def(py::init<>())
-        .def(py::init<int>(), py::arg("value"))
+        .def(py::init<>(), "Construct an Int64Tag with default value (0)")
+        .def(py::init<int>(), py::arg("value"), "Construct an Int64Tag from an integer value")
 
         .def(
             "assign",
@@ -21,39 +21,52 @@ void bindInt64Tag(py::module& m) {
                 return self;
             },
             py::arg("value"),
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Assign a new integer value to this tag"
         )
-
-        .def("__int__", [](const nbt::Int64Tag& self) { return static_cast<int64_t>(self); })
-        .def("__index__", [](const nbt::Int64Tag& self) { return static_cast<int64_t>(self); })
-        .def("__pos__", &nbt::Int64Tag::operator+)
-
-        .def("getType", &nbt::Int64Tag::getType)
-        .def("equals", &nbt::Int64Tag::equals)
-        .def("copy", &nbt::Int64Tag::copy)
-        .def("hash", &nbt::Int64Tag::hash)
+        .def("getType", &nbt::Int64Tag::getType, "Get the NBT type ID (int64)")
+        .def("equals", &nbt::Int64Tag::equals, py::arg("other"), "Check if this tag equals another tag")
+        .def("copy", &nbt::Int64Tag::copy, "Create a deep copy of this tag")
+        .def("hash", &nbt::Int64Tag::hash, "Compute hash value of this tag")
 
         .def(
             "write",
             [](nbt::Int64Tag& self, bstream::BinaryStream& stream) { self.write(stream); },
-            py::arg("stream")
+            py::arg("stream"),
+            "Write tag to a binary stream"
         )
         .def(
             "load",
             [](nbt::Int64Tag& self, bstream::ReadOnlyBinaryStream& stream) { self.load(stream); },
-            py::arg("stream")
+            py::arg("stream"),
+            "Load tag value from a binary stream"
         )
 
         .def_property(
             "value",
             [](nbt::Int64Tag& self) -> int64_t { return self.storage(); },
-            [](nbt::Int64Tag& self, int64_t value) { self.storage() = static_cast<int64_t>(value); }
+            [](nbt::Int64Tag& self, int64_t value) { self.storage() = static_cast<int64_t>(value); },
+            "Access the integer value of this tag"
         )
 
-        .def("__str__", [](const nbt::Int64Tag& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); })
-        .def("__repr__", [](const nbt::Int64Tag& self) {
-            return std::format("rapidnbt.Int64Tag({})", self.storage());
-        });
+        .def(
+            "__int__",
+            [](nbt::Int64Tag const& self) { return static_cast<int64_t>(self); },
+            "Convert to Python int"
+        )
+        .def("__pos__", &nbt::Int64Tag::operator+, "Unary plus operator (+)")
+        .def("__eq__", &nbt::Int64Tag::equals, py::arg("other"), "Equality operator (==)")
+        .def("__hash__", &nbt::Int64Tag::hash, "Compute hash value for Python hashing operations")
+        .def(
+            "__str__",
+            [](nbt::Int64Tag const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },
+            "String representation (SNBT minimized format)"
+        )
+        .def(
+            "__repr__",
+            [](nbt::Int64Tag const& self) { return std::format("rapidnbt.Int64Tag({})", self.storage()); },
+            "Official string representation"
+        );
 }
 
-}
+} // namespace rapidnbt
