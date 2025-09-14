@@ -17,6 +17,7 @@ from rapidnbt._NBT import (
     Int64Tag,
     FloatTag,
     DoubleTag,
+    ByteArrayTag,
 )
 
 __all__ = [
@@ -31,4 +32,5 @@ __all__ = [
     "Int64Tag",
     "FloatTag",
     "DoubleTag",
+    "ByteArrayTag",
 ]

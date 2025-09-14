@@ -4,7 +4,120 @@ Python bindings for NBT library
 from __future__ import annotations
 import collections.abc
 import typing
-__all__: list[str] = ['AlwaysLineFeed', 'ArrayLineFeed', 'Byte', 'ByteArray', 'ByteTag', 'Classic', 'CommentMarks', 'Compound', 'CompoundTagVariant', 'Double', 'DoubleTag', 'End', 'EndTag', 'Float', 'FloatTag', 'ForceAscii', 'ForceQuote', 'Int', 'Int64', 'Int64Tag', 'IntArray', 'IntTag', 'Jsonify', 'List', 'LongArray', 'Minimize', 'NumTagTypes', 'PrettyFilePrint', 'Short', 'ShortTag', 'SnbtFormat', 'String', 'Tag', 'TagType']
+__all__: list[str] = ['AlwaysLineFeed', 'ArrayLineFeed', 'Byte', 'ByteArray', 'ByteArrayTag', 'ByteTag', 'Classic', 'CommentMarks', 'Compound', 'CompoundTagVariant', 'Double', 'DoubleTag', 'End', 'EndTag', 'Float', 'FloatTag', 'ForceAscii', 'ForceQuote', 'Int', 'Int64', 'Int64Tag', 'IntArray', 'IntTag', 'Jsonify', 'List', 'LongArray', 'Minimize', 'NumTagTypes', 'PrettyFilePrint', 'Short', 'ShortTag', 'SnbtFormat', 'String', 'Tag', 'TagType']
+class ByteArrayTag(Tag):
+    def __bytes__(self) -> bytes:
+        """
+        Convert to Python bytes object
+        """
+    def __eq__(self, other: Tag) -> bool:
+        """
+        Equality operator (==)
+        """
+    def __getitem__(self, index: typing.SupportsInt) -> int:
+        """
+        Get byte at specified index
+        """
+    def __hash__(self) -> int:
+        """
+        Compute hash value for Python hashing operations
+        """
+    @typing.overload
+    def __init__(self) -> None:
+        """
+        Construct an empty ByteArrayTag
+        """
+    @typing.overload
+    def __init__(self, arr: collections.abc.Sequence[typing.SupportsInt]) -> None:
+        """
+        Construct from a list of bytes (e.g., [1, 2, 3])
+        """
+    def __iter__(self) -> collections.abc.Iterator[int]:
+        """
+        Iterate over bytes in the array
+        """
+    def __len__(self) -> int:
+        """
+        Get number of bytes in the array
+        """
+    def __repr__(self) -> str:
+        """
+        Official string representation
+        """
+    def __setitem__(self, index: typing.SupportsInt, value: typing.SupportsInt) -> None:
+        """
+        Set byte at specified index
+        """
+    def __str__(self) -> str:
+        """
+        Human-readable string representation
+        """
+    def assign(self, bytes: collections.abc.Buffer) -> ByteArrayTag:
+        """
+        Assign new binary data from a list of bytes
+        """
+    def clear(self) -> None:
+        """
+        Clear all byte data
+        """
+    def copy(self) -> Tag:
+        """
+        Create a deep copy of this tag
+        """
+    def data(self) -> memoryview:
+        """
+        Get a raw memory view of the byte data
+        """
+    def equals(self, other: Tag) -> bool:
+        """
+        Check if this tag equals another tag (same bytes and type)
+        """
+    def getType(self) -> TagType:
+        """
+        Get the NBT type ID (ByteArray)
+        """
+    def hash(self) -> int:
+        """
+        Compute hash value of this tag
+        """
+    def load(self, stream: ...) -> None:
+        """
+        Load tag value from a binary stream
+        """
+    def push_back(self, value: typing.SupportsInt) -> None:
+        """
+        Add a byte to the end of the array
+        """
+    @typing.overload
+    def remove(self, index: typing.SupportsInt) -> bool:
+        """
+        Remove byte at specified index
+        """
+    @typing.overload
+    def remove(self, start_index: typing.SupportsInt, end_index: typing.SupportsInt) -> bool:
+        """
+        Remove bytes in the range [start_index, end_index)
+        """
+    def reserve(self, size: typing.SupportsInt) -> None:
+        """
+        Preallocate memory for future additions
+        """
+    def size(self) -> int:
+        """
+        Get number of bytes in the array
+        """
+    def write(self, stream: ...) -> None:
+        """
+        Write tag to a binary stream
+        """
+    @property
+    def value(self) -> bytes:
+        """
+        Access the byte array as a list of integers (0-255)
+        """
+    @value.setter
+    def value(self, arg1: collections.abc.Buffer) -> None:
+        ...
 class ByteTag(Tag):
     def __eq__(self, other: Tag) -> bool:
         """

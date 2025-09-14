@@ -31,5 +31,6 @@ void bindIntTag(py::module& m);
 void bindInt64Tag(py::module& m);
 void bindFloatTag(py::module& m);
 void bindDoubleTag(py::module& m);
+void bindByteArrayTag(py::module& m);
 
 } // namespace rapidnbt
