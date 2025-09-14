@@ -8,7 +8,6 @@
 from typing import overload
 from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
 from rapidnbt._NBT.snbt_format import SnbtFormat
-from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 from abc import ABC, abstractmethod
 

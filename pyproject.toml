@@ -26,7 +26,7 @@ Homepage = "https://github.com/GlacieTeam/RapidNBT"
 
 [tool.setuptools]
 include-package-data = true
-packages = ["rapidnbt"]
+packages = { find = {} }
 
 [tool.setuptools.package-data]
 rapidnbt = ["*.pyd", "*.so"]

@@ -1,5 +1,5 @@
 import subprocess, os, shutil
-from setuptools import setup, Distribution
+from setuptools import setup, Distribution, find_packages
 from setuptools.command.build_ext import build_ext
 from setuptools.command.build_py import build_py
 
@@ -48,7 +48,7 @@ class InstallCommand(build_py):
 setup(
     name=f"{PACKAGE_NAME}",
     version="1.0.0",
-    packages=[f"{PACKAGE_NAME}"],
+    packages=find_packages(),
     include_package_data=True,
     package_data={f"{PACKAGE_NAME}": ["*.so", "*.pyd"]},
     cmdclass={
