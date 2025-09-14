@@ -4,7 +4,7 @@ Python bindings for NBT library
 from __future__ import annotations
 import collections.abc
 import typing
-__all__: list[str] = ['AlwaysLineFeed', 'ArrayLineFeed', 'Byte', 'ByteArray', 'ByteArrayTag', 'ByteTag', 'Classic', 'CommentMarks', 'Compound', 'CompoundTagVariant', 'Double', 'DoubleTag', 'End', 'EndTag', 'Float', 'FloatTag', 'ForceAscii', 'ForceQuote', 'Int', 'Int64', 'Int64Tag', 'IntArray', 'IntTag', 'Jsonify', 'List', 'LongArray', 'Minimize', 'NumTagTypes', 'PrettyFilePrint', 'Short', 'ShortTag', 'SnbtFormat', 'String', 'StringTag', 'Tag', 'TagType']
+__all__: list[str] = ['AlwaysLineFeed', 'ArrayLineFeed', 'Byte', 'ByteArray', 'ByteArrayTag', 'ByteTag', 'Classic', 'CommentMarks', 'Compound', 'CompoundTagVariant', 'Double', 'DoubleTag', 'End', 'EndTag', 'Float', 'FloatTag', 'ForceAscii', 'ForceQuote', 'Int', 'Int64', 'Int64Tag', 'IntArray', 'IntTag', 'Jsonify', 'List', 'ListTag', 'LongArray', 'Minimize', 'NumTagTypes', 'PrettyFilePrint', 'Short', 'ShortTag', 'SnbtFormat', 'String', 'StringTag', 'Tag', 'TagType']
 class ByteArrayTag(Tag):
     def __bytes__(self) -> bytes:
         """
@@ -605,6 +605,119 @@ class IntTag(Tag):
     @value.setter
     def value(self, arg1: typing.SupportsInt) -> None:
         ...
+class ListTag(Tag):
+    def __eq__(self, other: Tag) -> bool:
+        """
+        Equality operator (==)
+        """
+    def __getitem__(self, index: typing.SupportsInt) -> Tag:
+        """
+        Get element at specified index
+        """
+    def __hash__(self) -> int:
+        """
+        Compute hash value for Python hashing operations
+        """
+    @typing.overload
+    def __init__(self) -> None:
+        """
+        Construct an empty ListTag
+        """
+    @typing.overload
+    def __init__(self, elements: collections.abc.Sequence[typing.Any]) -> None:
+        """
+        Construct from a list of Tag elements (e.g., [IntTag(1), StringTag('test')])
+        """
+    def __iter__(self) -> collections.abc.Iterator[Tag]:
+        """
+        Iterate over elements in the list
+        """
+    def __len__(self) -> int:
+        """
+        Get number of elements in the list
+        """
+    def __repr__(self) -> str:
+        """
+        Official string representation
+        """
+    def __setitem__(self, index: typing.SupportsInt, element: typing.Any) -> bool:
+        """
+        Set element at specified index
+        """
+    def __str__(self) -> str:
+        """
+        String representation (SNBT minimized format)
+        """
+    def append(self, element: typing.Any) -> None:
+        """
+        Append a Tag element to the list
+        """
+    def clear(self) -> None:
+        """
+        Remove all elements from the list
+        """
+    def copy(self) -> Tag:
+        """
+        Create a deep copy of this tag
+        """
+    def copy_list(self) -> ListTag:
+        """
+        Create a deep copy of this list (same as copy() but returns ListTag)
+        """
+    def empty(self) -> bool:
+        """
+        Check if the list is empty
+        """
+    def equals(self, other: Tag) -> bool:
+        """
+        Check if this tag equals another tag (same elements in same order)
+        """
+    def getType(self) -> TagType:
+        """
+        Get the NBT type ID (List)
+        """
+    def get_element_type(self) -> TagType:
+        """
+        Get the type of elements in this list (returns nbt.Type enum)
+        """
+    def hash(self) -> int:
+        """
+        Compute hash value of this tag
+        """
+    def insert(self, index: typing.SupportsInt, element: typing.Any) -> None:
+        """
+        Insert element at specified position
+        """
+    def load(self, stream: ...) -> None:
+        """
+        Load list from a binary stream
+        """
+    def merge(self, other: ListTag) -> None:
+        """
+        Merge another ListTag into this one (appends all elements)
+        """
+    @typing.overload
+    def remove(self, index: typing.SupportsInt) -> bool:
+        """
+        Remove element at specified index
+        """
+    @typing.overload
+    def remove(self, start_index: typing.SupportsInt, end_index: typing.SupportsInt) -> bool:
+        """
+        Remove elements in the range [start_index, end_index)
+        """
+    def reserve(self, size: typing.SupportsInt) -> None:
+        """
+        Preallocate memory for future additions
+        """
+    def size(self) -> int:
+        """
+        Get number of elements in the list
+        """
+    def write(self, stream: ...) -> None:
+        """
+        Write list to a binary stream
+        """
 class ShortTag(Tag):
     def __eq__(self, other: Tag) -> bool:
         """

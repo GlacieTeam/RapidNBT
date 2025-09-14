@@ -21,6 +21,8 @@ namespace rapidnbt {
 inline py::bytes to_pybytes(std::string_view sv) { return py::bytes(sv.data(), sv.size()); }
 inline py::bytes to_pybytes(std::string const& s) { return py::bytes(s); }
 
+std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj);
+
 void bindEnums(py::module& m);
 void bindCompoundTagVariant(py::module& m);
 void bindTag(py::module& m);
@@ -33,5 +35,6 @@ void bindFloatTag(py::module& m);
 void bindDoubleTag(py::module& m);
 void bindByteArrayTag(py::module& m);
 void bindStringTag(py::module& m);
+void bindListTag(py::module& m);
 
 } // namespace rapidnbt

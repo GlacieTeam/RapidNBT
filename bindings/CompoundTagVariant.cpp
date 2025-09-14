@@ -9,6 +9,48 @@
 
 namespace rapidnbt {
 
+std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
+    if (py::isinstance<py::bool_>(obj)) {
+        return std::make_unique<nbt::ByteTag>(obj.cast<uint8_t>());
+    } else if (py::isinstance<py::int_>(obj)) {
+        return std::make_unique<nbt::IntTag>(obj.cast<int>());
+    } else if (py::isinstance<py::str>(obj)) {
+        return std::make_unique<nbt::StringTag>(obj.cast<std::string>());
+    } else if (py::isinstance<py::float_>(obj)) {
+        return std::make_unique<nbt::FloatTag>(obj.cast<float>());
+    } else if (py::isinstance<py::bytes>(obj) || py::isinstance<py::bytearray>(obj)) {
+        return std::make_unique<nbt::ByteArrayTag>(nbt::ByteArrayTag(obj.cast<std::string>()));
+    } else if (py::isinstance<py::dict>(obj)) {
+        auto dict = obj.cast<py::dict>();
+        auto tag  = std::make_unique<nbt::CompoundTag>();
+        for (auto [k, v] : dict) {
+            std::string key = py::cast<std::string>(k);
+            tag->put(key, makeNativeTag(static_cast<py::object&&>(v)));
+        }
+        return tag;
+    } else if (py::isinstance<py::list>(obj)) {
+        auto list = obj.cast<py::list>();
+        auto tag  = std::make_unique<nbt::ListTag>();
+        for (auto t : list) { tag->push_back(makeNativeTag(static_cast<py::object&&>(t))); }
+        return tag;
+    }
+    auto ctypes = py::module::import("ctypes");
+    if (py::isinstance(obj, ctypes.attr("c_int8")) || py::isinstance(obj, ctypes.attr("c_uint8"))) {
+        return std::make_unique<nbt::ByteTag>(obj.attr("value").cast<uint8_t>());
+    } else if (py::isinstance(obj, ctypes.attr("c_int16")) || py::isinstance(obj, ctypes.attr("c_uint16"))) {
+        return std::make_unique<nbt::ShortTag>(obj.attr("value").cast<short>());
+    } else if (py::isinstance(obj, ctypes.attr("c_int32")) || py::isinstance(obj, ctypes.attr("c_uint32"))) {
+        return std::make_unique<nbt::IntTag>(obj.attr("value").cast<int>());
+    } else if (py::isinstance(obj, ctypes.attr("c_int64")) || py::isinstance(obj, ctypes.attr("c_uint64"))) {
+        return std::make_unique<nbt::Int64Tag>(obj.attr("value").cast<int64_t>());
+    } else if (py::isinstance(obj, ctypes.attr("c_float"))) {
+        return std::make_unique<nbt::FloatTag>(obj.attr("value").cast<float>());
+    } else if (py::isinstance(obj, ctypes.attr("c_double"))) {
+        return std::make_unique<nbt::DoubleTag>(obj.attr("value").cast<double>());
+    }
+    return nullptr;
+}
+
 void bindCompoundTagVariant(py::module& m) {
     py::class_<nbt::CompoundTagVariant> variant(m, "CompoundTagVariant");
 
@@ -28,37 +70,11 @@ void bindCompoundTagVariant(py::module& m) {
     // 构造函数绑定
     variant.def(py::init<>())
         .def(py::init([](py::object const& obj) {
-            auto ctypes = py::module::import("ctypes");
             if (py::isinstance<nbt::Tag>(obj)) {
                 return new nbt::CompoundTagVariant(*obj.cast<nbt::Tag*>());
-            } else if (py::isinstance<py::bool_>(obj)) {
-                return new nbt::CompoundTagVariant(obj.cast<uint8_t>());
-            } else if (py::isinstance<py::int_>(obj)) {
-                return new nbt::CompoundTagVariant(obj.cast<int>());
-            } else if (py::isinstance<py::float_>(obj)) {
-                return new nbt::CompoundTagVariant(obj.cast<float>());
-            } else if (py::isinstance(obj, ctypes.attr("c_int8")) || py::isinstance(obj, ctypes.attr("c_uint8"))) {
-                return new nbt::CompoundTagVariant(obj.attr("value").cast<uint8_t>());
-            } else if (py::isinstance(obj, ctypes.attr("c_int16")) || py::isinstance(obj, ctypes.attr("c_uint16"))) {
-                return new nbt::CompoundTagVariant(obj.attr("value").cast<short>());
-            } else if (py::isinstance(obj, ctypes.attr("c_int32")) || py::isinstance(obj, ctypes.attr("c_uint32"))) {
-                return new nbt::CompoundTagVariant(obj.attr("value").cast<int>());
-            } else if (py::isinstance(obj, ctypes.attr("c_int64")) || py::isinstance(obj, ctypes.attr("c_uint64"))) {
-                return new nbt::CompoundTagVariant(obj.attr("value").cast<int64_t>());
-            } else if (py::isinstance(obj, ctypes.attr("c_float"))) {
-                return new nbt::CompoundTagVariant(obj.attr("value").cast<float>());
-            } else if (py::isinstance(obj, ctypes.attr("c_double"))) {
-                return new nbt::CompoundTagVariant(obj.attr("value").cast<double>());
-            } else if (py::isinstance<py::str>(obj)) {
-                return new nbt::CompoundTagVariant(obj.cast<std::string>());
-            } else if (py::isinstance<py::bytes>(obj) || py::isinstance<py::bytearray>(obj)) {
-                return new nbt::CompoundTagVariant(nbt::ByteArrayTag(obj.cast<std::string>()));
-            } else if (py::isinstance<py::dict>(obj)) {
-                // TODO
-            } else if (py::isinstance<py::list>(obj)) {
-                // TODO
+            } else {
+                return new nbt::CompoundTagVariant(makeNativeTag(obj));
             }
-            return new nbt::CompoundTagVariant(nullptr);
         }))
 
         .def("get_type", &nbt::CompoundTagVariant::getType)
@@ -172,23 +188,3 @@ void bindCompoundTagVariant(py::module& m) {
 }
 
 } // namespace rapidnbt
-
-
-/*
-// 绑定常量迭代器 (仅声明)
-py::class_<nbt::CompoundTagVariant::const_iterator>(variant, "ConstIterator")
-    .def(
-        "__iter__",
-        [](nbt::CompoundTagVariant::const_iterator& it) -> nbt::CompoundTagVariant::const_iterator& { return it; }
-    )
-    .def(
-        "__next__",
-        [](nbt::CompoundTagVariant::const_iterator& it) -> const nbt::Tag& {
-            if (it == nbt::CompoundTagVariant::const_iterator()) throw py::stop_iteration();
-            const nbt::Tag& value = *it;
-            ++it;
-            return value;
-        },
-        py::return_value_policy::reference_internal
-    );
-*/
