@@ -110,27 +110,23 @@ void bindCompoundTagVariant(py::module& m) {
             py::return_value_policy::reference_internal
         )
 
-        // TODO: 隐式构造
         .def(
             "__setitem__",
-            [](nbt::CompoundTagVariant& self, std::string_view key, nbt::CompoundTagVariant const& value) {
-                self[key] = value;
+            [](nbt::CompoundTagVariant& self, std::string_view key, py::object const& obj) {
+                self[key] = makeNativeTag(obj);
             }
         )
         .def(
             "__setitem__",
-            [](nbt::CompoundTagVariant& self, size_t index, nbt::CompoundTagVariant const& value) {
-                self[index] = value;
+            [](nbt::CompoundTagVariant& self, size_t index, py::object const& obj) {
+                self[index] = *makeNativeTag(obj);
             }
         )
 
-        .def("remove", py::overload_cast<std::string_view>(&nbt::CompoundTagVariant::remove))
-        .def("remove", py::overload_cast<size_t>(&nbt::CompoundTagVariant::remove))
+        .def("pop", py::overload_cast<std::string_view>(&nbt::CompoundTagVariant::remove))
+        .def("pop", py::overload_cast<size_t>(&nbt::CompoundTagVariant::remove))
         .def("rename", &nbt::CompoundTagVariant::rename)
-
-        // TODO: 隐式构造
-        .def("push_back", py::overload_cast<nbt::CompoundTagVariant>(&nbt::CompoundTagVariant::push_back))
-        .def("push_back", py::overload_cast<const nbt::Tag&>(&nbt::CompoundTagVariant::push_back))
+        .def("append", [](nbt::CompoundTagVariant& self, py::object const& obj) { self.push_back(makeNativeTag(obj)); })
 
         .def(
             "__iter__",

@@ -4,7 +4,7 @@ Python bindings for NBT library
 from __future__ import annotations
 import collections.abc
 import typing
-__all__: list[str] = ['AlwaysLineFeed', 'ArrayLineFeed', 'Byte', 'ByteArray', 'ByteArrayTag', 'ByteTag', 'Classic', 'CommentMarks', 'Compound', 'CompoundTag', 'CompoundTagVariant', 'Double', 'DoubleTag', 'End', 'EndTag', 'Float', 'FloatTag', 'ForceAscii', 'ForceQuote', 'Int', 'Int64', 'Int64Tag', 'IntArray', 'IntTag', 'Jsonify', 'List', 'ListTag', 'LongArray', 'Minimize', 'NumTagTypes', 'PrettyFilePrint', 'Short', 'ShortTag', 'SnbtFormat', 'String', 'StringTag', 'Tag', 'TagType']
+__all__: list[str] = ['AlwaysLineFeed', 'ArrayLineFeed', 'Byte', 'ByteArray', 'ByteArrayTag', 'ByteTag', 'Classic', 'CommentMarks', 'Compound', 'CompoundTag', 'CompoundTagVariant', 'Double', 'DoubleTag', 'End', 'EndTag', 'Float', 'FloatTag', 'ForceAscii', 'ForceQuote', 'Int', 'Int64', 'Int64Tag', 'IntArray', 'IntArrayTag', 'IntTag', 'Jsonify', 'List', 'ListTag', 'LongArray', 'LongArrayTag', 'Minimize', 'NumTagTypes', 'PrettyFilePrint', 'Short', 'ShortTag', 'SnbtFormat', 'String', 'StringTag', 'Tag', 'TagType']
 class ByteArrayTag(Tag):
     def __bytes__(self) -> bytes:
         """
@@ -52,6 +52,10 @@ class ByteArrayTag(Tag):
         """
         String representation (SNBT minimized format)
         """
+    def append(self, value: typing.SupportsInt) -> None:
+        """
+        Add a byte to the end of the array
+        """
     def assign(self, bytes: collections.abc.Buffer) -> ByteArrayTag:
         """
         Assign new binary data from a list of bytes
@@ -84,17 +88,13 @@ class ByteArrayTag(Tag):
         """
         Load tag value from a binary stream
         """
-    def push_back(self, value: typing.SupportsInt) -> None:
-        """
-        Add a byte to the end of the array
-        """
     @typing.overload
-    def remove(self, index: typing.SupportsInt) -> bool:
+    def pop(self, index: typing.SupportsInt) -> bool:
         """
         Remove byte at specified index
         """
     @typing.overload
-    def remove(self, start_index: typing.SupportsInt, end_index: typing.SupportsInt) -> bool:
+    def pop(self, start_index: typing.SupportsInt, end_index: typing.SupportsInt) -> bool:
         """
         Remove bytes in the range [start_index, end_index)
         """
@@ -191,19 +191,19 @@ class ByteTag(Tag):
         ...
 class CompoundTag(Tag):
     @staticmethod
-    def fromBinaryNbt(binary_data: collections.abc.Buffer, little_endian: bool = True, header: bool = False) -> rapidnbt._NBT.CompoundTag | None:
+    def from_binary_nbt(binary_data: collections.abc.Buffer, little_endian: bool = True, header: bool = False) -> rapidnbt._NBT.CompoundTag | None:
         """
         Deserialize from binary NBT format
-        """
-    @staticmethod
-    def fromSnbt(snbt: str, parsed_length: typing.SupportsInt | None = None) -> rapidnbt._NBT.CompoundTag | None:
-        """
-        Parse from String NBT (SNBT) format
         """
     @staticmethod
     def from_network_nbt(binary_data: collections.abc.Buffer) -> rapidnbt._NBT.CompoundTag | None:
         """
         Deserialize from Network NBT format
+        """
+    @staticmethod
+    def from_snbt(snbt: str, parsed_length: typing.SupportsInt | None = None) -> rapidnbt._NBT.CompoundTag | None:
+        """
+        Parse from String NBT (SNBT) format
         """
     def __contains__(self, key: str) -> bool:
         """
@@ -231,7 +231,7 @@ class CompoundTag(Tag):
         Construct an empty CompoundTag
         """
     @typing.overload
-    def __init__(self, pairs: collections.abc.Sequence) -> None:
+    def __init__(self, pairs: dict) -> None:
         """
         Construct from a sequence of (key, value) pairs
                     Example:
@@ -471,11 +471,25 @@ class CompoundTagVariant:
         ...
     def __iter__(self) -> collections.abc.Iterator[...]:
         ...
+    def __repr__(self) -> str:
+        """
+        Official string representation
+        """
     @typing.overload
     def __setitem__(self, arg0: str, arg1: CompoundTagVariant) -> None:
         ...
     @typing.overload
     def __setitem__(self, arg0: typing.SupportsInt, arg1: CompoundTagVariant) -> None:
+        ...
+    def __str__(self) -> str:
+        """
+        String representation (SNBT minimized format)
+        """
+    @typing.overload
+    def append(self, arg0: CompoundTagVariant) -> None:
+        ...
+    @typing.overload
+    def append(self, arg0: ...) -> None:
         ...
     def as_byte(self) -> ...:
         ...
@@ -531,21 +545,15 @@ class CompoundTagVariant:
         ...
     def is_structured(self) -> bool:
         ...
-    def items(self) -> dict[str, CompoundTagVariant]:
+    def items(self) -> list:
         ...
     def merge(self, other: CompoundTagVariant, merge_list: bool = False) -> None:
         ...
     @typing.overload
-    def push_back(self, arg0: CompoundTagVariant) -> None:
+    def pop(self, arg0: str) -> bool:
         ...
     @typing.overload
-    def push_back(self, arg0: ...) -> None:
-        ...
-    @typing.overload
-    def remove(self, arg0: str) -> bool:
-        ...
-    @typing.overload
-    def remove(self, arg0: typing.SupportsInt) -> bool:
+    def pop(self, arg0: typing.SupportsInt) -> bool:
         ...
     def rename(self, arg0: str, arg1: str) -> bool:
         ...
@@ -805,6 +813,119 @@ class Int64Tag(Tag):
     @value.setter
     def value(self, arg1: typing.SupportsInt) -> None:
         ...
+class IntArrayTag(Tag):
+    __hash__: typing.ClassVar[None] = None
+    def __contains__(self, value: typing.SupportsInt) -> bool:
+        """
+        Check if value is in the array
+        """
+    def __eq__(self, other: IntArrayTag) -> bool:
+        ...
+    def __getitem__(self, index: typing.SupportsInt) -> int:
+        """
+        Get element at index without bounds checking
+        """
+    @typing.overload
+    def __init__(self) -> None:
+        """
+        Construct an empty IntArrayTag
+        """
+    @typing.overload
+    def __init__(self, values: collections.abc.Sequence[typing.SupportsInt]) -> None:
+        """
+        Construct from a list of integers
+                    Example:
+                        IntArrayTag([1, 2, 3])
+        """
+    def __iter__(self) -> collections.abc.Iterator[int]:
+        """
+        Iterate over elements in the array
+                    Example:
+                        for value in int_array:
+                            print(value)
+        """
+    def __list__(self) -> typing.Any:
+        """
+        Convert to Python list of integers
+        """
+    def __repr__(self) -> str:
+        """
+        Official string representation
+        """
+    def __setitem__(self, index: typing.SupportsInt, value: typing.SupportsInt) -> None:
+        """
+        Set element at index
+        """
+    def __str__(self) -> str:
+        """
+        String representation (SNBT minimized format)
+        """
+    def append(self, value: typing.SupportsInt) -> None:
+        """
+        Append an integer to the end of the array
+        """
+    def assign(self, values: collections.abc.Sequence[typing.SupportsInt]) -> IntArrayTag:
+        """
+        Assign new values to the array
+                    Returns the modified array
+        """
+    def clear(self) -> None:
+        """
+        Remove all elements from the array
+        """
+    def copy(self) -> Tag:
+        """
+        Create a deep copy of this tag
+        """
+    def empty(self) -> bool:
+        """
+        Check if the array is empty
+        """
+    def equals(self, other: Tag) -> bool:
+        """
+        Check if this tag equals another tag
+        """
+    def get_type(self) -> TagType:
+        """
+        Get the NBT type ID (int array)
+        """
+    def hash(self) -> int:
+        """
+        Compute hash value of this tag
+        """
+    def load(self, stream: ...) -> None:
+        """
+        Load int array from a binary stream
+        """
+    @typing.overload
+    def pop(self, index: typing.SupportsInt) -> bool:
+        """
+        Remove element at specified index
+        Returns True if successful, False if index out of range
+        """
+    @typing.overload
+    def pop(self, start_index: typing.SupportsInt, end_index: typing.SupportsInt) -> bool:
+        """
+        Remove elements in the range [start_index, end_index)
+                    Arguments:
+                        start_index: First index to remove (inclusive)\\n"
+                        end_index: End index (exclusive)\\n"
+                    Returns True if successful, False if indices out of range
+        """
+    def reserve(self, capacity: typing.SupportsInt) -> None:
+        """
+        Reserve storage capacity for the array
+                    Arguments:
+                        capacity: Minimum capacity to reserv)
+        """
+    def size(self) -> int:
+        """
+        Get number of elements in the array
+        """
+    def write(self, stream: ...) -> None:
+        """
+        Write int array to a binary stream
+        """
 class IntTag(Tag):
     def __eq__(self, other: Tag) -> bool:
         """
@@ -968,12 +1089,12 @@ class ListTag(Tag):
         Merge another ListTag into this one (appends all elements)
         """
     @typing.overload
-    def remove(self, index: typing.SupportsInt) -> bool:
+    def pop(self, index: typing.SupportsInt) -> bool:
         """
         Remove element at specified index
         """
     @typing.overload
-    def remove(self, start_index: typing.SupportsInt, end_index: typing.SupportsInt) -> bool:
+    def pop(self, start_index: typing.SupportsInt, end_index: typing.SupportsInt) -> bool:
         """
         Remove elements in the range [start_index, end_index)
         """
@@ -988,6 +1109,119 @@ class ListTag(Tag):
     def write(self, stream: ...) -> None:
         """
         Write list to a binary stream
+        """
+class LongArrayTag(Tag):
+    __hash__: typing.ClassVar[None] = None
+    def __contains__(self, value: typing.SupportsInt) -> bool:
+        """
+        Check if value is in the array
+        """
+    def __eq__(self, other: LongArrayTag) -> bool:
+        ...
+    def __getitem__(self, index: typing.SupportsInt) -> int:
+        """
+        Get element at index without bounds checking
+        """
+    @typing.overload
+    def __init__(self) -> None:
+        """
+        Construct an empty LongArrayTag
+        """
+    @typing.overload
+    def __init__(self, values: collections.abc.Sequence[typing.SupportsInt]) -> None:
+        """
+        Construct from a list of integers
+                    Example:
+                        LongArrayTag([1, 2, 3])
+        """
+    def __iter__(self) -> collections.abc.Iterator[int]:
+        """
+        Iterate over elements in the array
+                    Example:
+                        for value in int_array:
+                            print(value)
+        """
+    def __list__(self) -> typing.Any:
+        """
+        Convert to Python list of integers
+        """
+    def __repr__(self) -> str:
+        """
+        Official string representation
+        """
+    def __setitem__(self, index: typing.SupportsInt, value: typing.SupportsInt) -> None:
+        """
+        Set element at index
+        """
+    def __str__(self) -> str:
+        """
+        String representation (SNBT minimized format)
+        """
+    def append(self, value: typing.SupportsInt) -> None:
+        """
+        Append an integer to the end of the array
+        """
+    def assign(self, values: collections.abc.Sequence[typing.SupportsInt]) -> LongArrayTag:
+        """
+        Assign new values to the array
+                    Returns the modified array
+        """
+    def clear(self) -> None:
+        """
+        Remove all elements from the array
+        """
+    def copy(self) -> Tag:
+        """
+        Create a deep copy of this tag
+        """
+    def empty(self) -> bool:
+        """
+        Check if the array is empty
+        """
+    def equals(self, other: Tag) -> bool:
+        """
+        Check if this tag equals another tag
+        """
+    def get_type(self) -> TagType:
+        """
+        Get the NBT type ID (int array)
+        """
+    def hash(self) -> int:
+        """
+        Compute hash value of this tag
+        """
+    def load(self, stream: ...) -> None:
+        """
+        Load int array from a binary stream
+        """
+    @typing.overload
+    def pop(self, index: typing.SupportsInt) -> bool:
+        """
+        Remove element at specified index
+        Returns True if successful, False if index out of range
+        """
+    @typing.overload
+    def pop(self, start_index: typing.SupportsInt, end_index: typing.SupportsInt) -> bool:
+        """
+        Remove elements in the range [start_index, end_index)
+                    Arguments:
+                        start_index: First index to remove (inclusive)\\n"
+                        end_index: End index (exclusive)\\n"
+                    Returns True if successful, False if indices out of range
+        """
+    def reserve(self, capacity: typing.SupportsInt) -> None:
+        """
+        Reserve storage capacity for the array
+                    Arguments:
+                        capacity: Minimum capacity to reserv)
+        """
+    def size(self) -> int:
+        """
+        Get number of elements in the array
+        """
+    def write(self, stream: ...) -> None:
+        """
+        Write int array to a binary stream
         """
 class ShortTag(Tag):
     def __eq__(self, other: Tag) -> bool:

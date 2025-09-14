@@ -21,6 +21,8 @@ from rapidnbt._NBT import (
     StringTag,
     ListTag,
     CompoundTag,
+    IntArrayTag,
+    LongArrayTag,
 )
 
 __all__ = [
@@ -39,4 +41,6 @@ __all__ = [
     "StringTag",
     "ListTag",
     "CompoundTag",
+    "IntArrayTag",
+    "LongArrayTag",
 ]

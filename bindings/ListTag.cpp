@@ -87,13 +87,13 @@ void bindListTag(py::module& m) {
         )
         .def("reserve", &nbt::ListTag::reserve, py::arg("size"), "Preallocate memory for future additions")
         .def(
-            "remove",
+            "pop",
             [](nbt::ListTag& self, size_t index) { return self.remove(index); },
             py::arg("index"),
             "Remove element at specified index"
         )
         .def(
-            "remove",
+            "pop",
             [](nbt::ListTag& self, size_t start, size_t end) { return self.remove(start, end); },
             py::arg("start_index"),
             py::arg("end_index"),
@@ -136,7 +136,7 @@ void bindListTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](const nbt::ListTag& self) {
+            [](nbt::ListTag const& self) {
                 return std::format(
                     "<rapidnbt.ListTag(size={0}) object at 0x{1:0{2}X}>",
                     self.size(),

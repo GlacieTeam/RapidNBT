@@ -151,7 +151,9 @@ void bindCompoundTag(py::module& m) {
         .def("put_string", &nbt::CompoundTag::putString, py::arg("key"), py::arg("value"), "Put a string value")
         .def(
             "put_byte_array",
-            &nbt::CompoundTag::putByteArray,
+            [](nbt::CompoundTag& self, std::string_view key, py::buffer value) {
+                self.put(key, nbt::ByteArrayTag(to_cppstringview(value)));
+            },
             py::arg("key"),
             py::arg("value"),
             "Put a byte array (list of uint8)"
@@ -356,7 +358,7 @@ void bindCompoundTag(py::module& m) {
             "Deserialize from Network NBT format"
         )
         .def_static(
-            "fromBinaryNbt",
+            "from_binary_nbt",
             [](py::buffer value, bool little_endian, bool header) {
                 if (header) {
                     return nbt::CompoundTag::fromBinaryNbtWithHeader(to_cppstringview(value), little_endian);
@@ -370,7 +372,7 @@ void bindCompoundTag(py::module& m) {
             "Deserialize from binary NBT format"
         )
         .def_static(
-            "fromSnbt",
+            "from_snbt",
             &nbt::CompoundTag::fromSnbt,
             py::arg("snbt"),
             py::arg("parsed_length") = py::none(),

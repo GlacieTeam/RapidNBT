@@ -77,19 +77,19 @@ void bindByteArrayTag(py::module& m) {
         .def("reserve", &nbt::ByteArrayTag::reserve, py::arg("size"), "Preallocate memory for future additions")
         .def("clear", &nbt::ByteArrayTag::clear, "Clear all byte data")
         .def(
-            "push_back",
+            "append",
             [](nbt::ByteArrayTag& self, uint8_t value) { self.push_back(value); },
             py::arg("value"),
             "Add a byte to the end of the array"
         )
         .def(
-            "remove",
+            "pop",
             [](nbt::ByteArrayTag& self, size_t index) { return self.remove(index); },
             py::arg("index"),
             "Remove byte at specified index"
         )
         .def(
-            "remove",
+            "pop",
             [](nbt::ByteArrayTag& self, size_t start, size_t end) { return self.remove(start, end); },
             py::arg("start_index"),
             py::arg("end_index"),
