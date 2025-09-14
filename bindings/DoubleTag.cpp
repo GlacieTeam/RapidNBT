@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindDoubleTag(py::module& m) {
-    py::class_<nbt::DoubleTag, nbt::Tag>(m, "DoubleTag")
+    auto sm = m.def_submodule("double_tag");
+
+    py::class_<nbt::DoubleTag, nbt::Tag>(sm, "DoubleTag")
         .def(py::init<>(), "Construct a DoubleTag with default value (0.0)")
         .def(py::init<double>(), py::arg("value"), "Construct a DoubleTag from a floating-point value")
 

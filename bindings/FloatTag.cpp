@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindFloatTag(py::module& m) {
-    py::class_<nbt::FloatTag, nbt::Tag>(m, "FloatTag")
+    auto sm = m.def_submodule("float_tag");
+
+    py::class_<nbt::FloatTag, nbt::Tag>(sm, "FloatTag")
         .def(py::init<>(), "Construct a FloatTag with default value (0.0)")
         .def(py::init<float>(), py::arg("value"), "Construct a FloatTag from a floating-point value")
 

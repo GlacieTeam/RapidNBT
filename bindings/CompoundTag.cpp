@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindCompoundTag(py::module& m) {
-    py::class_<nbt::CompoundTag, nbt::Tag>(m, "CompoundTag")
+    auto sm = m.def_submodule("compound_tag");
+
+    py::class_<nbt::CompoundTag, nbt::Tag>(sm, "CompoundTag")
         .def(py::init<>(), "Construct an empty CompoundTag")
         .def(
             py::init([](py::dict obj) {

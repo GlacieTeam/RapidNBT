@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindByteArrayTag(py::module& m) {
-    py::class_<nbt::ByteArrayTag, nbt::Tag>(m, "ByteArrayTag")
+    auto sm = m.def_submodule("byte_array_tag");
+
+    py::class_<nbt::ByteArrayTag, nbt::Tag>(sm, "ByteArrayTag")
         .def(py::init<>(), "Construct an empty ByteArrayTag")
         .def(
             py::init<std::vector<uint8_t> const&>(),

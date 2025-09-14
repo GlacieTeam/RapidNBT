@@ -27,7 +27,9 @@ public:
 };
 
 void bindTag(py::module& m) {
-    py::class_<nbt::Tag, PyTag, TagHolder>(m, "Tag", "Base class for all NBT tags")
+    auto sm = m.def_submodule("tag");
+
+    py::class_<nbt::Tag, PyTag, TagHolder>(sm, "Tag", "Base class for all NBT tags")
         .def("get_type", &nbt::Tag::getType, "Get the type of this tag")
         .def("equals", &nbt::Tag::equals, py::arg("other"), "Check if this tag equals another tag")
         .def("copy", &nbt::Tag::copy, "Create a deep copy of this tag")

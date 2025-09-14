@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindStringTag(py::module& m) {
-    py::class_<nbt::StringTag, nbt::Tag>(m, "StringTag")
+    auto sm = m.def_submodule("string_tag");
+
+    py::class_<nbt::StringTag, nbt::Tag>(sm, "StringTag")
         .def(py::init<>(), "Construct an empty StringTag")
         .def(py::init<std::string>(), py::arg("str"), "Construct from a Python string")
 

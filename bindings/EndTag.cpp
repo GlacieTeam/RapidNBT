@@ -5,12 +5,14 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-#include "NativeModule.hpp" // 包含模块绑定基础设施
+#include "NativeModule.hpp"
 
 namespace rapidnbt {
 
 void bindEndTag(py::module& m) {
-    py::class_<nbt::EndTag, nbt::Tag>(m, "EndTag")
+    auto sm = m.def_submodule("end_tag");
+
+    py::class_<nbt::EndTag, nbt::Tag>(sm, "EndTag")
         .def(py::init<>(), "Construct an EndTag")
 
         .def("get_type", &nbt::EndTag::getType, "Get the NBT type ID (End)")

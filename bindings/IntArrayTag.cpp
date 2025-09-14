@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindIntArrayTag(py::module& m) {
-    py::class_<nbt::IntArrayTag, nbt::Tag>(m, "IntArrayTag")
+    auto sm = m.def_submodule("int_array_tag");
+
+    py::class_<nbt::IntArrayTag, nbt::Tag>(sm, "IntArrayTag")
         .def(py::init<>(), "Construct an empty IntArrayTag")
         .def(
             py::init<std::vector<int> const&>(),
@@ -126,11 +128,6 @@ void bindIntArrayTag(py::module& m) {
             },
             py::arg("value"),
             "Check if value is in the array"
-        )
-        .def(
-            "__list__",
-            [](nbt::IntArrayTag const& self) { return py::cast(self.storage()); },
-            "Convert to Python list of integers"
         )
         .def(
             "__str__",

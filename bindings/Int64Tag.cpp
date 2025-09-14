@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindInt64Tag(py::module& m) {
-    py::class_<nbt::Int64Tag, nbt::Tag>(m, "Int64Tag")
+    auto sm = m.def_submodule("int64_tag");
+
+    py::class_<nbt::Int64Tag, nbt::Tag>(sm, "Int64Tag")
         .def(py::init<>(), "Construct an Int64Tag with default value (0)")
         .def(py::init<int>(), py::arg("value"), "Construct an Int64Tag from an integer value")
 

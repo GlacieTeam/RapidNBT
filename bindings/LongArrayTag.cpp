@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindLongArrayTag(py::module& m) {
-    py::class_<nbt::LongArrayTag, nbt::Tag>(m, "LongArrayTag")
+    auto sm = m.def_submodule("long_array_tag");
+
+    py::class_<nbt::LongArrayTag, nbt::Tag>(sm, "LongArrayTag")
         .def(py::init<>(), "Construct an empty LongArrayTag")
         .def(
             py::init<std::vector<int64_t> const&>(),
@@ -127,11 +129,6 @@ void bindLongArrayTag(py::module& m) {
             },
             py::arg("value"),
             "Check if value is in the array"
-        )
-        .def(
-            "__list__",
-            [](nbt::LongArrayTag const& self) { return py::cast(self.storage()); },
-            "Convert to Python list of integers"
         )
         .def(
             "__str__",

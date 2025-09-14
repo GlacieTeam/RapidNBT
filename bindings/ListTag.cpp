@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindListTag(py::module& m) {
-    py::class_<nbt::ListTag, nbt::Tag>(m, "ListTag")
+    auto sm = m.def_submodule("list_tag");
+
+    py::class_<nbt::ListTag, nbt::Tag>(sm, "ListTag")
         .def(py::init<>(), "Construct an empty ListTag")
         .def(
             py::init([](std::vector<py::object> elements) {

@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindByteTag(py::module& m) {
-    py::class_<nbt::ByteTag, nbt::Tag>(m, "ByteTag")
+    auto sm = m.def_submodule("byte_tag");
+
+    py::class_<nbt::ByteTag, nbt::Tag>(sm, "ByteTag")
         .def(py::init<>(), "Construct an ByteTag with default value (0)")
         .def(py::init<int>(), py::arg("value"), "Construct an ByteTag from an integer value")
 

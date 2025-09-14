@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindNbtIO(py::module& m) {
-    py::enum_<nbt::NbtFileFormat>(m, "NbtFileFormat", "Enumeration of NBT binary file formats")
+    auto sm = m.def_submodule("nbtio");
+
+    py::enum_<nbt::NbtFileFormat>(sm, "NbtFileFormat", "Enumeration of NBT binary file formats")
         .value("LittleEndian", nbt::NbtFileFormat::LittleEndianBinary)
         .value("LittleEndianWithHeader", nbt::NbtFileFormat::LittleEndianBinaryWithHeader)
         .value("BigEndian", nbt::NbtFileFormat::BigEndianBinary)
@@ -18,13 +20,13 @@ void bindNbtIO(py::module& m) {
         .value("BedrockNetwork", nbt::NbtFileFormat::BedrockNetwork)
         .export_values();
 
-    py::enum_<nbt::CompressionType>(m, "NbtCompressionType", "Enumeration of compression types for NBT serialization")
+    py::enum_<nbt::CompressionType>(sm, "NbtCompressionType", "Enumeration of compression types for NBT serialization")
         .value("NONE", nbt::CompressionType::None)
         .value("GZIP", nbt::CompressionType::Gzip)
         .value("ZLIB", nbt::CompressionType::Zlib)
         .export_values();
 
-    py::enum_<nbt::CompressionLevel>(m, "NbtCompressionLevel", "Enumeration of compression levels")
+    py::enum_<nbt::CompressionLevel>(sm, "NbtCompressionLevel", "Enumeration of compression levels")
         .value("DEFAULT", nbt::CompressionLevel::Default)
         .value("NO_COMPRESSION", nbt::CompressionLevel::NoCompression)
         .value("BEST_SPEED", nbt::CompressionLevel::BestSpeed)
@@ -38,7 +40,7 @@ void bindNbtIO(py::module& m) {
         .value("BEST_COMPRESSION", nbt::CompressionLevel::BestCompression)
         .export_values();
 
-    m.def(
+    sm.def(
         "detect_content_format",
         [](py::buffer buffer) { return nbt::checkNbtContentFormat(to_cppstringview(buffer)); },
         py::arg("content"),
@@ -48,7 +50,7 @@ void bindNbtIO(py::module& m) {
         Returns:
             NbtFileFormat or None if format cannot be determined)"
     );
-    m.def(
+    sm.def(
         "detect_file_format",
         &nbt::checkNbtFileFormat,
         py::arg("path"),
@@ -60,7 +62,7 @@ void bindNbtIO(py::module& m) {
             Returns:
                 NbtFileFormat or None if format cannot be determined)"
     );
-    m.def(
+    sm.def(
         "loads",
         [](py::buffer buffer, std::optional<nbt::NbtFileFormat> format) {
             return nbt::parseFromBinary(to_cppstringview(buffer), format);
@@ -77,7 +79,7 @@ void bindNbtIO(py::module& m) {
                 with open('level.dat', 'rb') as f:
                     nbt = rapidnbt.io.loads(f.read()))"
     );
-    m.def(
+    sm.def(
         "load",
         &nbt::parseFromFile,
         py::arg("path"),
@@ -91,7 +93,7 @@ void bindNbtIO(py::module& m) {
             Returns:
                 CompoundTag or None if parsing fails)"
     );
-    m.def(
+    sm.def(
         "dumps",
         [](nbt::CompoundTag const& nbt,
            nbt::NbtFileFormat      format,
@@ -112,7 +114,7 @@ void bindNbtIO(py::module& m) {
             Returns:
                 bytes: Serialized binary data)"
     );
-    m.def(
+    sm.def(
         "save",
         &nbt::saveToFile,
         py::arg("nbt"),
@@ -130,7 +132,7 @@ void bindNbtIO(py::module& m) {
             Returns:
                 bool: True if successful, False otherwise)"
     );
-    m.def(
+    sm.def(
         "load_snbt",
         &nbt::parseSnbtFromFile,
         py::arg("path"),
@@ -140,7 +142,7 @@ void bindNbtIO(py::module& m) {
             Returns:
                 CompoundTag or None if parsing fails)"
     );
-    m.def(
+    sm.def(
         "loads_snbt",
         &nbt::CompoundTag::fromSnbt,
         py::arg("path"),
@@ -151,7 +153,7 @@ void bindNbtIO(py::module& m) {
             Returns:
                 CompoundTag or None if parsing fails)"
     );
-    m.def(
+    sm.def(
         "save_snbt",
         &nbt::saveSnbtToFile,
         py::arg("nbt"),
@@ -167,7 +169,7 @@ void bindNbtIO(py::module& m) {
             Returns:
                 bool: True if successful, False otherwise)"
     );
-    m.def(
+    sm.def(
         "validate",
         [](py::buffer buffer, nbt::NbtFileFormat format) {
             return nbt::validateContent(to_cppstringview(buffer), format);
@@ -181,7 +183,7 @@ void bindNbtIO(py::module& m) {
             Returns:
                 bool: True if valid NBT, False otherwise)"
     );
-    m.def(
+    sm.def(
         "validate_file",
         &nbt::validateFile,
         py::arg("path"),
@@ -195,7 +197,7 @@ void bindNbtIO(py::module& m) {
             Returns:
                 bool: True if valid NBT file, False otherwise)"
     );
-    m.def(
+    sm.def(
         "loads_base64",
         &nbt::parseFromBsae64,
         py::arg("content"),
@@ -207,7 +209,7 @@ void bindNbtIO(py::module& m) {
             Returns:
                 CompoundTag or None if parsing fails)"
     );
-    m.def(
+    sm.def(
         "dumps_base64",
         &nbt::saveAsBase64,
         py::arg("nbt"),

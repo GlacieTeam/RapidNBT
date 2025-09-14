@@ -10,7 +10,9 @@
 namespace rapidnbt {
 
 void bindIntTag(py::module& m) {
-    py::class_<nbt::IntTag, nbt::Tag>(m, "IntTag")
+    auto sm = m.def_submodule("int_tag");
+
+    py::class_<nbt::IntTag, nbt::Tag>(sm, "IntTag")
         .def(py::init<>(), "Construct an IntTag with default value (0)")
         .def(py::init<int>(), py::arg("value"), "Construct an IntTag from an integer value")
 

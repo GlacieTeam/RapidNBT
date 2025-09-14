@@ -64,7 +64,9 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
 }
 
 void bindCompoundTagVariant(py::module& m) {
-    py::class_<nbt::CompoundTagVariant>(m, "CompoundTagVariant")
+    auto sm = m.def_submodule("compound_tag_variant");
+
+    py::class_<nbt::CompoundTagVariant>(sm, "CompoundTagVariant")
         .def(py::init<>())
         .def(py::init([](py::object const& obj) {
             if (py::isinstance<nbt::Tag>(obj)) {
