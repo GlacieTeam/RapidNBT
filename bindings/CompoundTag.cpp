@@ -13,14 +13,11 @@ void bindCompoundTag(py::module& m) {
     py::class_<nbt::CompoundTag, nbt::Tag>(m, "CompoundTag")
         .def(py::init<>(), "Construct an empty CompoundTag")
         .def(
-            py::init([](py::sequence pairs) {
+            py::init([](py::dict obj) {
                 auto tag = std::make_unique<nbt::CompoundTag>();
-                for (auto handle : pairs) {
-                    py::tuple pair = py::reinterpret_borrow<py::tuple>(handle);
-                    if (pair.size() != 2) { throw std::runtime_error("Each item must be a (key, value) pair"); }
-                    std::string key   = pair[0].cast<std::string>();
-                    py::object  value = pair[1];
-                    tag->put(key, makeNativeTag(value));
+                for (auto [k, v] : obj) {
+                    std::string key = py::cast<std::string>(k);
+                    tag->put(key, makeNativeTag(static_cast<py::object&&>(v)));
                 }
                 return tag;
             }),
@@ -341,7 +338,14 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::CompoundTag const& self) { return std::format("CompoundTag(size={})", self.size()); },
+            [](nbt::CompoundTag const& self) {
+                return std::format(
+                    "<rapidnbt.CompoundTag(size={0}) object at 0x{1:0{2}X}>",
+                    self.size(),
+                    reinterpret_cast<uintptr_t>(&self),
+                    ADDRESS_LENGTH
+                );
+            },
             "Official string representation"
         )
 

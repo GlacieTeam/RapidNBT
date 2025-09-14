@@ -6,9 +6,7 @@ def test1():
     tag = CompoundTagVariant(
         {"aa": [1, 2, 34, 92873, 52678, -56278], "bb": [c_int16(23), c_int16(87)]}
     )
-    print(tag.to_snbt())
-    for k, v in tag.items():
-        print(f"{k} : {v.to_snbt()}")
+    print(repr(tag))
 
 
 def test2():

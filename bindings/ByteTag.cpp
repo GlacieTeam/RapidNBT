@@ -64,7 +64,13 @@ void bindByteTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::ByteTag const& self) { return std::format("rapidnbt.ByteTag({})", self.storage()); },
+            [](nbt::ByteTag const& self) {
+                return std::format(
+                    "<rapidnbt.ByteTag object at 0x{0:0{1}X}>",
+                    reinterpret_cast<uintptr_t>(&self),
+                    ADDRESS_LENGTH
+                );
+            },
             "Official string representation"
         );
 }

@@ -78,7 +78,14 @@ void bindStringTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::StringTag const& self) { return std::format("StringTag({})", self.storage()); },
+            [](nbt::StringTag const& self) {
+                return std::format(
+                    "<rapidnbt.StringTag({0}) object at 0x{1:0{2}X}>",
+                    self.storage(),
+                    reinterpret_cast<uintptr_t>(&self),
+                    ADDRESS_LENGTH
+                );
+            },
             "Official representation with quoted content"
         );
 }

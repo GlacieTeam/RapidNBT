@@ -70,9 +70,9 @@ void bindCompoundTagVariant(py::module& m) {
     variant.def(py::init<>())
         .def(py::init([](py::object const& obj) {
             if (py::isinstance<nbt::Tag>(obj)) {
-                return new nbt::CompoundTagVariant(*obj.cast<nbt::Tag*>());
+                return std::make_unique<nbt::CompoundTagVariant>(*obj.cast<nbt::Tag*>());
             } else {
-                return new nbt::CompoundTagVariant(makeNativeTag(obj));
+                return std::make_unique<nbt::CompoundTagVariant>(makeNativeTag(obj));
             }
         }))
 
@@ -224,9 +224,27 @@ void bindCompoundTagVariant(py::module& m) {
 
         .def("__int__", [](nbt::CompoundTagVariant const& self) { return static_cast<int64_t>(self); })
         .def("__float__", [](nbt::CompoundTagVariant const& self) { return static_cast<double>(self); })
-        .def("__eq__", [](nbt::CompoundTagVariant const& self, nbt::CompoundTagVariant const& other) {
-            return self == other;
-        });
+        .def(
+            "__eq__",
+            [](nbt::CompoundTagVariant const& self, nbt::CompoundTagVariant const& other) { return self == other; }
+        )
+        .def(
+            "__str__",
+            [](nbt::CompoundTagVariant const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },
+            "String representation (SNBT minimized format)"
+        )
+        .def(
+            "__repr__",
+            [](nbt::CompoundTagVariant const& self) {
+                return std::format(
+                    "<rapidnbt.CompoundTagVatiant(type={0}) object at 0x{1:0{2}X}>",
+                    magic_enum::enum_name(self.getType()),
+                    reinterpret_cast<uintptr_t>(&self),
+                    ADDRESS_LENGTH
+                );
+            },
+            "Official string representation"
+        );
 }
 
 } // namespace rapidnbt

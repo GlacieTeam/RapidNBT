@@ -129,7 +129,14 @@ void bindByteArrayTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::ByteArrayTag const& self) { return std::format("ByteArrayTag(size={})", self.size()); },
+            [](nbt::ByteArrayTag const& self) {
+                return std::format(
+                    "<rapidnbt.ByteArrayTag(size={0}) object at 0x{1:0{2}X}>",
+                    self.size(),
+                    reinterpret_cast<uintptr_t>(&self),
+                    ADDRESS_LENGTH
+                );
+            },
             "Official string representation"
         );
 }

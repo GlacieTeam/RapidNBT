@@ -64,7 +64,14 @@ void bindInt64Tag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::Int64Tag const& self) { return std::format("rapidnbt.Int64Tag({})", self.storage()); },
+            [](nbt::Int64Tag const& self) {
+                return std::format(
+                    "<rapidnbt.Int64Tag({0}) object at 0x{1:0{2}X}>",
+                    self.storage(),
+                    reinterpret_cast<uintptr_t>(&self),
+                    ADDRESS_LENGTH
+                );
+            },
             "Official string representation"
         );
 }

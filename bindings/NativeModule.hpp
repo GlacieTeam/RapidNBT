@@ -18,6 +18,8 @@ namespace py = pybind11;
 
 namespace rapidnbt {
 
+constexpr auto ADDRESS_LENGTH = 2 * sizeof(uintptr_t);
+
 inline py::bytes        to_pybytes(std::string_view sv) { return py::bytes(sv.data(), sv.size()); }
 inline py::bytes        to_pybytes(std::string const& s) { return py::bytes(s); }
 inline std::string_view to_cppstringview(py::buffer buffer) {

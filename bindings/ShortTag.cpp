@@ -64,7 +64,14 @@ void bindShortTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::ShortTag const& self) { return std::format("rapidnbt.ShortTag({})", self.storage()); },
+            [](nbt::ShortTag const& self) {
+                return std::format(
+                    "<rapidnbt.ShortTag({0}) object at 0x{1:0{2}X}>",
+                    self.storage(),
+                    reinterpret_cast<uintptr_t>(&self),
+                    ADDRESS_LENGTH
+                );
+            },
             "Official string representation"
         );
 }

@@ -64,7 +64,14 @@ void bindDoubleTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::DoubleTag const& self) { return std::format("rapidnbt.DoubleTag({})", self.storage()); },
+            [](nbt::DoubleTag const& self) {
+                return std::format(
+                    "<rapidnbt.DoubleTag({0}) object at 0x{1:0{2}X}>",
+                    self.storage(),
+                    reinterpret_cast<uintptr_t>(&self),
+                    ADDRESS_LENGTH
+                );
+            },
             "Official string representation including type information"
         );
 }
