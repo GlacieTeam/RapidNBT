@@ -14,7 +14,7 @@ void bindStringTag(py::module& m) {
         .def(py::init<>(), "Construct an empty StringTag")
         .def(py::init<std::string>(), py::arg("str"), "Construct from a Python string")
 
-        .def("getType", &nbt::StringTag::getType, "Get the NBT type ID (String)")
+        .def("get_type", &nbt::StringTag::getType, "Get the NBT type ID (String)")
         .def(
             "equals",
             &nbt::StringTag::equals,

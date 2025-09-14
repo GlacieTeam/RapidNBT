@@ -24,6 +24,7 @@ PYBIND11_MODULE(_NBT, m) {
     bindByteArrayTag(m);
     bindStringTag(m);
     bindListTag(m);
+    bindCompoundTag(m);
 }
 
 } // namespace rapidnbt

@@ -13,7 +13,7 @@ void bindEndTag(py::module& m) {
     py::class_<nbt::EndTag, nbt::Tag>(m, "EndTag")
         .def(py::init<>(), "Construct an EndTag")
 
-        .def("getType", &nbt::EndTag::getType, "Get the NBT type ID (End)")
+        .def("get_type", &nbt::EndTag::getType, "Get the NBT type ID (End)")
         .def(
             "equals",
             &nbt::EndTag::equals,

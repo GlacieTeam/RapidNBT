@@ -18,7 +18,7 @@ void bindByteArrayTag(py::module& m) {
             "Construct from a list of bytes (e.g., [1, 2, 3])"
         )
 
-        .def("getType", &nbt::ByteArrayTag::getType, "Get the NBT type ID (ByteArray)")
+        .def("get_type", &nbt::ByteArrayTag::getType, "Get the NBT type ID (ByteArray)")
         .def(
             "equals",
             &nbt::ByteArrayTag::equals,
@@ -44,12 +44,7 @@ void bindByteArrayTag(py::module& m) {
         .def_property(
             "value",
             [](nbt::ByteArrayTag& self) -> py::bytes { return to_pybytes(static_cast<std::string_view>(self)); },
-            [](nbt::ByteArrayTag& self, py::buffer value) {
-                py::buffer_info info = value.request();
-                const char*     data = static_cast<const char*>(info.ptr);
-                size_t          size = info.size;
-                self                 = std::string_view(data, size);
-            },
+            [](nbt::ByteArrayTag& self, py::buffer value) { self = to_cppstringview(value); },
             "Access the byte array as a list of integers (0-255)"
         )
         .def(
@@ -103,10 +98,7 @@ void bindByteArrayTag(py::module& m) {
         .def(
             "assign",
             [](nbt::ByteArrayTag& self, py::buffer value) {
-                py::buffer_info info = value.request();
-                const char*     data = static_cast<const char*>(info.ptr);
-                size_t          size = info.size;
-                self                 = std::string_view(data, size);
+                self = to_cppstringview(value);
                 return self;
             },
             py::arg("bytes"),

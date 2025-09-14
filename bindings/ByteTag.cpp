@@ -24,7 +24,7 @@ void bindByteTag(py::module& m) {
             py::return_value_policy::reference_internal,
             "Assign a new integer value to this tag"
         )
-        .def("getType", &nbt::ByteTag::getType, "Get the NBT type ID (Byte)")
+        .def("get_type", &nbt::ByteTag::getType, "Get the NBT type ID (Byte)")
         .def("equals", &nbt::ByteTag::equals, py::arg("other"), "Check if this tag equals another tag")
         .def("copy", &nbt::ByteTag::copy, "Create a deep copy of this tag")
         .def("hash", &nbt::ByteTag::hash, "Compute hash value of this tag")

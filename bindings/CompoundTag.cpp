@@ -9,6 +9,369 @@
 
 namespace rapidnbt {
 
-//
+void bindCompoundTag(py::module& m) {
+    py::class_<nbt::CompoundTag, nbt::Tag>(m, "CompoundTag")
+        .def(py::init<>(), "Construct an empty CompoundTag")
+        .def(
+            py::init([](py::sequence pairs) {
+                auto tag = std::make_unique<nbt::CompoundTag>();
+                for (auto handle : pairs) {
+                    py::tuple pair = py::reinterpret_borrow<py::tuple>(handle);
+                    if (pair.size() != 2) { throw std::runtime_error("Each item must be a (key, value) pair"); }
+                    std::string key   = pair[0].cast<std::string>();
+                    py::object  value = pair[1];
+                    tag->put(key, makeNativeTag(value));
+                }
+                return tag;
+            }),
+            py::arg("pairs"),
+            R"(Construct from a sequence of (key, value) pairs
+            Example:
+                CompoundTag([("key1", 42), ("key2", "value")]))"
+        )
 
+        .def(
+            "__getitem__",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::CompoundTagVariant& { return self[key]; },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get value by key (no exception, auto create if not found)"
+        )
+        .def(
+            "__setitem__",
+            [](nbt::CompoundTag& self, std::string_view key, py::object value) { self[key] = makeNativeTag(value); },
+            py::arg("key"),
+            py::arg("value"),
+            "Set value by key"
+        )
+
+        .def(
+            "keys",
+            [](nbt::CompoundTag& self) {
+                py::list keys;
+                for (auto& [key, _] : self) { keys.append(key); }
+                return keys;
+            },
+            "Get list of all keys in the compound"
+        )
+        .def(
+            "values",
+            [](nbt::CompoundTag& self) {
+                py::list values;
+                for (auto& [_, value] : self) { values.append(py::cast(value)); }
+                return values;
+            },
+            "Get list of all values in the compound"
+        )
+        .def(
+            "items",
+            [](nbt::CompoundTag& self) {
+                py::list items;
+                for (auto& [key, value] : self) { items.append(py::make_tuple(key, py::cast(value))); }
+                return items;
+            },
+            "Get list of (key, value) pairs in the compound"
+        )
+
+        .def("get_type", &nbt::CompoundTag::getType, "Get the NBT type ID (Compound)")
+        .def("equals", &nbt::CompoundTag::equals, py::arg("other"), "Check if this tag equals another tag")
+        .def("copy", &nbt::CompoundTag::copy, "Create a deep copy of this tag")
+        .def("clone", &nbt::CompoundTag::clone, "Create a deep copy of this compound tag")
+        .def("hash", &nbt::CompoundTag::hash, "Compute hash value of this tag")
+
+        .def(
+            "write",
+            [](nbt::CompoundTag& self, bstream::BinaryStream& stream) { self.write(stream); },
+            py::arg("stream"),
+            "Write compound to a binary stream"
+        )
+        .def(
+            "load",
+            [](nbt::CompoundTag& self, bstream::ReadOnlyBinaryStream& stream) { self.load(stream); },
+            py::arg("stream"),
+            "Load compound from a binary stream"
+        )
+
+        .def(
+            "serialize",
+            [](nbt::CompoundTag const& self, bstream::BinaryStream& stream) { self.serialize(stream); },
+            py::arg("stream"),
+            "Serialize compound to a binary stream"
+        )
+        .def(
+            "deserialize",
+            [](nbt::CompoundTag& self, bstream::ReadOnlyBinaryStream& stream) { self.deserialize(stream); },
+            py::arg("stream"),
+            "Deserialize compound from a binary stream"
+        )
+
+        .def(
+            "merge",
+            &nbt::CompoundTag::merge,
+            py::arg("other"),
+            py::arg("merge_list") = false,
+            R"(Merge another CompoundTag into this one
+            Arguments:
+                other: CompoundTag to merge from
+                merge_list: If true, merge list contents instead of replacing)"
+        )
+        .def("empty", &nbt::CompoundTag::empty, "Check if the compound is empty")
+        .def("clear", &nbt::CompoundTag::clear, "Remove all elements from the compound")
+        .def(
+            "rename",
+            &nbt::CompoundTag::rename,
+            py::arg("old_key"),
+            py::arg("new_key"),
+            "Rename a key in the compound"
+        )
+
+        .def(
+            "contains",
+            [](nbt::CompoundTag const& self, std::string_view key) { return self.contains(key); },
+            py::arg("key"),
+            "Check if key exists"
+        )
+        .def(
+            "get",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::Tag* { return self.get(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get tag by key or None if not found"
+        )
+        .def(
+            "put",
+            [](nbt::CompoundTag& self, std::string key, py::object value) { self.put(key, makeNativeTag(value)); },
+            py::arg("key"),
+            py::arg("value"),
+            "Put a value into the compound (automatically converted to appropriate tag type)"
+        )
+        .def("put_byte", &nbt::CompoundTag::putByte, py::arg("key"), py::arg("value"), "Put a byte (uint8) value")
+        .def("put_short", &nbt::CompoundTag::putShort, py::arg("key"), py::arg("value"), "Put a short (int16) value")
+        .def("put_int", &nbt::CompoundTag::putInt, py::arg("key"), py::arg("value"), "Put an int (int32) value")
+        .def("put_int64", &nbt::CompoundTag::putInt64, py::arg("key"), py::arg("value"), "Put a long (int64) value")
+        .def("put_float", &nbt::CompoundTag::putFloat, py::arg("key"), py::arg("value"), "Put a float value")
+        .def("put_double", &nbt::CompoundTag::putDouble, py::arg("key"), py::arg("value"), "Put a double value")
+        .def("put_string", &nbt::CompoundTag::putString, py::arg("key"), py::arg("value"), "Put a string value")
+        .def(
+            "put_byte_array",
+            &nbt::CompoundTag::putByteArray,
+            py::arg("key"),
+            py::arg("value"),
+            "Put a byte array (list of uint8)"
+        )
+        .def(
+            "put_int_array",
+            &nbt::CompoundTag::putIntArray,
+            py::arg("key"),
+            py::arg("value"),
+            "Put an int array (list of int32)"
+        )
+        .def(
+            "put_long_array",
+            &nbt::CompoundTag::putLongArray,
+            py::arg("key"),
+            py::arg("value"),
+            "Put a long array (list of int64)"
+        )
+        .def(
+            "put_compound",
+            [](nbt::CompoundTag& self, std::string key, py::object value) {
+                if (py::isinstance<nbt::CompoundTag>(value)) {
+                    self.putCompound(key, value.cast<nbt::CompoundTag>());
+                } else if (py::isinstance<py::dict>(value)) {
+                    self.put(key, makeNativeTag(value));
+                } else {
+                    throw std::runtime_error("Value must be a CompoundTag or dict");
+                }
+            },
+            py::arg("key"),
+            py::arg("value"),
+            "Put a CompoundTag value (or dict that will be converted)"
+        )
+        .def(
+            "put_list",
+            [](nbt::CompoundTag& self, std::string key, py::object value) {
+                if (py::isinstance<nbt::ListTag>(value)) {
+                    self.putList(key, value.cast<nbt::ListTag>());
+                } else if (py::isinstance<py::list>(value)) {
+                    self.put(key, makeNativeTag(value));
+                } else {
+                    throw std::runtime_error("Value must be a ListTag or list/tuple");
+                }
+            },
+            py::arg("key"),
+            py::arg("value"),
+            "Put a ListTag value (or list/tuple that will be converted)"
+        )
+
+        .def(
+            "get_byte",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::ByteTag* { return self.getByte(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get byte value or None if not found or wrong type"
+        )
+        .def(
+            "get_short",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::ShortTag* { return self.getShort(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get short value or None if not found or wrong type"
+        )
+        .def(
+            "get_int",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::IntTag* { return self.getInt(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get int value or None if not found or wrong type"
+        )
+        .def(
+            "get_int64",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::Int64Tag* { return self.getInt64(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get long value or None if not found or wrong type"
+        )
+        .def(
+            "get_float",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::FloatTag* { return self.getFloat(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get float value or None if not found or wrong type"
+        )
+        .def(
+            "get_double",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::DoubleTag* { return self.getDouble(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get double value or None if not found or wrong type"
+        )
+        .def(
+            "get_string",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::StringTag* { return self.getString(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get string value or None if not found or wrong type"
+        )
+        .def(
+            "get_byte_array",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::ByteArrayTag* { return self.getByteArray(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get byte array or None if not found or wrong type"
+        )
+        .def(
+            "get_int_array",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::IntArrayTag* { return self.getIntArray(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get int array or None if not found or wrong type"
+        )
+        .def(
+            "get_long_array",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::LongArrayTag* { return self.getLongArray(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get long array or None if not found or wrong type"
+        )
+        .def(
+            "get_compound",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::CompoundTag* { return self.getCompound(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get CompoundTag or None if not found or wrong type"
+        )
+        .def(
+            "get_list",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::ListTag* { return self.getList(key); },
+            py::return_value_policy::reference_internal,
+            py::arg("key"),
+            "Get ListTag or None if not found or wrong type"
+        )
+
+        .def(
+            "to_dict",
+            [](nbt::CompoundTag const& self) {
+                py::dict result;
+                for (auto& [key, value] : self) { result[py::str(key)] = py::cast(value); }
+                return result;
+            },
+            "Convert CompoundTag to a Python dictionary"
+        )
+
+        .def(
+            "to_network_nbt",
+            [](nbt::CompoundTag const& self) { return to_pybytes(self.toNetworkNbt()); },
+            "Serialize to Network NBT format (used in Minecraft networking)"
+        )
+        .def(
+            "to_binary_nbt",
+            [](nbt::CompoundTag const& self, bool little_endian, bool header) {
+                if (header) {
+                    return to_pybytes(self.toBinaryNbtWithHeader(little_endian));
+                } else {
+                    return to_pybytes(self.toBinaryNbt(little_endian));
+                }
+            },
+            py::arg("little_endian") = true,
+            py::arg("header")        = false,
+            "Serialize to binary NBT format"
+        )
+
+        .def(
+            "__contains__",
+            [](nbt::CompoundTag const& self, std::string_view key) { return self.contains(key); },
+            py::arg("key"),
+            "Check if key exists in the compound"
+        )
+        .def("__delitem__", &nbt::CompoundTag::remove, py::arg("key"), "Remove key from the compound")
+        .def("__len__", &nbt::CompoundTag::size, "Get number of key-value pairs")
+        .def(
+            "__iter__",
+            [](nbt::CompoundTag& self) { return py::make_key_iterator(self.begin(), self.end()); },
+            py::keep_alive<0, 1>(),
+            "Iterate over keys in the compound"
+        )
+        .def("__eq__", &nbt::CompoundTag::equals, py::arg("other"), "Equality operator (==)")
+        .def("__hash__", &nbt::CompoundTag::hash, "Compute hash value for Python hashing operations")
+        .def(
+            "__str__",
+            [](nbt::CompoundTag const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },
+            "String representation (SNBT minimized format)"
+        )
+        .def(
+            "__repr__",
+            [](nbt::CompoundTag const& self) { return std::format("CompoundTag(size={})", self.size()); },
+            "Official string representation"
+        )
+
+        .def_static(
+            "from_network_nbt",
+            [](py::buffer value) { return nbt::CompoundTag::fromNetworkNbt(to_cppstringview(value)); },
+            py::arg("binary_data"),
+            "Deserialize from Network NBT format"
+        )
+        .def_static(
+            "fromBinaryNbt",
+            [](py::buffer value, bool little_endian, bool header) {
+                if (header) {
+                    return nbt::CompoundTag::fromBinaryNbtWithHeader(to_cppstringview(value), little_endian);
+                } else {
+                    return nbt::CompoundTag::fromBinaryNbt(to_cppstringview(value), little_endian);
+                }
+            },
+            py::arg("binary_data"),
+            py::arg("little_endian") = true,
+            py::arg("header")        = false,
+            "Deserialize from binary NBT format"
+        )
+        .def_static(
+            "fromSnbt",
+            &nbt::CompoundTag::fromSnbt,
+            py::arg("snbt"),
+            py::arg("parsed_length") = py::none(),
+            "Parse from String NBT (SNBT) format"
+        );
 }
+
+} // namespace rapidnbt

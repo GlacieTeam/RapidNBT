@@ -22,7 +22,7 @@ void bindListTag(py::module& m) {
             "Construct from a list of Tag elements (e.g., [IntTag(1), StringTag('test')])"
         )
 
-        .def("getType", &nbt::ListTag::getType, "Get the NBT type ID (List)")
+        .def("get_type", &nbt::ListTag::getType, "Get the NBT type ID (List)")
         .def(
             "equals",
             &nbt::ListTag::equals,
@@ -52,13 +52,7 @@ void bindListTag(py::module& m) {
 
         .def(
             "append",
-            [](nbt::ListTag& self, py::object element) {
-                if (py::isinstance<nbt::Tag>(element)) {
-                    self.push_back(makeNativeTag(element));
-                } else {
-                    throw std::runtime_error("Element must be a Tag object");
-                }
-            },
+            [](nbt::ListTag& self, py::object element) { self.push_back(makeNativeTag(element)); },
             py::arg("element"),
             "Append a Tag element to the list"
         )

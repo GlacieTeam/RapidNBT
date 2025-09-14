@@ -4,7 +4,7 @@ Python bindings for NBT library
 from __future__ import annotations
 import collections.abc
 import typing
-__all__: list[str] = ['AlwaysLineFeed', 'ArrayLineFeed', 'Byte', 'ByteArray', 'ByteArrayTag', 'ByteTag', 'Classic', 'CommentMarks', 'Compound', 'CompoundTagVariant', 'Double', 'DoubleTag', 'End', 'EndTag', 'Float', 'FloatTag', 'ForceAscii', 'ForceQuote', 'Int', 'Int64', 'Int64Tag', 'IntArray', 'IntTag', 'Jsonify', 'List', 'ListTag', 'LongArray', 'Minimize', 'NumTagTypes', 'PrettyFilePrint', 'Short', 'ShortTag', 'SnbtFormat', 'String', 'StringTag', 'Tag', 'TagType']
+__all__: list[str] = ['AlwaysLineFeed', 'ArrayLineFeed', 'Byte', 'ByteArray', 'ByteArrayTag', 'ByteTag', 'Classic', 'CommentMarks', 'Compound', 'CompoundTag', 'CompoundTagVariant', 'Double', 'DoubleTag', 'End', 'EndTag', 'Float', 'FloatTag', 'ForceAscii', 'ForceQuote', 'Int', 'Int64', 'Int64Tag', 'IntArray', 'IntTag', 'Jsonify', 'List', 'ListTag', 'LongArray', 'Minimize', 'NumTagTypes', 'PrettyFilePrint', 'Short', 'ShortTag', 'SnbtFormat', 'String', 'StringTag', 'Tag', 'TagType']
 class ByteArrayTag(Tag):
     def __bytes__(self) -> bytes:
         """
@@ -72,7 +72,7 @@ class ByteArrayTag(Tag):
         """
         Check if this tag equals another tag (same bytes and type)
         """
-    def getType(self) -> TagType:
+    def get_type(self) -> TagType:
         """
         Get the NBT type ID (ByteArray)
         """
@@ -165,7 +165,7 @@ class ByteTag(Tag):
         """
         Check if this tag equals another tag
         """
-    def getType(self) -> TagType:
+    def get_type(self) -> TagType:
         """
         Get the NBT type ID (Byte)
         """
@@ -189,6 +189,261 @@ class ByteTag(Tag):
     @value.setter
     def value(self, arg1: typing.SupportsInt) -> None:
         ...
+class CompoundTag(Tag):
+    @staticmethod
+    def fromBinaryNbt(binary_data: collections.abc.Buffer, little_endian: bool = True, header: bool = False) -> rapidnbt._NBT.CompoundTag | None:
+        """
+        Deserialize from binary NBT format
+        """
+    @staticmethod
+    def fromSnbt(snbt: str, parsed_length: typing.SupportsInt | None = None) -> rapidnbt._NBT.CompoundTag | None:
+        """
+        Parse from String NBT (SNBT) format
+        """
+    @staticmethod
+    def from_network_nbt(binary_data: collections.abc.Buffer) -> rapidnbt._NBT.CompoundTag | None:
+        """
+        Deserialize from Network NBT format
+        """
+    def __contains__(self, key: str) -> bool:
+        """
+        Check if key exists in the compound
+        """
+    def __delitem__(self, key: str) -> bool:
+        """
+        Remove key from the compound
+        """
+    def __eq__(self, other: Tag) -> bool:
+        """
+        Equality operator (==)
+        """
+    def __getitem__(self, key: str) -> CompoundTagVariant:
+        """
+        Get value by key (no exception, auto create if not found)
+        """
+    def __hash__(self) -> int:
+        """
+        Compute hash value for Python hashing operations
+        """
+    @typing.overload
+    def __init__(self) -> None:
+        """
+        Construct an empty CompoundTag
+        """
+    @typing.overload
+    def __init__(self, pairs: collections.abc.Sequence) -> None:
+        """
+        Construct from a sequence of (key, value) pairs
+                    Example:
+                        CompoundTag([("key1", 42), ("key2", "value")])
+        """
+    def __iter__(self) -> collections.abc.Iterator[str]:
+        """
+        Iterate over keys in the compound
+        """
+    def __len__(self) -> int:
+        """
+        Get number of key-value pairs
+        """
+    def __repr__(self) -> str:
+        """
+        Official string representation
+        """
+    def __setitem__(self, key: str, value: typing.Any) -> None:
+        """
+        Set value by key
+        """
+    def __str__(self) -> str:
+        """
+        String representation (SNBT minimized format)
+        """
+    def clear(self) -> None:
+        """
+        Remove all elements from the compound
+        """
+    def clone(self) -> CompoundTag:
+        """
+        Create a deep copy of this compound tag
+        """
+    def contains(self, key: str) -> bool:
+        """
+        Check if key exists
+        """
+    def copy(self) -> Tag:
+        """
+        Create a deep copy of this tag
+        """
+    def deserialize(self, stream: ...) -> None:
+        """
+        Deserialize compound from a binary stream
+        """
+    def empty(self) -> bool:
+        """
+        Check if the compound is empty
+        """
+    def equals(self, other: Tag) -> bool:
+        """
+        Check if this tag equals another tag
+        """
+    def get(self, key: str) -> Tag:
+        """
+        Get tag by key or None if not found
+        """
+    def get_byte(self, key: str) -> ByteTag:
+        """
+        Get byte value or None if not found or wrong type
+        """
+    def get_byte_array(self, key: str) -> ByteArrayTag:
+        """
+        Get byte array or None if not found or wrong type
+        """
+    def get_compound(self, key: str) -> CompoundTag:
+        """
+        Get CompoundTag or None if not found or wrong type
+        """
+    def get_double(self, key: str) -> DoubleTag:
+        """
+        Get double value or None if not found or wrong type
+        """
+    def get_float(self, key: str) -> FloatTag:
+        """
+        Get float value or None if not found or wrong type
+        """
+    def get_int(self, key: str) -> IntTag:
+        """
+        Get int value or None if not found or wrong type
+        """
+    def get_int64(self, key: str) -> Int64Tag:
+        """
+        Get long value or None if not found or wrong type
+        """
+    def get_int_array(self, key: str) -> ...:
+        """
+        Get int array or None if not found or wrong type
+        """
+    def get_list(self, key: str) -> ListTag:
+        """
+        Get ListTag or None if not found or wrong type
+        """
+    def get_long_array(self, key: str) -> ...:
+        """
+        Get long array or None if not found or wrong type
+        """
+    def get_short(self, key: str) -> ShortTag:
+        """
+        Get short value or None if not found or wrong type
+        """
+    def get_string(self, key: str) -> StringTag:
+        """
+        Get string value or None if not found or wrong type
+        """
+    def get_type(self) -> TagType:
+        """
+        Get the NBT type ID (Compound)
+        """
+    def hash(self) -> int:
+        """
+        Compute hash value of this tag
+        """
+    def items(self) -> list:
+        """
+        Get list of (key, value) pairs in the compound
+        """
+    def keys(self) -> list:
+        """
+        Get list of all keys in the compound
+        """
+    def load(self, stream: ...) -> None:
+        """
+        Load compound from a binary stream
+        """
+    def merge(self, other: CompoundTag, merge_list: bool = False) -> None:
+        """
+        Merge another CompoundTag into this one
+                    Arguments:
+                        other: CompoundTag to merge from
+                        merge_list: If true, merge list contents instead of replacing
+        """
+    def put(self, key: str, value: typing.Any) -> None:
+        """
+        Put a value into the compound (automatically converted to appropriate tag type)
+        """
+    def put_byte(self, key: str, value: typing.SupportsInt) -> None:
+        """
+        Put a byte (uint8) value
+        """
+    def put_byte_array(self, key: str, value: collections.abc.Sequence[typing.SupportsInt]) -> None:
+        """
+        Put a byte array (list of uint8)
+        """
+    def put_compound(self, key: str, value: typing.Any) -> None:
+        """
+        Put a CompoundTag value (or dict that will be converted)
+        """
+    def put_double(self, key: str, value: typing.SupportsFloat) -> None:
+        """
+        Put a double value
+        """
+    def put_float(self, key: str, value: typing.SupportsFloat) -> None:
+        """
+        Put a float value
+        """
+    def put_int(self, key: str, value: typing.SupportsInt) -> None:
+        """
+        Put an int (int32) value
+        """
+    def put_int64(self, key: str, value: typing.SupportsInt) -> None:
+        """
+        Put a long (int64) value
+        """
+    def put_int_array(self, key: str, value: collections.abc.Sequence[typing.SupportsInt]) -> None:
+        """
+        Put an int array (list of int32)
+        """
+    def put_list(self, key: str, value: typing.Any) -> None:
+        """
+        Put a ListTag value (or list/tuple that will be converted)
+        """
+    def put_long_array(self, key: str, value: collections.abc.Sequence[typing.SupportsInt]) -> None:
+        """
+        Put a long array (list of int64)
+        """
+    def put_short(self, key: str, value: typing.SupportsInt) -> None:
+        """
+        Put a short (int16) value
+        """
+    def put_string(self, key: str, value: str) -> None:
+        """
+        Put a string value
+        """
+    def rename(self, old_key: str, new_key: str) -> bool:
+        """
+        Rename a key in the compound
+        """
+    def serialize(self, stream: ...) -> None:
+        """
+        Serialize compound to a binary stream
+        """
+    def to_binary_nbt(self, little_endian: bool = True, header: bool = False) -> bytes:
+        """
+        Serialize to binary NBT format
+        """
+    def to_dict(self) -> dict:
+        """
+        Convert CompoundTag to a Python dictionary
+        """
+    def to_network_nbt(self) -> bytes:
+        """
+        Serialize to Network NBT format (used in Minecraft networking)
+        """
+    def values(self) -> list:
+        """
+        Get list of all values in the compound
+        """
+    def write(self, stream: ...) -> None:
+        """
+        Write compound to a binary stream
+        """
 class CompoundTagVariant:
     class Iterator:
         def __iter__(self) -> CompoundTagVariant.Iterator:
@@ -222,13 +477,29 @@ class CompoundTagVariant:
     @typing.overload
     def __setitem__(self, arg0: typing.SupportsInt, arg1: CompoundTagVariant) -> None:
         ...
-    def as_byte_array(self) -> bytes:
+    def as_byte(self) -> ...:
         ...
-    def as_int_array(self) -> list[int]:
+    def as_byte_array(self) -> ...:
         ...
-    def as_long_array(self) -> list[int]:
+    def as_compound(self) -> ...:
         ...
-    def as_string(self) -> str:
+    def as_double(self) -> ...:
+        ...
+    def as_float(self) -> ...:
+        ...
+    def as_int(self) -> ...:
+        ...
+    def as_int64(self) -> ...:
+        ...
+    def as_int_array(self) -> ...:
+        ...
+    def as_list(self) -> ...:
+        ...
+    def as_long_array(self) -> ...:
+        ...
+    def as_short(self) -> ...:
+        ...
+    def as_string(self) -> ...:
         ...
     def contains(self, arg0: str) -> bool:
         ...
@@ -327,7 +598,7 @@ class DoubleTag(Tag):
         """
         Check if this tag equals another tag
         """
-    def getType(self) -> TagType:
+    def get_type(self) -> TagType:
         """
         Get the NBT type ID (Double)
         """
@@ -380,7 +651,7 @@ class EndTag(Tag):
         """
         Check if this tag equals another tag (all EndTags are equal)
         """
-    def getType(self) -> TagType:
+    def get_type(self) -> TagType:
         """
         Get the NBT type ID (End)
         """
@@ -439,7 +710,7 @@ class FloatTag(Tag):
         """
         Check if this tag equals another tag
         """
-    def getType(self) -> TagType:
+    def get_type(self) -> TagType:
         """
         Get the NBT type ID (Float)
         """
@@ -510,7 +781,7 @@ class Int64Tag(Tag):
         """
         Check if this tag equals another tag
         """
-    def getType(self) -> TagType:
+    def get_type(self) -> TagType:
         """
         Get the NBT type ID (Int64)
         """
@@ -581,7 +852,7 @@ class IntTag(Tag):
         """
         Check if this tag equals another tag
         """
-    def getType(self) -> TagType:
+    def get_type(self) -> TagType:
         """
         Get the NBT type ID (Int)
         """
@@ -672,13 +943,13 @@ class ListTag(Tag):
         """
         Check if this tag equals another tag (same elements in same order)
         """
-    def getType(self) -> TagType:
-        """
-        Get the NBT type ID (List)
-        """
     def get_element_type(self) -> TagType:
         """
         Get the type of elements in this list (returns nbt.Type enum)
+        """
+    def get_type(self) -> TagType:
+        """
+        Get the NBT type ID (List)
         """
     def hash(self) -> int:
         """
@@ -765,7 +1036,7 @@ class ShortTag(Tag):
         """
         Check if this tag equals another tag
         """
-    def getType(self) -> TagType:
+    def get_type(self) -> TagType:
         """
         Get the NBT type ID (Short)
         """
@@ -898,7 +1169,7 @@ class StringTag(Tag):
         """
         Check if this tag equals another tag (same content and type)
         """
-    def getType(self) -> TagType:
+    def get_type(self) -> TagType:
         """
         Get the NBT type ID (String)
         """

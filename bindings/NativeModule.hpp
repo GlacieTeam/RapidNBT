@@ -18,8 +18,14 @@ namespace py = pybind11;
 
 namespace rapidnbt {
 
-inline py::bytes to_pybytes(std::string_view sv) { return py::bytes(sv.data(), sv.size()); }
-inline py::bytes to_pybytes(std::string const& s) { return py::bytes(s); }
+inline py::bytes        to_pybytes(std::string_view sv) { return py::bytes(sv.data(), sv.size()); }
+inline py::bytes        to_pybytes(std::string const& s) { return py::bytes(s); }
+inline std::string_view to_cppstringview(py::buffer buffer) {
+    py::buffer_info info = buffer.request();
+    const char*     data = static_cast<const char*>(info.ptr);
+    size_t          size = info.size;
+    return std::string_view(data, size);
+}
 
 std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj);
 
@@ -36,5 +42,6 @@ void bindDoubleTag(py::module& m);
 void bindByteArrayTag(py::module& m);
 void bindStringTag(py::module& m);
 void bindListTag(py::module& m);
+void bindCompoundTag(py::module& m);
 
 } // namespace rapidnbt

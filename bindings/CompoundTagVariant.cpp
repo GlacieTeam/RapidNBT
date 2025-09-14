@@ -67,7 +67,6 @@ void bindCompoundTagVariant(py::module& m) {
             py::return_value_policy::reference_internal
         );
 
-    // 构造函数绑定
     variant.def(py::init<>())
         .def(py::init([](py::object const& obj) {
             if (py::isinstance<nbt::Tag>(obj)) {
@@ -140,7 +139,14 @@ void bindCompoundTagVariant(py::module& m) {
         )
         .def(
             "items",
-            [](nbt::CompoundTagVariant& self) -> nbt::CompoundTag::TagMap& { return self.items(); },
+            [](nbt::CompoundTagVariant& self) {
+                if (!self.hold(nbt::Tag::Type::Compound)) { throw py::type_error("tag not hold an object!"); }
+                py::list items;
+                for (auto& [key, value] : self.as<nbt::CompoundTag>()) {
+                    items.append(py::make_tuple(key, py::cast(value)));
+                }
+                return items;
+            },
             py::return_value_policy::reference_internal
         )
 
@@ -155,33 +161,69 @@ void bindCompoundTagVariant(py::module& m) {
         .def("merge", &nbt::CompoundTagVariant::merge, py::arg("other"), py::arg("merge_list") = false)
         .def("copy", &nbt::CompoundTagVariant::toUniqueCopy)
 
-        .def("__int__", [](nbt::CompoundTagVariant const& self) { return static_cast<int64_t>(self); })
-        .def("__float__", [](nbt::CompoundTagVariant const& self) { return static_cast<double>(self); })
         .def(
-            "as_string",
-            [](nbt::CompoundTagVariant& self) -> std::string& { return static_cast<std::string&>(self); },
+            "as_byte",
+            [](nbt::CompoundTagVariant& self) -> nbt::ByteTag& { return self.as<nbt::ByteTag>(); },
+            py::return_value_policy::reference_internal
+        )
+        .def(
+            "as_short",
+            [](nbt::CompoundTagVariant& self) -> nbt::ShortTag& { return self.as<nbt::ShortTag>(); },
+            py::return_value_policy::reference_internal
+        )
+        .def(
+            "as_int",
+            [](nbt::CompoundTagVariant& self) -> nbt::IntTag& { return self.as<nbt::IntTag>(); },
+            py::return_value_policy::reference_internal
+        )
+        .def(
+            "as_int64",
+            [](nbt::CompoundTagVariant& self) -> nbt::Int64Tag& { return self.as<nbt::Int64Tag>(); },
+            py::return_value_policy::reference_internal
+        )
+        .def(
+            "as_float",
+            [](nbt::CompoundTagVariant& self) -> nbt::FloatTag& { return self.as<nbt::FloatTag>(); },
+            py::return_value_policy::reference_internal
+        )
+        .def(
+            "as_double",
+            [](nbt::CompoundTagVariant& self) -> nbt::DoubleTag& { return self.as<nbt::DoubleTag>(); },
             py::return_value_policy::reference_internal
         )
         .def(
             "as_byte_array",
-            [](nbt::CompoundTagVariant& self) -> py::bytes {
-                return to_pybytes(static_cast<std::string_view>(self.as<nbt::ByteArrayTag>()));
-            }
+            [](nbt::CompoundTagVariant& self) -> nbt::ByteArrayTag& { return self.as<nbt::ByteArrayTag>(); },
+            py::return_value_policy::reference_internal
+        )
+        .def(
+            "as_string",
+            [](nbt::CompoundTagVariant& self) -> nbt::StringTag& { return self.as<nbt::StringTag>(); },
+            py::return_value_policy::reference_internal
+        )
+        .def(
+            "as_compound",
+            [](nbt::CompoundTagVariant& self) -> nbt::CompoundTag& { return self.as<nbt::CompoundTag>(); },
+            py::return_value_policy::reference_internal
+        )
+        .def(
+            "as_list",
+            [](nbt::CompoundTagVariant& self) -> nbt::ListTag& { return self.as<nbt::ListTag>(); },
+            py::return_value_policy::reference_internal
         )
         .def(
             "as_int_array",
-            [](nbt::CompoundTagVariant& self) -> std::vector<int32_t>& {
-                return static_cast<std::vector<int32_t>&>(self);
-            },
+            [](nbt::CompoundTagVariant& self) -> nbt::IntArrayTag& { return self.as<nbt::IntArrayTag>(); },
             py::return_value_policy::reference_internal
         )
         .def(
             "as_long_array",
-            [](nbt::CompoundTagVariant& self) -> std::vector<int64_t>& {
-                return static_cast<std::vector<int64_t>&>(self);
-            },
+            [](nbt::CompoundTagVariant& self) -> nbt::LongArrayTag& { return self.as<nbt::LongArrayTag>(); },
             py::return_value_policy::reference_internal
         )
+
+        .def("__int__", [](nbt::CompoundTagVariant const& self) { return static_cast<int64_t>(self); })
+        .def("__float__", [](nbt::CompoundTagVariant const& self) { return static_cast<double>(self); })
         .def("__eq__", [](nbt::CompoundTagVariant const& self, nbt::CompoundTagVariant const& other) {
             return self == other;
         });

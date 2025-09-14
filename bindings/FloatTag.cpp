@@ -25,7 +25,7 @@ void bindFloatTag(py::module& m) {
             "Assign a new floating-point value to this tag"
         )
 
-        .def("getType", &nbt::FloatTag::getType, "Get the NBT type ID (Float)")
+        .def("get_type", &nbt::FloatTag::getType, "Get the NBT type ID (Float)")
         .def("equals", &nbt::FloatTag::equals, py::arg("other"), "Check if this tag equals another tag")
         .def("copy", &nbt::FloatTag::copy, "Create a deep copy of this tag")
         .def("hash", &nbt::FloatTag::hash, "Compute hash value of this tag")
