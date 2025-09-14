@@ -24,7 +24,7 @@ void bindInt64Tag(py::module& m) {
             py::return_value_policy::reference_internal,
             "Assign a new integer value to this tag"
         )
-        .def("getType", &nbt::Int64Tag::getType, "Get the NBT type ID (int64)")
+        .def("getType", &nbt::Int64Tag::getType, "Get the NBT type ID (Int64)")
         .def("equals", &nbt::Int64Tag::equals, py::arg("other"), "Check if this tag equals another tag")
         .def("copy", &nbt::Int64Tag::copy, "Create a deep copy of this tag")
         .def("hash", &nbt::Int64Tag::hash, "Compute hash value of this tag")

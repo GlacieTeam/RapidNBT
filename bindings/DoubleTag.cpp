@@ -9,6 +9,64 @@
 
 namespace rapidnbt {
 
-//
+void bindDoubleTag(py::module& m) {
+    py::class_<nbt::DoubleTag, nbt::Tag>(m, "DoubleTag")
+        .def(py::init<>(), "Construct a DoubleTag with default value (0.0)")
+        .def(py::init<double>(), py::arg("value"), "Construct a DoubleTag from a floating-point value")
 
+        .def(
+            "assign",
+            [](nbt::DoubleTag& self, double value) -> nbt::DoubleTag& {
+                self = value;
+                return self;
+            },
+            py::arg("value"),
+            py::return_value_policy::reference_internal,
+            "Assign a new floating-point value to this tag"
+        )
+
+        .def("getType", &nbt::DoubleTag::getType, "Get the NBT type ID (Double)")
+        .def("equals", &nbt::DoubleTag::equals, py::arg("other"), "Check if this tag equals another tag")
+        .def("copy", &nbt::DoubleTag::copy, "Create a deep copy of this tag")
+        .def("hash", &nbt::DoubleTag::hash, "Compute hash value of this tag")
+
+        .def(
+            "write",
+            [](nbt::DoubleTag& self, bstream::BinaryStream& stream) { self.write(stream); },
+            py::arg("stream"),
+            "Write tag to a binary stream"
+        )
+        .def(
+            "load",
+            [](nbt::DoubleTag& self, bstream::ReadOnlyBinaryStream& stream) { self.load(stream); },
+            py::arg("stream"),
+            "Load tag value from a binary stream"
+        )
+
+        .def_property(
+            "value",
+            [](nbt::DoubleTag& self) -> double { return self.storage(); },
+            [](nbt::DoubleTag& self, double value) { self.storage() = value; },
+            "Access the floating-point value of this tag"
+        )
+
+        .def(
+            "__float__",
+            [](nbt::DoubleTag const& self) { return static_cast<double>(self); },
+            "Convert to Python float (for float(tag) operations)"
+        )
+        .def("__hash__", &nbt::DoubleTag::hash, "Compute hash value for Python hashing operations")
+        .def("__eq__", &nbt::DoubleTag::equals, py::arg("other"), "Equality operator (==)")
+        .def(
+            "__str__",
+            [](nbt::DoubleTag const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },
+            "String representation (SNBT minimized format)"
+        )
+        .def(
+            "__repr__",
+            [](nbt::DoubleTag const& self) { return std::format("rapidnbt.DoubleTag({})", self.storage()); },
+            "Official string representation including type information"
+        );
 }
+
+} // namespace rapidnbt

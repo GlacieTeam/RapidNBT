@@ -2,7 +2,7 @@ from rapidnbt import *
 
 
 def test1():
-    tag = CompoundTagVariant(Int64Tag(11))
+    tag = CompoundTagVariant(FloatTag(11))
     print(tag.to_snbt())
 
 

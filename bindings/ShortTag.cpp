@@ -24,7 +24,7 @@ void bindShortTag(py::module& m) {
             py::return_value_policy::reference_internal,
             "Assign a new integer value to this tag"
         )
-        .def("getType", &nbt::ShortTag::getType, "Get the NBT type ID (int64)")
+        .def("getType", &nbt::ShortTag::getType, "Get the NBT type ID (Short)")
         .def("equals", &nbt::ShortTag::equals, py::arg("other"), "Check if this tag equals another tag")
         .def("copy", &nbt::ShortTag::copy, "Create a deep copy of this tag")
         .def("hash", &nbt::ShortTag::hash, "Compute hash value of this tag")

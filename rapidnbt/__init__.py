@@ -15,6 +15,8 @@ from rapidnbt._NBT import (
     ShortTag,
     IntTag,
     Int64Tag,
+    FloatTag,
+    DoubleTag,
 )
 
 __all__ = [
@@ -27,4 +29,6 @@ __all__ = [
     "ShortTag",
     "IntTag",
     "Int64Tag",
+    "FloatTag",
+    "DoubleTag",
 ]
