@@ -26,7 +26,6 @@ void bindEnums(py::module& m) {
         .value("Compound", nbt::Tag::Type::Compound)
         .value("IntArray", nbt::Tag::Type::IntArray)
         .value("LongArray", nbt::Tag::Type::LongArray)
-        .value("NumTagTypes", nbt::Tag::Type::NumTagTypes)
         .export_values();
 
     py::enum_<nbt::SnbtFormat>(m, "SnbtFormat", py::arithmetic())

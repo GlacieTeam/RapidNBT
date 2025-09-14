@@ -106,6 +106,7 @@ void bindIntArrayTag(py::module& m) {
             [](nbt::IntArrayTag const& self, nbt::IntArrayTag const& other) { return self.equals(other); },
             py::arg("other")
         )
+        .def("__hash__", &nbt::IntArrayTag::hash, "Compute hash value for Python hashing operations")
         .def(
             "__iter__",
             [](nbt::IntArrayTag const& self) {

@@ -16,15 +16,20 @@ void bindCompoundTag(py::module& m) {
             py::init([](py::dict obj) {
                 auto tag = std::make_unique<nbt::CompoundTag>();
                 for (auto [k, v] : obj) {
-                    std::string key = py::cast<std::string>(k);
-                    tag->put(key, makeNativeTag(static_cast<py::object&&>(v)));
+                    std::string key   = py::cast<std::string>(k);
+                    auto&       value = static_cast<py::object&>(v);
+                    if (py::isinstance<nbt::Tag>(value)) {
+                        tag->put(key, value.cast<nbt::Tag*>()->copy());
+                    } else {
+                        tag->put(key, makeNativeTag(value));
+                    }
                 }
                 return tag;
             }),
             py::arg("pairs"),
-            R"(Construct from a sequence of (key, value) pairs
+            R"(Construct from a Dict[str, Any]
             Example:
-                CompoundTag([("key1", 42), ("key2", "value")]))"
+                CompoundTag(["key1": 42, "key2": "value"]))"
         )
 
         .def(
@@ -36,7 +41,13 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "__setitem__",
-            [](nbt::CompoundTag& self, std::string_view key, py::object value) { self[key] = makeNativeTag(value); },
+            [](nbt::CompoundTag& self, std::string_view key, py::object value) {
+                if (py::isinstance<nbt::Tag>(value)) {
+                    self.put(key, value.cast<nbt::Tag*>()->copy());
+                } else {
+                    self.put(key, makeNativeTag(value));
+                }
+            },
             py::arg("key"),
             py::arg("value"),
             "Set value by key"
@@ -137,7 +148,13 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "put",
-            [](nbt::CompoundTag& self, std::string key, py::object value) { self.put(key, makeNativeTag(value)); },
+            [](nbt::CompoundTag& self, std::string key, py::object value) {
+                if (py::isinstance<nbt::Tag>(value)) {
+                    self.put(key, value.cast<nbt::Tag*>()->copy());
+                } else {
+                    self.put(key, makeNativeTag(value));
+                }
+            },
             py::arg("key"),
             py::arg("value"),
             "Put a value into the compound (automatically converted to appropriate tag type)"

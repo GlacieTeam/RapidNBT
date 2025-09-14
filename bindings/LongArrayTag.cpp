@@ -107,6 +107,7 @@ void bindLongArrayTag(py::module& m) {
             [](nbt::LongArrayTag const& self, nbt::LongArrayTag const& other) { return self.equals(other); },
             py::arg("other")
         )
+        .def("__hash__", &nbt::LongArrayTag::hash, "Compute hash value for Python hashing operations")
         .def(
             "__iter__",
             [](nbt::LongArrayTag const& self) {

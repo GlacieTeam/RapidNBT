@@ -13,6 +13,7 @@
 #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 
 namespace py = pybind11;
 
@@ -47,5 +48,6 @@ void bindListTag(py::module& m);
 void bindCompoundTag(py::module& m);
 void bindIntArrayTag(py::module& m);
 void bindLongArrayTag(py::module& m);
+void bindNbtIO(py::module& m);
 
 } // namespace rapidnbt

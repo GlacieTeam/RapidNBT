@@ -24,14 +24,26 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
         auto dict = obj.cast<py::dict>();
         auto tag  = std::make_unique<nbt::CompoundTag>();
         for (auto [k, v] : dict) {
-            std::string key = py::cast<std::string>(k);
-            tag->put(key, makeNativeTag(static_cast<py::object&&>(v)));
+            auto  key   = py::cast<std::string>(k);
+            auto& value = static_cast<py::object&>(v);
+            if (py::isinstance<nbt::Tag>(value)) {
+                tag->put(key, value.cast<nbt::Tag*>()->copy());
+            } else {
+                tag->put(key, makeNativeTag(value));
+            }
         }
         return tag;
     } else if (py::isinstance<py::list>(obj)) {
         auto list = obj.cast<py::list>();
         auto tag  = std::make_unique<nbt::ListTag>();
-        for (auto t : list) { tag->push_back(makeNativeTag(static_cast<py::object&&>(t))); }
+        for (auto t : list) {
+            auto& value = static_cast<py::object&>(t);
+            if (py::isinstance<nbt::Tag>(value)) {
+                tag->push_back(value.cast<nbt::Tag*>()->copy());
+            } else {
+                tag->push_back(makeNativeTag(value));
+            }
+        }
         return tag;
     }
     auto ctypes = py::module::import("ctypes");
@@ -52,22 +64,8 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
 }
 
 void bindCompoundTagVariant(py::module& m) {
-    py::class_<nbt::CompoundTagVariant> variant(m, "CompoundTagVariant");
-
-    py::class_<nbt::CompoundTagVariant::iterator>(variant, "Iterator")
-        .def("__iter__", [](nbt::CompoundTagVariant::iterator& it) -> nbt::CompoundTagVariant::iterator& { return it; })
-        .def(
-            "__next__",
-            [](nbt::CompoundTagVariant::iterator& it) -> nbt::Tag& {
-                if (it == nbt::CompoundTagVariant::iterator()) throw py::stop_iteration();
-                nbt::Tag& value = *it;
-                ++it;
-                return value;
-            },
-            py::return_value_policy::reference_internal
-        );
-
-    variant.def(py::init<>())
+    py::class_<nbt::CompoundTagVariant>(m, "CompoundTagVariant")
+        .def(py::init<>())
         .def(py::init([](py::object const& obj) {
             if (py::isinstance<nbt::Tag>(obj)) {
                 return std::make_unique<nbt::CompoundTagVariant>(*obj.cast<nbt::Tag*>());
@@ -113,20 +111,37 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "__setitem__",
             [](nbt::CompoundTagVariant& self, std::string_view key, py::object const& obj) {
-                self[key] = makeNativeTag(obj);
+                if (py::isinstance<nbt::Tag>(obj)) {
+                    self[key] = *obj.cast<nbt::Tag*>();
+                } else {
+                    self[key] = makeNativeTag(obj);
+                }
             }
         )
         .def(
             "__setitem__",
             [](nbt::CompoundTagVariant& self, size_t index, py::object const& obj) {
-                self[index] = *makeNativeTag(obj);
+                if (py::isinstance<nbt::Tag>(obj)) {
+                    self[index] = *obj.cast<nbt::Tag*>();
+                } else {
+                    self[index] = *makeNativeTag(obj);
+                }
             }
         )
 
         .def("pop", py::overload_cast<std::string_view>(&nbt::CompoundTagVariant::remove))
         .def("pop", py::overload_cast<size_t>(&nbt::CompoundTagVariant::remove))
         .def("rename", &nbt::CompoundTagVariant::rename)
-        .def("append", [](nbt::CompoundTagVariant& self, py::object const& obj) { self.push_back(makeNativeTag(obj)); })
+        .def(
+            "append",
+            [](nbt::CompoundTagVariant& self, py::object const& obj) {
+                if (py::isinstance<nbt::Tag>(obj)) {
+                    self.push_back(*obj.cast<nbt::Tag*>());
+                } else {
+                    self.push_back(makeNativeTag(obj));
+                }
+            }
+        )
 
         .def(
             "__iter__",

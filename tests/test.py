@@ -27,9 +27,10 @@ def test1():
     nbt["byte_array_tag"] = b"13276273923"
     nbt["list_tag"] = ["aaaaa", "bbbbb"]
     nbt["list_tag"].append("Homo")
-    #  nbt["compound_tag"] = nbt
-    #  nbt["int_array_tag"] = IntArrayTag([1, 2, 3, 4, 5, 6, 7])
-    # nbt["long_array_tag"] = LongArrayTag([1, 2, 3, 4, 5, 6, 7])
+    nbt["compound_tag"] = nbt
+    nbt["int_array_tag"] = IntArrayTag([1, 2, 3, 4, 5, 6, 7])
+    nbt["long_array_tag"] = LongArrayTag([1, 2, 3, 4, 5, 6, 7])
+    nbt["long_array_tag"] = IntTag(2)
     print(nbt.to_snbt())
     print(f'{nbt["test"]["double_tag"]}')
     print(f'{nbt["not_exist"]["not_exist"]}')
@@ -57,9 +58,9 @@ def test3():
     nbt.put_float("tag_float", 1.2345)
     nbt.put_double("tag_double", 1.414213562)
     nbt.put_byte_array("tag_byte_array", b"45678909876")
-    # nbt.put_list("tag_list", [nbt, nbt])
-    # nbt.put_int_array("tag_int_array", [1, 2, 3, 4, 5, 6, 7])
-    # nbt.put_compound("tag_compound", {})
+    nbt.put_list("tag_list", [nbt, nbt])
+    nbt.put_int_array("tag_int_array", [1, 2, 3, 4, 5, 6, 7])
+    nbt.put_compound("tag_compound", {})
     print(nbt.to_snbt())
     print(f'{nbt.get_string("tag_string")}')
     print(f'{nbt.get_byte("tag_byte")}')
@@ -86,13 +87,12 @@ def test4():
     )
     stream = BinaryStream()
     print(testnbt.to_snbt())
-    stream.write_byte(3)
+    stream.write_byte(23)
     testnbt.serialize(stream)
     buffer = stream.data()
     print(
         f"{buffer.hex()} | {buffer.hex() == '170a000108627974655f746167720307696e745f746167a4fd0d020973686f72745f746167bc4a080a737472696e675f7461670b5465737420537472696e6700'}"
     )
-
     print(f"{stream.get_byte()}")
     nbt = CompoundTag()
     nbt.deserialize(stream)

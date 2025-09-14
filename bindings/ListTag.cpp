@@ -14,9 +14,16 @@ void bindListTag(py::module& m) {
         .def(py::init<>(), "Construct an empty ListTag")
         .def(
             py::init([](std::vector<py::object> elements) {
-                auto list = std::make_unique<nbt::ListTag>();
-                for (auto& element : elements) { list->push_back(makeNativeTag(element)); }
-                return list;
+                auto tag = std::make_unique<nbt::ListTag>();
+                for (auto& element : elements) {
+                    auto& value = static_cast<py::object&>(element);
+                    if (py::isinstance<nbt::Tag>(value)) {
+                        tag->push_back(value.cast<nbt::Tag*>()->copy());
+                    } else {
+                        tag->push_back(makeNativeTag(value));
+                    }
+                }
+                return tag;
             }),
             py::arg("elements"),
             "Construct from a list of Tag elements (e.g., [IntTag(1), StringTag('test')])"
@@ -52,7 +59,13 @@ void bindListTag(py::module& m) {
 
         .def(
             "append",
-            [](nbt::ListTag& self, py::object element) { self.push_back(makeNativeTag(element)); },
+            [](nbt::ListTag& self, py::object element) {
+                if (py::isinstance<nbt::Tag>(element)) {
+                    self.push_back(element.cast<nbt::Tag*>()->copy());
+                } else {
+                    self.push_back(makeNativeTag(element));
+                }
+            },
             py::arg("element"),
             "Append a Tag element to the list"
         )
@@ -69,9 +82,13 @@ void bindListTag(py::module& m) {
         )
         .def(
             "__setitem__",
-            [](nbt::ListTag& self, size_t index, py::object element) {
+            [](nbt::ListTag& self, size_t index, py::object const& element) {
                 if (index >= self.size()) { throw py::index_error("Index out of range"); }
-                return self.set(index, *makeNativeTag(element));
+                if (py::isinstance<nbt::Tag>(element)) {
+                    self[index] = *element.cast<nbt::Tag*>();
+                } else {
+                    self[index] = *makeNativeTag(element);
+                }
             },
             py::arg("index"),
             py::arg("element"),
@@ -113,7 +130,11 @@ void bindListTag(py::module& m) {
                 if (index > self.size()) { throw py::index_error("Index out of range"); }
                 auto it = self.begin();
                 std::advance(it, index);
-                self.storage().insert(it, makeNativeTag(element));
+                if (py::isinstance<nbt::Tag>(element)) {
+                    self.storage().insert(it, element.cast<nbt::Tag*>()->copy());
+                } else {
+                    self.storage().insert(it, makeNativeTag(element));
+                }
             },
             py::arg("index"),
             py::arg("element"),
