@@ -45,6 +45,8 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
             }
         }
         return tag;
+    } else if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
+        return obj.cast<nbt::CompoundTagVariant>().toUniqueCopy();
     }
     auto ctypes = py::module::import("ctypes");
     if (py::isinstance(obj, ctypes.attr("c_int8")) || py::isinstance(obj, ctypes.attr("c_uint8"))) {
@@ -144,6 +146,16 @@ void bindCompoundTagVariant(py::module& m) {
                 }
             }
         )
+        .def(
+            "assign",
+            [](nbt::CompoundTagVariant& self, py::object const& obj) {
+                if (py::isinstance<nbt::Tag>(obj)) {
+                    self = *obj.cast<nbt::Tag*>();
+                } else {
+                    self = makeNativeTag(obj);
+                }
+            }
+        )
 
         .def(
             "__iter__",
@@ -175,64 +187,189 @@ void bindCompoundTagVariant(py::module& m) {
         .def("copy", &nbt::CompoundTagVariant::toUniqueCopy)
 
         .def(
-            "as_byte",
-            [](nbt::CompoundTagVariant& self) -> nbt::ByteTag& { return self.as<nbt::ByteTag>(); },
+            "as_byte_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::ByteTag& {
+                if (!self.hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
+                return self.as<nbt::ByteTag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_short",
-            [](nbt::CompoundTagVariant& self) -> nbt::ShortTag& { return self.as<nbt::ShortTag>(); },
+            "as_short_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::ShortTag& {
+                if (!self.hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
+                return self.as<nbt::ShortTag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_int",
-            [](nbt::CompoundTagVariant& self) -> nbt::IntTag& { return self.as<nbt::IntTag>(); },
+            "as_int_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::IntTag& {
+                if (!self.hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold an IntTag"); }
+                return self.as<nbt::IntTag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_int64",
-            [](nbt::CompoundTagVariant& self) -> nbt::Int64Tag& { return self.as<nbt::Int64Tag>(); },
+            "as_int64_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::Int64Tag& {
+                if (!self.hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold an Int64Tag"); }
+                return self.as<nbt::Int64Tag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_float",
-            [](nbt::CompoundTagVariant& self) -> nbt::FloatTag& { return self.as<nbt::FloatTag>(); },
+            "as_float_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::FloatTag& {
+                if (!self.hold(nbt::Tag::Type::Float)) { throw py::type_error("tag not hold a FloatTag"); }
+                return self.as<nbt::FloatTag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_double",
-            [](nbt::CompoundTagVariant& self) -> nbt::DoubleTag& { return self.as<nbt::DoubleTag>(); },
+            "as_double_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::DoubleTag& {
+                if (!self.hold(nbt::Tag::Type::Double)) { throw py::type_error("tag not hold a DoubleTag"); }
+                return self.as<nbt::DoubleTag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_byte_array",
-            [](nbt::CompoundTagVariant& self) -> nbt::ByteArrayTag& { return self.as<nbt::ByteArrayTag>(); },
+            "as_byte_array_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::ByteArrayTag& {
+                if (!self.hold(nbt::Tag::Type::ByteArray)) { throw py::type_error("tag not hold a ByteArrayTag"); }
+                return self.as<nbt::ByteArrayTag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_string",
-            [](nbt::CompoundTagVariant& self) -> nbt::StringTag& { return self.as<nbt::StringTag>(); },
+            "as_string_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::StringTag& {
+                if (!self.hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
+                return self.as<nbt::StringTag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_compound",
-            [](nbt::CompoundTagVariant& self) -> nbt::CompoundTag& { return self.as<nbt::CompoundTag>(); },
+            "as_compound_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::CompoundTag& {
+                if (!self.hold(nbt::Tag::Type::Compound)) { throw py::type_error("tag not hold a CompoundTag"); }
+                return self.as<nbt::CompoundTag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_list",
-            [](nbt::CompoundTagVariant& self) -> nbt::ListTag& { return self.as<nbt::ListTag>(); },
+            "as_list_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::ListTag& {
+                if (!self.hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold a ListTag"); }
+                return self.as<nbt::ListTag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_int_array",
-            [](nbt::CompoundTagVariant& self) -> nbt::IntArrayTag& { return self.as<nbt::IntArrayTag>(); },
+            "as_int_array_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::IntArrayTag& {
+                if (!self.hold(nbt::Tag::Type::IntArray)) { throw py::type_error("tag not hold an IntArrayTag"); }
+                return self.as<nbt::IntArrayTag>();
+            },
             py::return_value_policy::reference_internal
         )
         .def(
-            "as_long_array",
-            [](nbt::CompoundTagVariant& self) -> nbt::LongArrayTag& { return self.as<nbt::LongArrayTag>(); },
+            "as_long_array_tag",
+            [](nbt::CompoundTagVariant& self) -> nbt::LongArrayTag& {
+                if (!self.hold(nbt::Tag::Type::LongArray)) { throw py::type_error("tag not hold a LongArrayTag"); }
+                return self.as<nbt::LongArrayTag>();
+            },
             py::return_value_policy::reference_internal
+        )
+
+        .def(
+            "get_byte",
+            [](nbt::CompoundTagVariant& self) -> uint8_t {
+                if (!self.hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
+                return self.as<nbt::ByteTag>().storage();
+            }
+        )
+        .def(
+            "get_short",
+            [](nbt::CompoundTagVariant& self) -> short {
+                if (!self.hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
+                return self.as<nbt::ShortTag>().storage();
+            }
+        )
+        .def(
+            "get_int",
+            [](nbt::CompoundTagVariant& self) -> int {
+                if (!self.hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold an IntTag"); }
+                return self.as<nbt::IntTag>().storage();
+            }
+        )
+        .def(
+            "get_int64",
+            [](nbt::CompoundTagVariant& self) -> int64_t {
+                if (!self.hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold an Int64Tag"); }
+                return self.as<nbt::Int64Tag>().storage();
+            }
+        )
+        .def(
+            "get_float",
+            [](nbt::CompoundTagVariant& self) -> float {
+                if (!self.hold(nbt::Tag::Type::Float)) { throw py::type_error("tag not hold a FloatTag"); }
+                return self.as<nbt::FloatTag>().storage();
+            }
+        )
+        .def(
+            "get_double",
+            [](nbt::CompoundTagVariant& self) -> double {
+                if (!self.hold(nbt::Tag::Type::Double)) { throw py::type_error("tag not hold a DoubleTag"); }
+                return self.as<nbt::DoubleTag>().storage();
+            }
+        )
+        .def(
+            "get_byte_array",
+            [](nbt::CompoundTagVariant& self) -> py::bytes {
+                if (!self.hold(nbt::Tag::Type::ByteArray)) { throw py::type_error("tag not hold a ByteArrayTag"); }
+                return to_pybytes(static_cast<std::string_view>(self.as<nbt::ByteArrayTag>()));
+            }
+        )
+        .def(
+            "get_string",
+            [](nbt::CompoundTagVariant& self) -> std::string {
+                if (!self.hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
+                return self.as<nbt::StringTag>().storage();
+            }
+        )
+        .def(
+            "get_compound",
+            [](nbt::CompoundTagVariant& self) -> py::dict {
+                if (!self.hold(nbt::Tag::Type::Compound)) { throw py::type_error("tag not hold a CompoundTag"); }
+                py::dict result;
+                for (auto& [key, value] : self.as<nbt::CompoundTag>()) { result[py::str(key)] = py::cast(value); }
+                return result;
+            }
+        )
+        .def(
+            "get_list",
+            [](nbt::CompoundTagVariant& self) -> py::list {
+                if (!self.hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold a ListTag"); }
+                py::list result;
+                for (auto& tag : self.as<nbt::ListTag>()) { result.append(py::cast(nbt::CompoundTagVariant(*tag))); }
+                return result;
+            }
+        )
+        .def(
+            "get_int_array",
+            [](nbt::CompoundTagVariant& self) -> std::vector<int> {
+                if (!self.hold(nbt::Tag::Type::IntArray)) { throw py::type_error("tag not hold an IntArrayTag"); }
+                return self.as<nbt::IntArrayTag>().storage();
+            }
+        )
+        .def(
+            "get_long_array",
+            [](nbt::CompoundTagVariant& self) -> std::vector<int64_t> {
+                if (!self.hold(nbt::Tag::Type::LongArray)) { throw py::type_error("tag not hold a LongArrayTag"); }
+                return self.as<nbt::LongArrayTag>().storage();
+            }
         )
 
         .def("__int__", [](nbt::CompoundTagVariant const& self) { return static_cast<int64_t>(self); })

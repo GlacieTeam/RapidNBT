@@ -20,7 +20,7 @@ class Tag(ABC):
     def new_tag(type: TagType) -> Tag:
         """Create a new tag of the given type"""
 
-    def __eq__(self, arg0: Tag) -> bool:
+    def __eq__(self, other: Tag) -> bool:
         """Compare two tags for equality"""
 
     @overload

@@ -19,6 +19,8 @@ from rapidnbt._NBT.double_tag import DoubleTag
 from rapidnbt._NBT.byte_array_tag import ByteArrayTag
 from rapidnbt._NBT.string_tag import StringTag
 from rapidnbt._NBT.list_tag import ListTag
+from rapidnbt._NBT.int_array_tag import IntArrayTag
+from rapidnbt._NBT.long_array_tag import LongArrayTag
 
 class CompoundTag(Tag):
     @staticmethod
@@ -106,40 +108,76 @@ class CompoundTag(Tag):
     def get(self, key: str) -> Tag:
         """Get tag by key or None if not found"""
 
-    def get_byte(self, key: str) -> ByteTag:
-        """Get byte value or None if not found or wrong type"""
+    def get_byte_tag(self, key: str) -> Optional[ByteTag]:
+        """Get ByteTag or None if not found or wrong type"""
 
-    def get_byte_array(self, key: str) -> ByteArrayTag:
-        """Get byte array or None if not found or wrong type"""
+    def get_byte_array_tag(self, key: str) -> Optional[ByteArrayTag]:
+        """Get ByteArrayTag or None if not found or wrong type"""
 
-    def get_compound(self, key: str) -> CompoundTag:
+    def get_compound_tag(self, key: str) -> Optional[CompoundTag]:
         """Get CompoundTag or None if not found or wrong type"""
 
-    def get_double(self, key: str) -> DoubleTag:
-        """Get double value or None if not found or wrong type"""
+    def get_double_tag(self, key: str) -> Optional[DoubleTag]:
+        """Get DoubleTag or None if not found or wrong type"""
 
-    def get_float(self, key: str) -> FloatTag:
-        """Get float value or None if not found or wrong type"""
+    def get_float_tag(self, key: str) -> Optional[FloatTag]:
+        """Get FloatTag value or None if not found or wrong type"""
 
-    def get_int(self, key: str) -> IntTag:
-        """Get int value or None if not found or wrong type"""
+    def get_int_tag(self, key: str) -> Optional[IntTag]:
+        """Get IntTag or None if not found or wrong type"""
 
-    def get_int64(self, key: str) -> Int64Tag:
-        """Get long value or None if not found or wrong type"""
+    def get_int64_tag(self, key: str) -> Optional[Int64Tag]:
+        """Get Int64Tag or None if not found or wrong type"""
 
-    def get_int_array(self, key: str) -> ...:
-        """Get int array or None if not found or wrong type"""
+    def get_int_array_tag(self, key: str) -> Optional[IntArrayTag]:
+        """Get IntArrayTag or None if not found or wrong type"""
 
-    def get_list(self, key: str) -> ListTag:
+    def get_list_tag(self, key: str) -> Optional[ListTag]:
         """Get ListTag or None if not found or wrong type"""
 
-    def get_long_array(self, key: str) -> ...:
+    def get_long_array_tag(self, key: str) -> Optional[LongArrayTag]:
+        """Get LongArrayTag or None if not found or wrong type"""
+
+    def get_short_tag(self, key: str) -> Optional[ShortTag]:
+        """Get ShortTag or None if not found or wrong type"""
+
+    def get_string_tag(self, key: str) -> Optional[StringTag]:
+        """Get StringTag or None if not found or wrong type"""
+
+    def get_byte(self, key: str) -> Optional[int]:
+        """Get byte value or None if not found or wrong type"""
+
+    def get_byte_array(self, key: str) -> Optional[bytes]:
+        """Get byte array or None if not found or wrong type"""
+
+    def get_compound(self, key: str) -> Optional[Dict[str, CompoundTagVariant]]:
+        """Get CompoundTag or None if not found or wrong type"""
+
+    def get_double(self, key: str) -> Optional[float]:
+        """Get double value or None if not found or wrong type"""
+
+    def get_float(self, key: str) -> Optional[float]:
+        """Get float value or None if not found or wrong type"""
+
+    def get_int(self, key: str) -> Optional[int]:
+        """Get int value or None if not found or wrong type"""
+
+    def get_int64(self, key: str) -> Optional[int]:
+        """Get long value or None if not found or wrong type"""
+
+    def get_int_array(self, key: str) -> Optional[List[int]]:
+        """Get int array or None if not found or wrong type"""
+
+    def get_list(self, key: str) -> Optional[List[CompoundTagVariant]]:
+        """Get ListTag or None if not found or wrong type"""
+
+    def get_long_array(self, key: str) -> Optional[List[int]]:
         """Get long array or None if not found or wrong type"""
 
-    def get_short(self, key: str) -> ShortTag:
+    def get_short(self, key: str) -> Optional[int]:
         """Get short value or None if not found or wrong type"""
 
-    def get_string(self, key: str) -> StringTag:
+    def get_string(self, key: str) -> Optional[str]:
         """Get string value or None if not found or wrong type"""
 
     def get_type(self) -> TagType:
@@ -205,6 +243,45 @@ class CompoundTag(Tag):
 
     def rename(self, old_key: str, new_key: str) -> bool:
         """Rename a key in the compound"""
+
+    def set(self, key: str, value: Any) -> None:
+        """Set a value into the compound (automatically converted to appropriate tag type)"""
+
+    def set_byte(self, key: str, value: int) -> None:
+        """Set a byte (uint8) value"""
+
+    def set_byte_array(self, key: str, value: Union[bytes, bytearray]) -> None:
+        """Set a byte array (list of uint8)"""
+
+    def set_compound(self, key: str, value: Any) -> None:
+        """Set a CompoundTag value (or dict that will be converted)"""
+
+    def set_double(self, key: str, value: float) -> None:
+        """Set a double value"""
+
+    def set_float(self, key: str, value: float) -> None:
+        """Set a float value"""
+
+    def set_int(self, key: str, value: int) -> None:
+        """Set an int (int32) value"""
+
+    def set_int64(self, key: str, value: int) -> None:
+        """Set a long (int64) value"""
+
+    def set_int_array(self, key: str, value: List[int]) -> None:
+        """Set an int array (list of int32)"""
+
+    def set_list(self, key: str, value: Any) -> None:
+        """Set a ListTag value (or list/tuple that will be converted)"""
+
+    def set_long_array(self, key: str, value: List[int]) -> None:
+        """Set a long array (list of int64)"""
+
+    def set_short(self, key: str, value: int) -> None:
+        """Set a short (int16) value"""
+
+    def set_string(self, key: str, value: str) -> None:
+        """Set a string value"""
 
     def serialize(self, stream: ...) -> None:
         """Serialize compound to a binary stream"""

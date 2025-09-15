@@ -13,11 +13,11 @@ void bindNbtIO(py::module& m) {
     auto sm = m.def_submodule("nbtio");
 
     py::enum_<nbt::NbtFileFormat>(sm, "NbtFileFormat", "Enumeration of NBT binary file formats")
-        .value("LittleEndian", nbt::NbtFileFormat::LittleEndianBinary)
-        .value("LittleEndianWithHeader", nbt::NbtFileFormat::LittleEndianBinaryWithHeader)
-        .value("BigEndian", nbt::NbtFileFormat::BigEndianBinary)
-        .value("BigEndianWithHeader", nbt::NbtFileFormat::BigEndianBinaryWithHeader)
-        .value("BedrockNetwork", nbt::NbtFileFormat::BedrockNetwork)
+        .value("LITTLE_ENDIAN", nbt::NbtFileFormat::LittleEndianBinary)
+        .value("LITTLE_ENDIAN_WITH_HEADER", nbt::NbtFileFormat::LittleEndianBinaryWithHeader)
+        .value("BIG_ENDIAN", nbt::NbtFileFormat::BigEndianBinary)
+        .value("BIG_ENDIAN_WITH_HEADER", nbt::NbtFileFormat::BigEndianBinaryWithHeader)
+        .value("BEDROCK_NETWORK", nbt::NbtFileFormat::BedrockNetwork)
         .export_values();
 
     py::enum_<nbt::CompressionType>(sm, "NbtCompressionType", "Enumeration of compression types for NBT serialization")
@@ -115,7 +115,7 @@ void bindNbtIO(py::module& m) {
                 bytes: Serialized binary data)"
     );
     sm.def(
-        "save",
+        "dump",
         &nbt::saveToFile,
         py::arg("nbt"),
         py::arg("path"),
@@ -145,16 +145,16 @@ void bindNbtIO(py::module& m) {
     sm.def(
         "loads_snbt",
         &nbt::CompoundTag::fromSnbt,
-        py::arg("path"),
+        py::arg("content"),
         py::arg("parsed_length") = py::none(),
         R"(Parse CompoundTag from SNBT (String NBT) file
             Args:
-                path (str): Path to SNBT file
+                content (str): SNBT content
             Returns:
                 CompoundTag or None if parsing fails)"
     );
     sm.def(
-        "save_snbt",
+        "dump_snbt",
         &nbt::saveSnbtToFile,
         py::arg("nbt"),
         py::arg("path"),
@@ -170,7 +170,21 @@ void bindNbtIO(py::module& m) {
                 bool: True if successful, False otherwise)"
     );
     sm.def(
-        "validate",
+        "dumps_snbt",
+        [](nbt::CompoundTag const& nbt, nbt::SnbtFormat format, uint8_t indent) { return nbt.toSnbt(format, indent); },
+        py::arg("nbt"),
+        py::arg("format") = nbt::SnbtFormat::PrettyFilePrint,
+        py::arg("indent") = 4,
+        R"(Save CompoundTag to SNBT (String NBT) file
+            Args:
+                nbt (CompoundTag): Tag to save
+                format (SnbtFormat): Output formatting style (default: PrettyFilePrint)
+                indent (int): Indentation level (default: 4)
+            Returns:
+                str: SNBT string"
+    );
+    sm.def(
+        "validate_content",
         [](py::buffer buffer, nbt::NbtFileFormat format) {
             return nbt::validateContent(to_cppstringview(buffer), format);
         },

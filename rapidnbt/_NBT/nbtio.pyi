@@ -11,11 +11,11 @@ from rapidnbt._NBT.snbt_format import SnbtFormat
 from enum import Enum
 
 class NbtFileFormat(Enum):
-    LittleEndian = 0
-    LittleEndianWithHeader = 1
-    BigEndian = 2
-    BigEndianWithHeader = 3
-    BedrockNetwork = 4
+    LITTLE_ENDIAN = 0
+    LITTLE_ENDIAN_WITH_HEADER = 1
+    BIG_ENDIAN = 2
+    BIG_ENDIAN_WITH_HEADER = 3
+    BEDROCK_NETWORK = 4
 
 class NbtCompressionLevel(Enum):
     DEFAULT = -1
@@ -56,6 +56,40 @@ def detect_file_format(
         NbtFileFormat or None if format cannot be determined
     """
 
+def dump(
+    nbt: CompoundTag,
+    path: str,
+    format: NbtFileFormat = NbtFileFormat.LittleEndian,
+    compression_type: NbtCompressionType = NbtCompressionType.GZIP,
+    compression_level: NbtCompressionLevel = NbtCompressionLevel.DEFAULT,
+) -> bool:
+    """Save CompoundTag to a file
+    Args:
+        nbt (CompoundTag): Tag to save
+        path (str): Output file path
+        format (NbtFileFormat): Output format (default: LittleEndian)
+        compression_type (CompressionType): Compression method (default: Gzip)
+        compression_level (CompressionLevel): Compression level (default: Default)
+    Returns:
+        bool: True if successful, False otherwise
+    """
+
+def dump_snbt(
+    nbt: CompoundTag,
+    path: str,
+    format: SnbtFormat = SnbtFormat.PrettyFilePrint,
+    indent: int = 4,
+) -> bool:
+    """Save CompoundTag to SNBT (String NBT) file
+    Args:
+        nbt (CompoundTag): Tag to save
+        path (str): Output file path
+        format (SnbtFormat): Output formatting style (default: PrettyFilePrint)
+        indent (int): Indentation level (default: 4)
+    Returns:
+        bool: True if successful, False otherwise
+    """
+
 def dumps(
     nbt: CompoundTag,
     format: NbtFileFormat = NbtFileFormat.LittleEndian,
@@ -70,6 +104,20 @@ def dumps(
         compression_level (CompressionLevel): Compression level (default: Default)
     Returns:
         bytes: Serialized binary data
+    """
+
+def dumps_snbt(
+    nbt: CompoundTag,
+    format: SnbtFormat = SnbtFormat.PrettyFilePrint,
+    indent: int = 4,
+) -> str:
+    """Save CompoundTag to SNBT (String NBT) file
+    Args:
+        nbt (CompoundTag): Tag to save
+        format (SnbtFormat): Output formatting style (default: PrettyFilePrint)
+        indent (int): Indentation level (default: 4)
+    Returns:
+        bool: SNBT string
     """
 
 def dumps_base64(
@@ -132,49 +180,17 @@ def loads_base64(
         CompoundTag or None if parsing fails
     """
 
-def loads_snbt(path: str, parsed_length: int | None = None) -> Optional[CompoundTag]:
+def loads_snbt(
+    content: str, parsed_length: Optional[int] = None
+) -> Optional[CompoundTag]:
     """Parse CompoundTag from SNBT (String NBT) file
     Args:
-        path (str): Path to SNBT file
+        content (str): SNBT content
     Returns:
         CompoundTag or None if parsing fails
     """
 
-def save(
-    nbt: CompoundTag,
-    path: str,
-    format: NbtFileFormat = NbtFileFormat.LittleEndian,
-    compression_type: NbtCompressionType = NbtCompressionType.GZIP,
-    compression_level: NbtCompressionLevel = NbtCompressionLevel.DEFAULT,
-) -> bool:
-    """Save CompoundTag to a file
-    Args:
-        nbt (CompoundTag): Tag to save
-        path (str): Output file path
-        format (NbtFileFormat): Output format (default: LittleEndian)
-        compression_type (CompressionType): Compression method (default: Gzip)
-        compression_level (CompressionLevel): Compression level (default: Default)
-    Returns:
-        bool: True if successful, False otherwise
-    """
-
-def save_snbt(
-    nbt: CompoundTag,
-    path: str,
-    format: SnbtFormat = SnbtFormat.PrettyFilePrint,
-    indent: int = 4,
-) -> bool:
-    """Save CompoundTag to SNBT (String NBT) file
-    Args:
-        nbt (CompoundTag): Tag to save
-        path (str): Output file path
-        format (SnbtFormat): Output formatting style (default: PrettyFilePrint)
-        indent (int): Indentation level (default: 4)
-    Returns:
-        bool: True if successful, False otherwise
-    """
-
-def validate(
+def validate_content(
     content: Union[bytes, bytearray], format: NbtFileFormat = NbtFileFormat.LittleEndian
 ) -> bool:
     """Validate NBT binary content
