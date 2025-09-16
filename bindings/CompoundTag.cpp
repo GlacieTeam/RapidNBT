@@ -428,7 +428,7 @@ void bindCompoundTag(py::module& m) {
             "get_byte",
             [](nbt::CompoundTag& self, std::string_view key) -> std::optional<uint8_t> {
                 if (!self[key].hold(nbt::Tag::Type::Byte)) { return std::nullopt; }
-                return self[key];
+                return self[key].as<nbt::ByteTag>().storage();
             },
             py::arg("key"),
             "Get byte value or None if not found or wrong type"
@@ -437,7 +437,7 @@ void bindCompoundTag(py::module& m) {
             "get_short",
             [](nbt::CompoundTag& self, std::string_view key) -> std::optional<short> {
                 if (!self[key].hold(nbt::Tag::Type::Short)) { return std::nullopt; }
-                return self[key];
+                return self[key].as<nbt::ShortTag>().storage();
             },
             py::arg("key"),
             "Get short value or None if not found or wrong type"
@@ -446,7 +446,7 @@ void bindCompoundTag(py::module& m) {
             "get_int",
             [](nbt::CompoundTag& self, std::string_view key) -> std::optional<int> {
                 if (!self[key].hold(nbt::Tag::Type::Int)) { return std::nullopt; }
-                return self[key];
+                return self[key].as<nbt::IntTag>().storage();
             },
             py::arg("key"),
             "Get int value or None if not found or wrong type"
@@ -455,7 +455,7 @@ void bindCompoundTag(py::module& m) {
             "get_int64",
             [](nbt::CompoundTag& self, std::string_view key) -> std::optional<int64_t> {
                 if (!self[key].hold(nbt::Tag::Type::Int64)) { return std::nullopt; }
-                return self[key];
+                return self[key].as<nbt::Int64Tag>().storage();
             },
             py::arg("key"),
             "Get long value or None if not found or wrong type"
@@ -464,7 +464,7 @@ void bindCompoundTag(py::module& m) {
             "get_float",
             [](nbt::CompoundTag& self, std::string_view key) -> std::optional<float> {
                 if (!self[key].hold(nbt::Tag::Type::Float)) { return std::nullopt; }
-                return self[key];
+                return self[key].as<nbt::FloatTag>().storage();
             },
             py::arg("key"),
             "Get float value or None if not found or wrong type"
@@ -473,7 +473,7 @@ void bindCompoundTag(py::module& m) {
             "get_double",
             [](nbt::CompoundTag& self, std::string_view key) -> std::optional<double> {
                 if (!self[key].hold(nbt::Tag::Type::Double)) { return std::nullopt; }
-                return self[key];
+                return self[key].as<nbt::DoubleTag>().storage();
             },
             py::arg("key"),
             "Get double value or None if not found or wrong type"
@@ -482,7 +482,7 @@ void bindCompoundTag(py::module& m) {
             "get_string",
             [](nbt::CompoundTag& self, std::string_view key) -> std::optional<std::string> {
                 if (!self[key].hold(nbt::Tag::Type::String)) { return std::nullopt; }
-                return self[key];
+                return self[key].as<nbt::StringTag>().storage();
             },
             py::arg("key"),
             "Get string value or None if not found or wrong type"
@@ -500,7 +500,7 @@ void bindCompoundTag(py::module& m) {
             "get_int_array",
             [](nbt::CompoundTag& self, std::string_view key) -> std::optional<std::vector<int>> {
                 if (!self[key].hold(nbt::Tag::Type::IntArray)) { return std::nullopt; }
-                return self[key];
+                return self[key].as<nbt::IntArrayTag>().storage();
             },
             py::arg("key"),
             "Get int array or None if not found or wrong type"
@@ -509,7 +509,7 @@ void bindCompoundTag(py::module& m) {
             "get_long_array",
             [](nbt::CompoundTag& self, std::string_view key) -> std::optional<std::vector<int64_t>> {
                 if (!self[key].hold(nbt::Tag::Type::LongArray)) { return std::nullopt; }
-                return self[key];
+                return self[key].as<nbt::LongArrayTag>().storage();
             },
             py::arg("key"),
             "Get long array or None if not found or wrong type"
@@ -519,7 +519,7 @@ void bindCompoundTag(py::module& m) {
             [](nbt::CompoundTag& self, std::string_view key) -> std::optional<py::dict> {
                 if (!self[key].hold(nbt::Tag::Type::Compound)) { return std::nullopt; }
                 py::dict result;
-                for (auto& [key, value] : self[key].as<nbt::CompoundTag>()) { result[py::str(key)] = py::cast(value); }
+                for (auto& [k, v] : self[key].as<nbt::CompoundTag>()) { result[py::str(k)] = py::cast(v); }
                 return result;
             },
             py::arg("key"),

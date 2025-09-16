@@ -1,10 +1,34 @@
 # RapidNBT
 Python Bindings for High-Performance NBT Library
 
-## Install
+## Supported NBT format 📖
+
+| NBT Format                      | Minecraft Edition      | Support Status     |
+| ------------------------------- | ---------------------- | ------------------ |
+| Little Endian Binary            | Bedrock Edition        | :white_check_mark: |
+| Little Endian Binary with Header| Bedrock Edition        | :white_check_mark: |
+| Big Endian Binary               | Java Edition           | :white_check_mark: |
+| Big Endian Binary with Header   | Java                   | :white_check_mark: |
+| Bedrock Network NBT             | Bedrock Edition        | :white_check_mark: |
+| String NBT (SNBT)               | Bedrock & Java Edition | :white_check_mark: |
+
+## Install 🔧
 ```bash
-pip install bedrock-protocol-nbt
+pip install rapidnbt
 ```
+
+## Benchmarks 🚀
+Comparing with some popular NBT libraries.  
+
+Parsing NBT file (870 MB, little-endian binary NBT)
+
+| Library          | Link                                      | Time         | Performance    | Memory Usage |
+| ---------------- | ------------------------------------------| ------------ | -------------- | ------------ |
+| RapidNBT         | <https://github.com/GlacieTeam/RapidNBT>  | 5.2s         | 100%           | 4800MB       |
+| nbtlib           | <https://github.com/vberlier/nbtlib>      | 33.9s        | 15.3%          | 6500MB       |
+| PyNBT            | <https://github.com/TkTech/PyNBT>         | 33.4s        | 15.6%          | 8900MB       |
+
+> Tested on Intel i7 14700-HX with 32GB DDR5-5400 using 720MB little-endian binary NBT
 
 ## Usage & Examples
 1. load nbt from file / dump nbt to file
@@ -13,7 +37,7 @@ from rapidnbt import nbtio, Int64Tag
 from ctypes import c_int16
 
 def example(path: str):
-    nbt = nbtio.load("./level.dat") # Automatically detect nbt file format
+    nbt = nbtio.load("./level.dat") # Automatically detect nbt file format and decompress (if compressed)
     # nbt = nbtio.load("./level.dat", NbtFileFormat.BIG_ENDIAN) # You can also specify the file format
 
     # Modify NBT
@@ -34,8 +58,6 @@ def example(path: str):
 
     
 ```
-
-
 
 ```Python
 from rapidnbt import nbtio
@@ -60,14 +82,22 @@ nbt = CompoundTag(
 print(nbt.to_snbt()) # to string nbt
 ```
 
-# Used Libraries
+# Used Libraries 📖
 | Library          | License      | Link                                         |
 | ---------------- | ------------ | -------------------------------------------- |
 | NBT              | MPL-2.0      | <https://github.com/GlacieTeam/NBT>          |
-| pybind11         | pybind11     | <https://github.com/pybind/pybind11>         |
+| pybind11         | BSD-3-Clause | <https://github.com/pybind/pybind11>         |
 | magic_enum       | MIT          | <https://github.com/Neargye/magic_enum>      |
 
-## License
+## Contributing 🤝
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository and create your feature branch
+2. Add tests for any new functionality
+3. Submit a pull request with detailed description
+
+
+## License 📄
 This project is licensed under the **Mozilla Public License 2.0 (MPL-2.0)**.  
 
 ### Key Requirements:

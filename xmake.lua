@@ -4,8 +4,9 @@ add_repositories("groupmountain-repo https://github.com/GroupMountain/xmake-repo
 
 add_requires(
     "nbt 2.3.2",
-    "pybind11 3.0.1",
-    "magic_enum 0.9.7"
+    "pybind11-header 3.0.1",
+    "magic_enum 0.9.7",
+    "xmake-scripts 1.0.0"
 )
 
 if is_plat("windows") and not has_config("vs_runtime") then
@@ -19,10 +20,11 @@ target("_NBT")
     set_prefixname("")
     set_extension("")
     add_packages(
-        "pybind11",
+        "pybind11-header",
         "nbt",
         "magic_enum"
     )
+    add_rules("@xmake-scripts/python")
     add_includedirs("bindings")
     add_files("bindings/**.cpp")
     if is_plat("windows") then
@@ -47,8 +49,14 @@ target("_NBT")
             "-fvisibility=hidden",
             "-fvisibility-inlines-hidden"
         )
-        add_shflags(
-            "-static-libstdc++",
-            "-static-libgcc"
-        )
+        add_shflags("-static-libstdc++")
+
+        if is_plat("linux") then 
+            add_shflags("-static-libgcc")
+        end
+        if is_plat("macosx") then
+            add_mxflags("-target arm64-apple-macos11.0", "-mmacosx-version-min=11.0")
+            add_ldflags("-target arm64-apple-macos11.0", "-mmacosx-version-min=11.0")
+            add_shflags("-target arm64-apple-macos11.0", "-mmacosx-version-min=11.0")
+        end
     end

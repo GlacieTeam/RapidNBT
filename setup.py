@@ -26,11 +26,8 @@ class XMakeBuild(build_ext):
 
     def run(self):
         self._clean()
-        subprocess.run(
-            ["xmake", "f", "--mode=release", "-y"],
-            check=True,
-        )
-        subprocess.run(["xmake", "--all", "-y"], check=True)
+        subprocess.run(["xmake", "f", "--mode=release", "-y", "--root"], check=True)
+        subprocess.run(["xmake", "--all", "-y", "--root"], check=True)
         self._copy_binary()
 
 

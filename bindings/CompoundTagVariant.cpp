@@ -171,8 +171,7 @@ void bindCompoundTagVariant(py::module& m) {
                     items.append(py::make_tuple(key, py::cast(value)));
                 }
                 return items;
-            },
-            py::return_value_policy::reference_internal
+            }
         )
 
         .def(
