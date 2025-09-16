@@ -28,7 +28,7 @@ include-package-data = true
 packages = { find = {} }
 
 [tool.setuptools.package-data]
-rapidnbt = ["*.pyd", "*.so"]
+rapidnbt = ["*.pyd", "*.so", "*.lib"]
 
 [tool.cibuildwheel]
 build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
