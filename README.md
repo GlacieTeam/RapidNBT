@@ -1,21 +1,30 @@
 # RapidNBT
-Python Bindings for High-Performance NBT Library
 
-## Supported NBT format 📖
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/GlacieTeam/NBT/build.yml)](https://github.com/GlacieTeam/NBT/actions)
+[![GitHub License](https://img.shields.io/github/license/GlacieTeam/NBT)](https://www.mozilla.org/en-US/MPL/2.0/)
+[![C++23](https://img.shields.io/badge/C++-23-blue?logo=C%2B%2B&logoColor=41a3ed)](https://en.cppreference.com/w/cpp/compiler_support.html)   
+[![PyPI - Version](https://img.shields.io/pypi/v/rapidnbt)](https://pypi.org/project/rapidnbt)
+[![Python](https://img.shields.io/pypi/pyversions/rapidnbt?logo=python&logoColor=white)](https://www.python.org/)
 
-| NBT Format                            | Minecraft Edition      | Support Status     |
-| ------------------------------------- | ---------------------- | ------------------ |
-| Little Endian Binary                  | Bedrock Edition        | :white_check_mark: |
-| Little Endian Binary with Header      | Bedrock Edition        | :white_check_mark: |
-| Big Endian Binary                     | Java Edition           | :white_check_mark: |
-| Big Endian Binary with Header         | Java Edition           | :white_check_mark: |
-| Bedrock Network NBT (VarInt Encoding) | Bedrock Edition        | :white_check_mark: |
-| Formatted String NBT (SNBT)           | Bedrock & Java Edition | :white_check_mark: |
+Python Bindings for a High-Performance NBT Library  
+
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=GlacieTeam&repo=NBT)](https://github.com/GlacieTeam/NBT)
 
 ## Install 🔧
 ```bash
 pip install rapidnbt
 ```
+
+## Supported NBT format 📖
+
+| NBT Format                        | Minecraft Edition      | Support Status     |
+| --------------------------------- | ---------------------- | ------------------ |
+| Little Endian Binary              | Bedrock Edition        | :white_check_mark: |
+| Little Endian Binary with Header  | Bedrock Edition        | :white_check_mark: |
+| Big Endian Binary                 | Java Edition           | :white_check_mark: |
+| Big Endian Binary with Header     | Java Edition           | :white_check_mark: |
+| Bedrock Network (VarInt Encoding) | Bedrock Edition        | :white_check_mark: |
+| Formatted String (SNBT)           | Bedrock & Java Edition | :white_check_mark: |
 
 ## Benchmarks 🚀
 Comparing with some popular NBT libraries.  
@@ -31,7 +40,7 @@ Parsing NBT file (870 MB, little-endian binary NBT)
 > Tested on Intel i7 14700-HX with 32GB DDR5-5400 using 720MB little-endian binary NBT
 
 ## Usage & Examples
-1. load nbt from file / dump nbt to file
+1. Load NBT from file and modify it
 ```Python
 from rapidnbt import nbtio, Int64Tag
 from ctypes import c_int16
@@ -59,27 +68,34 @@ def example(path: str):
     
 ```
 
+2. Create a NBT in memory and save it to file
 ```Python
-from rapidnbt import nbtio
+from rapidnbt import nbtio, CompoundTag, ShortTag, Int64Tag, DoubleTag, IntArrayTag, NbtFileFormat
+from ctypes import c_uint8, c_double
 
-# Build a nbt
+# Create a NBT in memory
 nbt = CompoundTag(
     {
-        "string": StringTag("Test String"),
-        "byte", ByteTag(114)
-        "short", ShortTag(19132)
-        "int", IntTag(114514)
-        "int64", Int64Tag(1145141919810)
-        "float", FloatTag(114.514)
-        "double", DoubleTag(3.1415926535897)
-        "byte_array", ByteArrayTag(b"13276273923")
-        "list", ListTag([StringTag("1111"), StringTag("2222")])
-        "compound", nbt
-        "int_array", IntArrayTag([1, 2, 3, 4, 5, 6, 7])
+        "string": "Test String",
+        "byte": c_uint8(114),
+        "short": ShortTag(19132),
+        "int": 114514,
+        "int64": Int64Tag(1145141919810),
+        "float": 1.4142,
+        "double": c_double(3.1415926535897),
+        "byte_array": b"13276273923",
+        "list": ["string1", "string2"],
+        "compound": nbt,
+        "int_array": IntArrayTag([1, 2, 3, 4, 5, 6, 7]),
+        "long_array": LongArrayTag([1, 2, 3, 4, 5, 6, 7]),
     }
 )
 
-print(nbt.to_snbt()) # to string nbt
+print(nbt.to_snbt()) # Print SNBT
+
+# Save NBT to file
+nbtio.dump(nbt, "./test.nbt", NbtFileFormat.LITTLE_ENDIAN)
+
 ```
 
 # Used Libraries 📖
