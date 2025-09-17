@@ -3,14 +3,14 @@ Python Bindings for High-Performance NBT Library
 
 ## Supported NBT format 📖
 
-| NBT Format                      | Minecraft Edition      | Support Status     |
-| ------------------------------- | ---------------------- | ------------------ |
-| Little Endian Binary            | Bedrock Edition        | :white_check_mark: |
-| Little Endian Binary with Header| Bedrock Edition        | :white_check_mark: |
-| Big Endian Binary               | Java Edition           | :white_check_mark: |
-| Big Endian Binary with Header   | Java                   | :white_check_mark: |
-| Bedrock Network NBT             | Bedrock Edition        | :white_check_mark: |
-| String NBT (SNBT)               | Bedrock & Java Edition | :white_check_mark: |
+| NBT Format                            | Minecraft Edition      | Support Status     |
+| ------------------------------------- | ---------------------- | ------------------ |
+| Little Endian Binary                  | Bedrock Edition        | :white_check_mark: |
+| Little Endian Binary with Header      | Bedrock Edition        | :white_check_mark: |
+| Big Endian Binary                     | Java Edition           | :white_check_mark: |
+| Big Endian Binary with Header         | Java Edition           | :white_check_mark: |
+| Bedrock Network NBT (VarInt Encoding) | Bedrock Edition        | :white_check_mark: |
+| Formatted String NBT (SNBT)           | Bedrock & Java Edition | :white_check_mark: |
 
 ## Install 🔧
 ```bash

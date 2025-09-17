@@ -59,7 +59,7 @@ def detect_file_format(
 def dump(
     nbt: CompoundTag,
     path: str,
-    format: NbtFileFormat = NbtFileFormat.LittleEndian,
+    format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
     compression_type: NbtCompressionType = NbtCompressionType.GZIP,
     compression_level: NbtCompressionLevel = NbtCompressionLevel.DEFAULT,
 ) -> bool:
@@ -67,7 +67,7 @@ def dump(
     Args:
         nbt (CompoundTag): Tag to save
         path (str): Output file path
-        format (NbtFileFormat): Output format (default: LittleEndian)
+        format (NbtFileFormat): Output format (default: LITTLE_ENDIAN)
         compression_type (CompressionType): Compression method (default: Gzip)
         compression_level (CompressionLevel): Compression level (default: Default)
     Returns:
@@ -92,14 +92,14 @@ def dump_snbt(
 
 def dumps(
     nbt: CompoundTag,
-    format: NbtFileFormat = NbtFileFormat.LittleEndian,
+    format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
     compression_type: NbtCompressionType = NbtCompressionType.GZIP,
     compression_level: NbtCompressionLevel = NbtCompressionLevel.DEFAULT,
 ) -> bytes:
     """Serialize CompoundTag to binary data
     Args:
         nbt (CompoundTag): Tag to serialize
-        format (NbtFileFormat): Output format (default: LittleEndian)
+        format (NbtFileFormat): Output format (default: LITTLE_ENDIAN)
         compression_type (CompressionType): Compression method (default: Gzip)
         compression_level (CompressionLevel): Compression level (default: Default)
     Returns:
@@ -122,14 +122,14 @@ def dumps_snbt(
 
 def dumps_base64(
     nbt: CompoundTag,
-    format: NbtFileFormat = NbtFileFormat.LittleEndian,
+    format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
     compression_type: NbtCompressionType = NbtCompressionType.GZIP,
     compression_level: NbtCompressionLevel = NbtCompressionLevel.DEFAULT,
 ) -> str:
     """Serialize CompoundTag to Base64 string
     Args:
         nbt (CompoundTag): Tag to serialize
-        format (NbtFileFormat): Output format (default: LittleEndian)
+        format (NbtFileFormat): Output format (default: LITTLE_ENDIAN)
         compression_type (CompressionType): Compression method (default: Gzip)
         compression_level (CompressionLevel): Compression level (default: Default)
     Returns:
@@ -191,23 +191,26 @@ def loads_snbt(
     """
 
 def validate_content(
-    content: Union[bytes, bytearray], format: NbtFileFormat = NbtFileFormat.LittleEndian
+    content: Union[bytes, bytearray],
+    format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
 ) -> bool:
     """Validate NBT binary content
     Args:
         content (bytes): Binary data to validate
-        format (NbtFileFormat): Expected format (default: LittleEndian)
+        format (NbtFileFormat): Expected format (default: LITTLE_ENDIAN)
     Returns:
         bool: True if valid NBT, False otherwise
     """
 
 def validate_file(
-    path: str, format: NbtFileFormat = ..., file_memory_map: bool = False
+    path: str,
+    format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
+    file_memory_map: bool = False,
 ) -> bool:
     """Validate NBT file
     Args:
         path (str): File path to validate
-        format (NbtFileFormat): Expected format (default: LittleEndian)
+        format (NbtFileFormat): Expected format (default: LITTLE_ENDIAN)
         file_memory_map (bool): Use memory mapping (default: False)
     Returns:
         bool: True if valid NBT file, False otherwise

@@ -1,5 +1,5 @@
-import subprocess, os, shutil, sys
-from setuptools import setup, Distribution, find_packages
+import subprocess, os, shutil
+from setuptools import setup, Distribution
 from setuptools.command.build_ext import build_ext
 from setuptools.command.build_py import build_py
 
@@ -13,22 +13,16 @@ class XMakeBuild(build_ext):
         for root, _, files in os.walk(f"./{PACKAGE_NAME}"):
             for file_name in files:
                 file_path = os.path.join(root, file_name)
-                if file_path.endswith((".so", ".pyd", ".lib")):
+                if file_path.endswith((".so", ".pyd")):
                     os.remove(file_path)
 
     def _copy_binary(self):
-        extension: str = self.get_ext_filename(EXTENSION_FILENAME)
         shutil.copy(
             f"./build/bin/{EXTENSION_FILENAME}",
             os.path.join(
                 f"./{PACKAGE_NAME}", self.get_ext_filename(EXTENSION_FILENAME)
             ),
         )
-        if sys.platform == "win32" and extension.endswith(".pyd"):
-            shutil.copy(
-                f"./build/bin/{EXTENSION_FILENAME}.lib",
-                os.path.join(f"./{PACKAGE_NAME}", f"{extension[:-4]}.lib"),
-            )
 
     def run(self):
         self._clean()
@@ -49,15 +43,9 @@ class InstallCommand(build_py):
 
 
 setup(
-    name=f"{PACKAGE_NAME}",
-    version="1.0.0",
-    packages=find_packages(),
-    include_package_data=True,
-    package_data={f"{PACKAGE_NAME}": ["*.so", "*.pyd", "*.lib"]},
     cmdclass={
         "build_ext": XMakeBuild,
         "build_py": InstallCommand,
     },
     distclass=XmakeDistribution,
-    zip_safe=False,
 )

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rapidnbt"
-version = "1.0.0"
+version = "1.0.1"
 authors = [{ name = "GlacieTeam" }]
 description = "Python bindings for High-Performance NBT library"
 readme = "README.md"
@@ -28,7 +28,7 @@ include-package-data = true
 packages = { find = {} }
 
 [tool.setuptools.package-data]
-rapidnbt = ["*.pyd", "*.so", "*.lib"]
+rapidnbt = ["*.pyd", "*.so"]
 
 [tool.cibuildwheel]
 build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
@@ -41,7 +41,7 @@ before-all = [
     "/usr/local/bin/python3 --version",
     "yum install -y epel-release",
     "yum config-manager --set-enabled powertools",
-    "yum install -y gcc-toolset-13 ninja-build cmake openssl",
+    "yum install -y gcc-toolset-13",
     "source /opt/rh/gcc-toolset-13/enable",
     "ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/gcc /usr/bin/gcc",
     "ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/g++ /usr/bin/g++",
