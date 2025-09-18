@@ -39,7 +39,7 @@ Parsing NBT file (870 MB, little-endian binary NBT)
 
 > Tested on Intel i7 14700-HX with 32GB DDR5-5400 using 720MB little-endian binary NBT
 
-## Usage & Examples
+## Quick Start 🚀
 1. Load NBT from file and modify it
 ```Python
 from rapidnbt import nbtio, Int64Tag
@@ -64,8 +64,6 @@ def example(path: str):
         nbt["abc"]["def"] = True
         If nbt["abc"]["def"] does not exist, it will be auto created.
     """ 
-
-    
 ```
 
 2. Create a NBT in memory and save it to file
@@ -98,7 +96,52 @@ nbtio.dump(nbt, "./test.nbt", NbtFileFormat.LITTLE_ENDIAN)
 
 ```
 
-# Used Libraries 📖
+## CLI 🔧
+You can use CLI commands to opeartor NBT files easily.  
+Use `nbt` or `python -m rapidnbt` to run CLI
+```bash
+options:
+  -h, --help            show this help message and exit
+  -p, --print           print NBT as a formatted string
+  -i, --indent INDENT   NBT format indent
+  -j, --json            format NBT as a json string
+  -o, --output OUTPUT   NBT output file path
+  --little              NBT output should use little endian format
+  --big                 NBT output should use big endian format
+  --network             NBT output should use bedrock network format
+  --snbt                NBT output should use a formatted string nbt
+  --header              NBT output should write header
+  -m, --merge           NBT output should merge exist NBT
+  --merge-list          NBT should merge ListTag instead of replace it
+  -c, --compression {none,gzip,zlib}
+                        NBT output should merge exist NBT
+```
+
+**1. Print a NBT file as SNBT**  
+eg. level.dat
+```bash
+nbt level.dat -p
+```
+
+**2. Print a NBT file as a json**  
+eg. level.dat, indent = 2
+```bash
+nbt level.dat -pj --indent=2
+```
+
+**3. Convert a NBT file to other format**  
+eg. convert level.dat to SNBT and save as level.snbt
+```bash
+python -m rapidnbt level.dat --output=level.snbt --indent=0
+```
+
+**4. Merge NBT**  
+eg. use player1.nbt to patch player2.nbt (little-endian, no compression)
+```bash
+nbt player1.dat --output=player2.nbt --merge --little --compression=none
+```
+
+## Used Libraries 📖
 | Library          | License      | Link                                         |
 | ---------------- | ------------ | -------------------------------------------- |
 | NBT              | MPL-2.0      | <https://github.com/GlacieTeam/NBT>          |

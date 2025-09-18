@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rapidnbt"
-version = "1.0.2"
+version = "1.1.0"
 authors = [{ name = "GlacieTeam" }]
 description = "Python bindings for High-Performance NBT library"
 readme = "README.md"
@@ -36,6 +36,9 @@ packages = { find = {} }
 
 [tool.setuptools.package-data]
 rapidnbt = ["*.pyd", "*.so"]
+
+[project.scripts]
+nbt = "rapidnbt.cli:main"
 
 [tool.cibuildwheel]
 build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
