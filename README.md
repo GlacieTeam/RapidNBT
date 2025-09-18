@@ -4,7 +4,9 @@
 [![GitHub License](https://img.shields.io/github/license/GlacieTeam/RapidNBT)](https://www.mozilla.org/en-US/MPL/2.0/)
 [![C++23](https://img.shields.io/badge/C++-23-blue?logo=C%2B%2B&logoColor=41a3ed)](https://en.cppreference.com/w/cpp/compiler_support.html)   
 [![PyPI - Version](https://img.shields.io/pypi/v/rapidnbt)](https://pypi.org/project/rapidnbt)
-[![Python](https://img.shields.io/pypi/pyversions/rapidnbt?logo=python&logoColor=white)](https://www.python.org/)
+[![Python](https://img.shields.io/pypi/pyversions/rapidnbt?logo=python&logoColor=white)](https://www.python.org/)  
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/rapidnbt)](https://pypi.org/project/rapidnbt/)
+
 
 Python Bindings for a High-Performance NBT Library  
 
