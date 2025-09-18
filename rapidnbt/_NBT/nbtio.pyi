@@ -36,22 +36,24 @@ class NbtCompressionType(Enum):
     ZLIB = 2
 
 def detect_content_format(
-    content: Union[bytes, bytearray],
+    content: Union[bytes, bytearray], strict_match_size: bool = True
 ) -> Optional[NbtFileFormat]:
     """Detect NBT format from binary content
     Args:
         content (bytes): Binary content to analyze
+        strict_match_size (bool): Strictly match nbt content size (default: True)
     Returns:
         NbtFileFormat or None if format cannot be determined
     """
 
 def detect_file_format(
-    path: str, file_memory_map: bool = False
+    path: str, file_memory_map: bool = False, strict_match_size: bool = True
 ) -> Optional[NbtFileFormat]:
     """Detect NBT format from a file
     Args:
         path (str): Path to the file
         file_memory_map (bool): Use memory mapping for large files (default: False)
+        strict_match_size (bool): Strictly match nbt content size (default: True)
     Returns:
         NbtFileFormat or None if format cannot be determined
     """
@@ -140,12 +142,14 @@ def load(
     path: str,
     format: Optional[NbtFileFormat] = None,
     file_memory_map: bool = False,
+    strict_match_size: bool = True,
 ) -> Optional[CompoundTag]:
     """Parse CompoundTag from a file
     Args:
         path (str): Path to NBT file
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
         file_memory_map (bool): Use memory mapping for large files (default: False)
+        strict_match_size (bool): Strictly match nbt content size (default: True)
     Returns:
         CompoundTag or None if parsing fails
     """
@@ -159,23 +163,29 @@ def load_snbt(path: str) -> Optional[CompoundTag]:
     """
 
 def loads(
-    content: Union[bytes, bytearray], format: Optional[NbtFileFormat] = None
+    content: Union[bytes, bytearray],
+    format: Optional[NbtFileFormat] = None,
+    strict_match_size: bool = True,
 ) -> Optional[CompoundTag]:
     """Parse CompoundTag from binary data
     Args:
         content (bytes): Binary NBT data
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
+        strict_match_size (bool): Strictly match nbt content size (default: True)
     Returns:
         CompoundTag or None if parsing fails
     """
 
 def loads_base64(
-    content: str, format: Optional[NbtFileFormat] = None
+    content: str,
+    format: Optional[NbtFileFormat] = None,
+    strict_match_size: bool = True,
 ) -> Optional[CompoundTag]:
     """Parse CompoundTag from Base64-encoded NBT
     Args:
         content (str): Base64-encoded NBT data\\
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
+        strict_match_size (bool): Strictly match nbt content size (default: True)
     Returns:
         CompoundTag or None if parsing fails
     """
@@ -193,11 +203,13 @@ def loads_snbt(
 def validate_content(
     content: Union[bytes, bytearray],
     format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
+    strict_match_size: bool = True,
 ) -> bool:
     """Validate NBT binary content
     Args:
         content (bytes): Binary data to validate
         format (NbtFileFormat): Expected format (default: LITTLE_ENDIAN)
+        strict_match_size (bool): Strictly match nbt content size (default: True)
     Returns:
         bool: True if valid NBT, False otherwise
     """
@@ -206,12 +218,14 @@ def validate_file(
     path: str,
     format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
     file_memory_map: bool = False,
+    strict_match_size: bool = True,
 ) -> bool:
     """Validate NBT file
     Args:
         path (str): File path to validate
         format (NbtFileFormat): Expected format (default: LITTLE_ENDIAN)
         file_memory_map (bool): Use memory mapping (default: False)
+        strict_match_size (bool): Strictly match nbt content size (default: True)
     Returns:
         bool: True if valid NBT file, False otherwise
     """

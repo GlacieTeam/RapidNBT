@@ -46,36 +46,46 @@ void bindNbtIO(py::module& m) {
 
     sm.def(
         "detect_content_format",
-        [](py::buffer buffer) { return nbt::io::checkNbtContentFormat(to_cppstringview(buffer)); },
+        [](py::buffer buffer, bool strict_match_size) {
+            return nbt::io::checkNbtContentFormat(to_cppstringview(buffer), strict_match_size);
+        },
         py::arg("content"),
+        py::arg("strict_match_size") = true,
         R"(Detect NBT format from binary content
 Args:
     content (bytes): Binary content to analyzeReturns:
+    NbtFileFormat or None if format cannot be determined
+    strict_match_size (bool): Strictly match nbt content size (default: True)
+Returns:
     NbtFileFormat or None if format cannot be determined)"
     );
     sm.def(
         "detect_file_format",
         &nbt::io::checkNbtFileFormat,
         py::arg("path"),
-        py::arg("file_memory_map") = false,
+        py::arg("file_memory_map")   = false,
+        py::arg("strict_match_size") = true,
         R"(Detect NBT format from a file
 Args:
     path (str): Path to the file
-        file_memory_map (bool): Use memory mapping for large files (default: False)
+    file_memory_map (bool): Use memory mapping for large files (default: False)
+    strict_match_size (bool): Strictly match nbt content size (default: True)
 Returns:
     NbtFileFormat or None if format cannot be determined)"
     );
     sm.def(
         "loads",
-        [](py::buffer buffer, std::optional<nbt::io::NbtFileFormat> format) {
-            return nbt::io::parseFromBinary(to_cppstringview(buffer), format);
+        [](py::buffer buffer, std::optional<nbt::io::NbtFileFormat> format, bool strict_match_size) {
+            return nbt::io::parseFromContent(to_cppstringview(buffer), format, strict_match_size);
         },
         py::arg("content"),
-        py::arg("format") = py::none(),
+        py::arg("format")            = std::nullopt,
+        py::arg("strict_match_size") = true,
         R"(Parse CompoundTag from binary data
 Args:
     content (bytes): Binary NBT data
     format (NbtFileFormat, optional): Force specific format (autodetect if None)
+    strict_match_size (bool): Strictly match nbt content size (default: True)
 Returns:
     CompoundTag or None if parsing fails)"
     );
@@ -83,13 +93,15 @@ Returns:
         "load",
         &nbt::io::parseFromFile,
         py::arg("path"),
-        py::arg("format")          = py::none(),
-        py::arg("file_memory_map") = false,
+        py::arg("format")            = std::nullopt,
+        py::arg("file_memory_map")   = false,
+        py::arg("strict_match_size") = true,
         R"(Parse CompoundTag from a file
 Args:
     path (str): Path to NBT file
     format (NbtFileFormat, optional): Force specific format (autodetect if None)
     file_memory_map (bool): Use memory mapping for large files (default: False)
+    strict_match_size (bool): Strictly match nbt content size (default: True)
 Returns:
     CompoundTag or None if parsing fails)"
     );
@@ -190,15 +202,17 @@ Returns:
     );
     sm.def(
         "validate_content",
-        [](py::buffer buffer, nbt::io::NbtFileFormat format) {
-            return nbt::io::validateContent(to_cppstringview(buffer), format);
+        [](py::buffer buffer, nbt::io::NbtFileFormat format, bool strict_match_size) {
+            return nbt::io::validateContent(to_cppstringview(buffer), format, strict_match_size);
         },
         py::arg("content"),
-        py::arg("format") = nbt::io::NbtFileFormat::LittleEndian,
+        py::arg("format")            = nbt::io::NbtFileFormat::LittleEndian,
+        py::arg("strict_match_size") = true,
         R"(Validate NBT binary content
 Args:
     content (bytes): Binary data to validate
     format (NbtFileFormat): Expected format (default: LittleEndian)
+    strict_match_size (bool): Strictly match nbt content size (default: True)
 Returns:
     bool: True if valid NBT, False otherwise)"
     );
@@ -206,25 +220,29 @@ Returns:
         "validate_file",
         &nbt::io::validateFile,
         py::arg("path"),
-        py::arg("format")          = nbt::io::NbtFileFormat::LittleEndian,
-        py::arg("file_memory_map") = false,
+        py::arg("format")            = nbt::io::NbtFileFormat::LittleEndian,
+        py::arg("file_memory_map")   = false,
+        py::arg("strict_match_size") = true,
         R"(Validate NBT file
 Args:
     path (str): File path to validate
     format (NbtFileFormat): Expected format (default: LittleEndian)
     file_memory_map (bool): Use memory mapping (default: False)
- Returns:
+    strict_match_size (bool): Strictly match nbt content size (default: True)
+Returns:
     bool: True if valid NBT file, False otherwise)"
     );
     sm.def(
         "loads_base64",
         &nbt::io::parseFromBsae64,
         py::arg("content"),
-        py::arg("format") = py::none(),
+        py::arg("format")            = std::nullopt,
+        py::arg("strict_match_size") = true,
         R"(Parse CompoundTag from Base64-encoded NBT
 Args:
     content (str): Base64-encoded NBT data\
     format (NbtFileFormat, optional): Force specific format (autodetect if None)
+    strict_match_size (bool): Strictly match nbt content size (default: True)
 Returns:
     CompoundTag or None if parsing fails)"
     );
