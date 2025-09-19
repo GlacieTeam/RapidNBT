@@ -1,14 +1,15 @@
 # Copyright © 2025 GlacieTeam.All rights reserved.
 #
-# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
-# distributed with this file, You can obtain one at http:#mozilla.org/MPL/2.0/.
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy
+# of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # SPDX-License-Identifier: MPL-2.0
 
+import os
 from typing import Union, Optional
+from enum import Enum
 from rapidnbt._NBT.compound_tag import CompoundTag
 from rapidnbt._NBT.snbt_format import SnbtFormat
-from enum import Enum
 
 class NbtFileFormat(Enum):
     LITTLE_ENDIAN = 0
@@ -47,7 +48,7 @@ def detect_content_format(
     """
 
 def detect_file_format(
-    path: str, file_memory_map: bool = False, strict_match_size: bool = True
+    path: os.PathLike, file_memory_map: bool = False, strict_match_size: bool = True
 ) -> Optional[NbtFileFormat]:
     """Detect NBT format from a file
     Args:
@@ -60,7 +61,7 @@ def detect_file_format(
 
 def dump(
     nbt: CompoundTag,
-    path: str,
+    path: os.PathLike,
     format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
     compression_type: NbtCompressionType = NbtCompressionType.GZIP,
     compression_level: NbtCompressionLevel = NbtCompressionLevel.DEFAULT,
@@ -78,7 +79,7 @@ def dump(
 
 def dump_snbt(
     nbt: CompoundTag,
-    path: str,
+    path: os.PathLike,
     format: SnbtFormat = SnbtFormat.PrettyFilePrint,
     indent: int = 4,
 ) -> bool:
@@ -139,7 +140,7 @@ def dumps_base64(
     """
 
 def load(
-    path: str,
+    path: os.PathLike,
     format: Optional[NbtFileFormat] = None,
     file_memory_map: bool = False,
     strict_match_size: bool = True,
@@ -154,7 +155,7 @@ def load(
         CompoundTag or None if parsing fails
     """
 
-def load_snbt(path: str) -> Optional[CompoundTag]:
+def load_snbt(path: os.PathLike) -> Optional[CompoundTag]:
     """Parse CompoundTag from SNBT (String NBT) file
     Args:
         path (str): Path to SNBT file
@@ -215,7 +216,7 @@ def validate_content(
     """
 
 def validate_file(
-    path: str,
+    path: os.PathLike,
     format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
     file_memory_map: bool = False,
     strict_match_size: bool = True,

@@ -1,33 +1,32 @@
 # Copyright © 2025 GlacieTeam.All rights reserved.
 #
-# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
-# distributed with this file, You can obtain one at http:#mozilla.org/MPL/2.0/.
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy
+# of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from argparse import ArgumentParser
-from rapidnbt import nbtio, SnbtFormat, CompoundTag, NbtFileFormat, NbtCompressionType
-from pathlib import Path
 import os
+from argparse import ArgumentParser
+from pathlib import Path
+from rapidnbt import CompoundTag, NbtCompressionType, NbtFileFormat, SnbtFormat, nbtio
 
 
-def Info(output: str):
+def Info(output: str):  # pylint: disable=invalid-name
     print(f"\033[0m[INFO] {output}\033[0m")
 
 
-def Warn(output: str):
+def Warn(output: str):  # pylint: disable=invalid-name
     print(f"\033[33m[WARN] {output}\033[0m")
 
 
-def Error(output: str):
+def Error(output: str):  # pylint: disable=invalid-name
     print(f"\033[31m[ERROR] {output}\033[0m")
 
 
-def parse_file(path: str, format: NbtFileFormat):
-    if format is not None:
-        return nbtio.load(path, format)
-    else:
-        return nbtio.load_snbt(path)
+def parse_file(path: str, fmt: NbtFileFormat):
+    if fmt is not None:
+        return nbtio.load(path, fmt)
+    return nbtio.load_snbt(path)
 
 
 def write_snbt(nbt: CompoundTag, output: str, indent: int):
@@ -106,7 +105,7 @@ def parse_args():
 
 
 def process_print_options(args, nbt: CompoundTag):
-    if args.print == True:
+    if args.print is True:
         if args.json:
             print(nbt.to_json(args.indent))
         else:
@@ -116,7 +115,7 @@ def process_print_options(args, nbt: CompoundTag):
                 print(nbt.to_snbt(SnbtFormat.Minimize))
 
 
-def process_write_options(args, nbt: CompoundTag, format: NbtFileFormat):
+def process_write_options(args, nbt: CompoundTag, fmt: NbtFileFormat):
     if args.output is not None:
         if os.path.isabs(args.output):
             output = args.output
@@ -124,42 +123,41 @@ def process_write_options(args, nbt: CompoundTag, format: NbtFileFormat):
             output = os.path.join(os.getcwd(), args.output)
         os.makedirs(os.path.dirname(output), exist_ok=True)
 
-        if args.snbt == False:
-            if args.little == True:
-                if args.header == False:
-                    format = NbtFileFormat.LITTLE_ENDIAN
+        if args.snbt is False:
+            if args.little is True:
+                if args.header is False:
+                    fmt = NbtFileFormat.LITTLE_ENDIAN
                 else:
-                    format = NbtFileFormat.LITTLE_ENDIAN_WITH_HEADER
-            elif args.big == True:
-                if args.big == False:
-                    format = NbtFileFormat.BIG_ENDIAN
+                    fmt = NbtFileFormat.LITTLE_ENDIAN_WITH_HEADER
+            elif args.big is True:
+                if args.big is False:
+                    fmt = NbtFileFormat.BIG_ENDIAN
                 else:
-                    format = NbtFileFormat.BIG_ENDIAN_WITH_HEADER
+                    fmt = NbtFileFormat.BIG_ENDIAN_WITH_HEADER
             elif args.network:
-                format = NbtFileFormat.BEDROCK_NETWORK
+                fmt = NbtFileFormat.BEDROCK_NETWORK
 
+            compression = NbtCompressionType.NONE
             if args.compression == "gzip":
                 compression = NbtCompressionType.GZIP
             elif args.compression == "zlib":
                 compression = NbtCompressionType.ZLIB
-            elif args.compression == "none":
-                compression = NbtCompressionType.NONE
 
-            if args.merge == False:
-                nbtio.dump(nbt, output, format, compression)
+            if args.merge is False:
+                nbtio.dump(nbt, output, fmt, compression)
             else:
                 old = nbtio.load(output)
                 if old is not None:
                     old.merge(nbt, args.merge_list)
-                    nbtio.dump(old, output, format, compression)
+                    nbtio.dump(old, output, fmt, compression)
                 else:
                     Warn(
                         f"File {Path(output).absolute()} does not exist, skipping merge."
                     )
-                    nbtio.dump(nbt, output, format, compression)
+                    nbtio.dump(nbt, output, fmt, compression)
 
         else:
-            if args.merge == False:
+            if args.merge is False:
                 write_snbt(nbt, output, args.indent)
             else:
                 old = nbtio.load_snbt(output)

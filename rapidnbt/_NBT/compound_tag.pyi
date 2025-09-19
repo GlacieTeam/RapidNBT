@@ -1,7 +1,7 @@
 # Copyright © 2025 GlacieTeam.All rights reserved.
 #
-# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
-# distributed with this file, You can obtain one at http:#mozilla.org/MPL/2.0/.
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy
+# of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # SPDX-License-Identifier: MPL-2.0
 
@@ -9,7 +9,6 @@ from typing import overload, List, Dict, Union, Optional, Any
 from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
-from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.byte_tag import ByteTag
 from rapidnbt._NBT.short_tag import ShortTag
 from rapidnbt._NBT.int_tag import IntTag

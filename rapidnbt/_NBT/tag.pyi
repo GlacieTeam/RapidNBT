@@ -1,15 +1,15 @@
 # Copyright © 2025 GlacieTeam.All rights reserved.
 #
-# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
-# distributed with this file, You can obtain one at http:#mozilla.org/MPL/2.0/.
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy
+# of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 # SPDX-License-Identifier: MPL-2.0
 
 from typing import overload
+from abc import ABC, abstractmethod
 from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
 from rapidnbt._NBT.snbt_format import SnbtFormat
 from rapidnbt._NBT.tag_type import TagType
-from abc import ABC, abstractmethod
 
 class Tag(ABC):
     """
