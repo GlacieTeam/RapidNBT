@@ -5,7 +5,6 @@ on:
     paths:
       - .github/workflows/build.yml
       - bindings/**
-      - rapidnbt/**
       - xmake.lua
   pull_request:
   workflow_dispatch:
