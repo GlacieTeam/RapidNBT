@@ -175,13 +175,13 @@ Returns:
         &nbt::io::saveSnbtToFile,
         py::arg("nbt"),
         py::arg("path"),
-        py::arg("format") = nbt::SnbtFormat::PrettyFilePrint,
+        py::arg("format") = nbt::SnbtFormat::Default,
         py::arg("indent") = 4,
         R"(Save CompoundTag to SNBT (String NBT) file
 Args:
     nbt (CompoundTag): Tag to save
     path (str): Output file path
-    format (SnbtFormat): Output formatting style (default: PrettyFilePrint)
+    format (SnbtFormat): Output formatting style (default: Default)
     indent (int): Indentation level (default: 4)
 Returns:
     bool: True if successful, False otherwise)"
@@ -190,12 +190,12 @@ Returns:
         "dumps_snbt",
         [](nbt::CompoundTag const& nbt, nbt::SnbtFormat format, uint8_t indent) { return nbt.toSnbt(format, indent); },
         py::arg("nbt"),
-        py::arg("format") = nbt::SnbtFormat::PrettyFilePrint,
+        py::arg("format") = nbt::SnbtFormat::Default,
         py::arg("indent") = 4,
         R"(Save CompoundTag to SNBT (String NBT) file
 Args:
     nbt (CompoundTag): Tag to save
-    format (SnbtFormat): Output formatting style (default: PrettyFilePrint)
+    format (SnbtFormat): Output formatting style (default: Default)
     indent (int): Indentation level (default: 4)
 Returns:
     str: SNBT string)"

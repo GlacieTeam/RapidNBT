@@ -48,10 +48,10 @@ void bindTag(py::module& m) {
         )
         .def(
             "to_snbt",
-            [](const nbt::Tag& self, nbt::SnbtFormat format = nbt::SnbtFormat::PrettyFilePrint, uint8_t indent = 4) {
+            [](const nbt::Tag& self, nbt::SnbtFormat format = nbt::SnbtFormat::Default, uint8_t indent = 4) {
                 return self.toSnbt(format, indent);
             },
-            py::arg("format") = nbt::SnbtFormat::PrettyFilePrint,
+            py::arg("format") = nbt::SnbtFormat::Default,
             py::arg("indent") = 4,
             "Convert tag to SNBT string"
         )

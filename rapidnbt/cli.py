@@ -8,7 +8,7 @@
 import os
 from argparse import ArgumentParser
 from pathlib import Path
-from rapidnbt import CompoundTag, NbtCompressionType, NbtFileFormat, SnbtFormat, nbtio
+from rapidnbt import CompoundTag, NbtCompressionType, NbtFileFormat, nbtio
 
 
 def Info(output: str):  # pylint: disable=invalid-name
@@ -27,13 +27,6 @@ def parse_file(path: str, fmt: NbtFileFormat):
     if fmt is not None:
         return nbtio.load(path, fmt)
     return nbtio.load_snbt(path)
-
-
-def write_snbt(nbt: CompoundTag, output: str, indent: int):
-    if indent != 0:
-        nbtio.dump_snbt(nbt, output, SnbtFormat.PrettyFilePrint, indent)
-    else:
-        nbtio.dump_snbt(nbt, output, SnbtFormat.Minimize)
 
 
 def parse_args():
@@ -109,10 +102,7 @@ def process_print_options(args, nbt: CompoundTag):
         if args.json:
             print(nbt.to_json(args.indent))
         else:
-            if args.indent != 0:
-                print(nbt.to_snbt(SnbtFormat.PrettyFilePrint, args.indent))
-            else:
-                print(nbt.to_snbt(SnbtFormat.Minimize))
+            print(nbt.to_snbt(indent=args.indent))
 
 
 def process_write_options(args, nbt: CompoundTag, fmt: NbtFileFormat):
@@ -158,17 +148,17 @@ def process_write_options(args, nbt: CompoundTag, fmt: NbtFileFormat):
 
         else:
             if args.merge is False:
-                write_snbt(nbt, output, args.indent)
+                nbtio.dump_snbt(nbt, output, indent=args.indent)
             else:
                 old = nbtio.load_snbt(output)
                 if old is not None:
                     old.merge(nbt, args.merge_list)
-                    write_snbt(old, output, args.indent)
+                    nbtio.dump_snbt(old, output, indent=args.indent)
                 else:
                     Warn(
                         f"File {Path(output).absolute()} does not exist, skipping merge."
                     )
-                    write_snbt(nbt, output, args.indent)
+                    nbtio.dump_snbt(nbt, output, indent=args.indent)
 
         Info(f"NBT file generated at: {Path(output).absolute()}")
 
