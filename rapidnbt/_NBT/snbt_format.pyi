@@ -9,11 +9,14 @@ from enum import Enum
 
 class SnbtFormat(Enum):
     Minimize = 0
-    PrettyFilePrint = 1
-    ArrayLineFeed = 2
-    AlwaysLineFeed = 3
-    ForceAscii = 4
-    ForceQuote = 8
-    Classic = 10
-    CommentMarks = 16
-    Jsonify = 24
+    PrettyFilePrint = 1 << 0
+    ArrayLineFeed = 1 << 1
+    ForceAscii = 1 << 2
+    ForceQuote = 1 << 3
+    CommentMarks = 1 << 4
+    AlwaysLineFeed = PrettyFilePrint | ArrayLineFeed
+    Default = PrettyFilePrint
+    Classic = PrettyFilePrint | ForceQuote
+    Jsonify = AlwaysLineFeed | ForceQuote | CommentMarks
+
+    def __or__(self, value: SnbtFormat) -> SnbtFormat: ...

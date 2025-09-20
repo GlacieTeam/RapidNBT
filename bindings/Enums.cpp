@@ -41,10 +41,12 @@ void bindEnums(py::module& m) {
             .value("ForceAscii", nbt::SnbtFormat::ForceAscii)
             .value("ForceQuote", nbt::SnbtFormat::ForceQuote)
             .value("CommentMarks", nbt::SnbtFormat::CommentMarks)
+            .value("Default", nbt::SnbtFormat::Default)
             .value("Classic", nbt::SnbtFormat::Classic)
             .value("Jsonify", nbt::SnbtFormat::Jsonify)
             .value("AlwaysLineFeed", nbt::SnbtFormat::AlwaysLineFeed)
-            .export_values();
+            .export_values()
+            .def("__or__", [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs | rhs; });
     }
 }
 

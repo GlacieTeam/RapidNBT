@@ -63,7 +63,5 @@ class Tag(ABC):
     def to_json(self, indent: int = 4) -> str:
         """Convert tag to JSON string"""
 
-    def to_snbt(
-        self, format: SnbtFormat = SnbtFormat.PrettyFilePrint, indent: int = 4
-    ) -> str:
+    def to_snbt(self, format: SnbtFormat = SnbtFormat.Default, indent: int = 4) -> str:
         """Convert tag to SNBT string"""

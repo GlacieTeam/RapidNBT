@@ -80,14 +80,14 @@ def dump(
 def dump_snbt(
     nbt: CompoundTag,
     path: os.PathLike,
-    format: SnbtFormat = SnbtFormat.PrettyFilePrint,
+    format: SnbtFormat = SnbtFormat.Default,
     indent: int = 4,
 ) -> bool:
     """Save CompoundTag to SNBT (String NBT) file
     Args:
         nbt (CompoundTag): Tag to save
         path (str): Output file path
-        format (SnbtFormat): Output formatting style (default: PrettyFilePrint)
+        format (SnbtFormat): Output formatting style (default: Default)
         indent (int): Indentation level (default: 4)
     Returns:
         bool: True if successful, False otherwise
@@ -111,13 +111,13 @@ def dumps(
 
 def dumps_snbt(
     nbt: CompoundTag,
-    format: SnbtFormat = SnbtFormat.PrettyFilePrint,
+    format: SnbtFormat = SnbtFormat.Default,
     indent: int = 4,
 ) -> str:
     """Save CompoundTag to SNBT (String NBT) file
     Args:
         nbt (CompoundTag): Tag to save
-        format (SnbtFormat): Output formatting style (default: PrettyFilePrint)
+        format (SnbtFormat): Output formatting style (default: Default)
         indent (int): Indentation level (default: 4)
     Returns:
         bool: SNBT string
