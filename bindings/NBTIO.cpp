@@ -161,9 +161,9 @@ Returns:
     );
     sm.def(
         "loads_snbt",
-        &nbt::CompoundTag::fromSnbt,
+        &nbt::io::parseSnbtFromContent,
         py::arg("content"),
-        py::arg("parsed_length") = py::none(),
+        py::arg("parsed_length") = std::nullopt,
         R"(Parse CompoundTag from SNBT (String NBT) file
 Args:
     content (str): SNBT content
@@ -240,7 +240,7 @@ Returns:
         py::arg("strict_match_size") = true,
         R"(Parse CompoundTag from Base64-encoded NBT
 Args:
-    content (str): Base64-encoded NBT data\
+    content (str): Base64-encoded NBT data
     format (NbtFileFormat, optional): Force specific format (autodetect if None)
     strict_match_size (bool): Strictly match nbt content size (default: True)
 Returns:

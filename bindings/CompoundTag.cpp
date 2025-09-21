@@ -626,7 +626,7 @@ void bindCompoundTag(py::module& m) {
             "from_snbt",
             &nbt::CompoundTag::fromSnbt,
             py::arg("snbt"),
-            py::arg("parsed_length") = py::none(),
+            py::arg("parsed_length") = std::nullopt,
             "Parse from String NBT (SNBT) format"
         );
 }

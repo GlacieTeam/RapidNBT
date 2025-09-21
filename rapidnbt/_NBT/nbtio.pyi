@@ -184,7 +184,7 @@ def loads_base64(
 ) -> Optional[CompoundTag]:
     """Parse CompoundTag from Base64-encoded NBT
     Args:
-        content (str): Base64-encoded NBT data\\
+        content (str): Base64-encoded NBT data
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
         strict_match_size (bool): Strictly match nbt content size (default: True)
     Returns:

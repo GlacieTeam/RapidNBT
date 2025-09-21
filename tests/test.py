@@ -6,8 +6,16 @@
 # SPDX-License-Identifier: MPL-2.0
 
 import ctypes
-from rapidnbt import *
-from bstream import *
+from bstream import BinaryStream
+from rapidnbt import (
+    IntArrayTag,
+    LongArrayTag,
+    CompoundTag,
+    IntTag,
+    StringTag,
+    ByteTag,
+    ShortTag,
+)
 
 
 def test1():
@@ -102,14 +110,14 @@ def test4():
         {"c": "d", "3": 4},
         {"e": "f", "5": True},
     ]
-    mergeNbt = CompoundTag(
+    merge_nbt = CompoundTag(
         {
             "string_tag": "merge string",
             "byte_array_tag": b"114514",
             "aaa": {"bbb": [{"c": "d", "3": 4}, {"g": "h", "7": ShortTag(8)}]},
         }
     )
-    nbt.merge(mergeNbt, True)
+    nbt.merge(merge_nbt, True)
     print(nbt.to_snbt())
 
 

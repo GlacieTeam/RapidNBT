@@ -36,7 +36,7 @@ class XmakeDistribution(Distribution):
         return True
 
 
-class InstallCommand(build_py):
+class XmakeCommand(build_py):
     def run(self):
         self.run_command("build_ext")
         super().run()
@@ -45,7 +45,7 @@ class InstallCommand(build_py):
 setup(
     cmdclass={
         "build_ext": XMakeBuild,
-        "build_py": InstallCommand,
+        "build_py": XmakeCommand,
     },
     distclass=XmakeDistribution,
 )
