@@ -36,17 +36,23 @@ void bindEnums(py::module& m) {
 
         py::enum_<nbt::SnbtFormat>(sm, "SnbtFormat", py::arithmetic())
             .value("Minimize", nbt::SnbtFormat::Minimize)
-            .value("PrettyFilePrint", nbt::SnbtFormat::PrettyFilePrint)
-            .value("ArrayLineFeed", nbt::SnbtFormat::ArrayLineFeed)
+            .value("CompoundLineFeed", nbt::SnbtFormat::CompoundLineFeed)
+            .value("ListArrayLineFeed", nbt::SnbtFormat::ListArrayLineFeed)
+            .value("BinaryArrayLineFeed", nbt::SnbtFormat::BinaryArrayLineFeed)
+            .value("ForceLineFeedIgnoreIndent", nbt::SnbtFormat::ForceLineFeedIgnoreIndent)
             .value("ForceAscii", nbt::SnbtFormat::ForceAscii)
             .value("ForceQuote", nbt::SnbtFormat::ForceQuote)
+            .value("ForceUppercase", nbt::SnbtFormat::ForceUppercase)
             .value("CommentMarks", nbt::SnbtFormat::CommentMarks)
+            .value("ArrayLineFeed", nbt::SnbtFormat::ArrayLineFeed)
             .value("AlwaysLineFeed", nbt::SnbtFormat::AlwaysLineFeed)
-            .value("Default", nbt::SnbtFormat::Default)
+            .value("PrettyFilePrint", nbt::SnbtFormat::PrettyFilePrint)
             .value("Classic", nbt::SnbtFormat::Classic)
             .value("Jsonify", nbt::SnbtFormat::Jsonify)
+            .value("Default", nbt::SnbtFormat::Default)
             .export_values()
-            .def("__or__", [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs | rhs; });
+            .def("__or__", [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs | rhs; })
+            .def("__and__", [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs & rhs; });
     }
 }
 
