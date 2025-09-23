@@ -52,7 +52,8 @@ class CompoundTag(Tag):
         """Equality operator (==)"""
 
     def __getitem__(self, key: str) -> CompoundTagVariant:
-        """Get value by key (no exception, auto create if not found)"""
+        """
+        Get value by key (no exception, auto create if not found)"""
 
     def __hash__(self) -> int:
         """Compute hash value for Python hashing operations"""
@@ -72,7 +73,8 @@ class CompoundTag(Tag):
         """Iterate over keys in the compound"""
 
     def __len__(self) -> int:
-        """Get number of key-value pairs"""
+        """
+        Get number of key-value pairs"""
 
     def __repr__(self) -> str:
         """Official string representation"""
@@ -105,91 +107,170 @@ class CompoundTag(Tag):
         """Check if this tag equals another tag"""
 
     def get(self, key: str) -> Tag:
-        """Get tag by key or None if not found"""
+        """
+        Get tag by key
+        Throw TypeError if not found"""
 
     def get_byte_tag(self, key: str) -> Optional[ByteTag]:
-        """Get ByteTag or None if not found or wrong type"""
+        """
+        Get ByteTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_byte_array_tag(self, key: str) -> Optional[ByteArrayTag]:
-        """Get ByteArrayTag or None if not found or wrong type"""
+        """
+        Get ByteArrayTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_compound_tag(self, key: str) -> Optional[CompoundTag]:
-        """Get CompoundTag or None if not found or wrong type"""
+        """
+        Get CompoundTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_double_tag(self, key: str) -> Optional[DoubleTag]:
-        """Get DoubleTag or None if not found or wrong type"""
+        """
+        Get DoubleTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_float_tag(self, key: str) -> Optional[FloatTag]:
-        """Get FloatTag value or None if not found or wrong type"""
+        """
+        Get FloatTag value
+        Throw TypeError if not found or wrong type
+        """
 
     def get_int_tag(self, key: str) -> Optional[IntTag]:
-        """Get IntTag or None if not found or wrong type"""
+        """
+        Get IntTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_int64_tag(self, key: str) -> Optional[Int64Tag]:
-        """Get Int64Tag or None if not found or wrong type"""
+        """
+        Get Int64Tag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_int_array_tag(self, key: str) -> Optional[IntArrayTag]:
-        """Get IntArrayTag or None if not found or wrong type"""
+        """
+        Get IntArrayTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_list_tag(self, key: str) -> Optional[ListTag]:
-        """Get ListTag or None if not found or wrong type"""
+        """
+        Get ListTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_long_array_tag(self, key: str) -> Optional[LongArrayTag]:
-        """Get LongArrayTag or None if not found or wrong type"""
+        """
+        Get LongArrayTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_short_tag(self, key: str) -> Optional[ShortTag]:
-        """Get ShortTag or None if not found or wrong type"""
+        """
+        Get ShortTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_string_tag(self, key: str) -> Optional[StringTag]:
-        """Get StringTag or None if not found or wrong type"""
+        """
+        Get StringTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_byte(self, key: str) -> Optional[int]:
-        """Get byte value or None if not found or wrong type"""
+        """
+        Get byte value
+        Throw TypeError if not found or wrong type
+        """
 
     def get_byte_array(self, key: str) -> Optional[bytes]:
-        """Get byte array or None if not found or wrong type"""
+        """
+        Get byte array
+        Throw TypeError if not found or wrong type
+        """
 
     def get_compound(self, key: str) -> Optional[Dict[str, CompoundTagVariant]]:
-        """Get CompoundTag or None if not found or wrong type"""
+        """
+        Get CompoundTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_double(self, key: str) -> Optional[float]:
-        """Get double value or None if not found or wrong type"""
+        """
+        Get double value
+        Throw TypeError if not found or wrong type
+        """
 
     def get_float(self, key: str) -> Optional[float]:
-        """Get float value or None if not found or wrong type"""
+        """
+        Get float value
+        Throw TypeError if not found or wrong type
+        """
 
     def get_int(self, key: str) -> Optional[int]:
-        """Get int value or None if not found or wrong type"""
+        """
+        Get int value
+        Throw TypeError if not found or wrong type
+        """
 
     def get_int64(self, key: str) -> Optional[int]:
-        """Get long value or None if not found or wrong type"""
+        """
+        Get long value
+        Throw TypeError if not found or wrong type
+        """
 
     def get_int_array(self, key: str) -> Optional[List[int]]:
-        """Get int array or None if not found or wrong type"""
+        """
+        Get int array
+        Throw TypeError if not found or wrong type
+        """
 
     def get_list(self, key: str) -> Optional[List[CompoundTagVariant]]:
-        """Get ListTag or None if not found or wrong type"""
+        """
+        Get ListTag
+        Throw TypeError if not found or wrong type
+        """
 
     def get_long_array(self, key: str) -> Optional[List[int]]:
-        """Get long array or None if not found or wrong type"""
+        """
+        Get long array
+        Throw TypeError if not found or wrong type
+        """
 
     def get_short(self, key: str) -> Optional[int]:
-        """Get short value or None if not found or wrong type"""
+        """
+        Get short value
+        Throw TypeError if not found or wrong type
+        """
 
     def get_string(self, key: str) -> Optional[str]:
-        """Get string value or None if not found or wrong type"""
+        """
+        Get string value
+        Throw TypeError if not found or wrong type
+        """
 
     def get_type(self) -> TagType:
-        """Get the NBT type ID (Compound)"""
+        """
+        Get the NBT type ID (Compound)"""
 
     def hash(self) -> int:
         """Compute hash value of this tag"""
 
     def items(self) -> list:
-        """Get list of (key, value) pairs in the compound"""
+        """
+        Get list of (key, value) pairs in the compound
+        """
 
     def keys(self) -> list:
-        """Get list of all keys in the compound"""
+        """
+        Get list of all keys in the compound
+        """
 
     def load(self, stream: ...) -> None:
         """Load compound from a binary stream"""
@@ -295,7 +376,9 @@ class CompoundTag(Tag):
         """Serialize to Network NBT format (used in Minecraft networking)"""
 
     def values(self) -> list:
-        """Get list of all values in the compound"""
+        """
+        Get list of all values in the compound
+        """
 
     def write(self, stream: ...) -> None:
         """Write compound to a binary stream"""
