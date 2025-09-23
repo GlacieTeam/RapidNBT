@@ -56,6 +56,11 @@ class LongArrayTag(Tag):
                 print(value)
         """
 
+    def __len__(self) -> int:
+        """
+        Get number of int64 in the array
+        """
+
     def __repr__(self) -> str:
         """
         Official string representation
@@ -128,15 +133,19 @@ class LongArrayTag(Tag):
     def pop(self, start_index: int, end_index: int) -> bool:
         """
         Remove elements in the range [start_index, end_index)
+
         Arguments:
-            start_index: First index to remove (inclusive)\\n"
-            end_index: End index (exclusive)\\n"
-        Returns True if successful, False if indices out of range
+            start_index: First index to remove (inclusive)
+            end_index: End index (exclusive)
+
+        Returns:
+            True if successful, False if indices out of range
         """
 
     def reserve(self, capacity: int) -> None:
         """
         Reserve storage capacity for the array
+
         Arguments:
             capacity: Minimum capacity to reserv)
         """

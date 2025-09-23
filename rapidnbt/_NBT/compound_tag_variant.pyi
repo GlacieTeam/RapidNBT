@@ -50,8 +50,14 @@ class CompoundTagVariant:
         Throw TypeError is not hold a CompoundTag.
         """
 
-    def __eq__(self, other: CompoundTagVariant) -> bool: ...
-    def __float__(self) -> float: ...
+    def __eq__(self, other: CompoundTagVariant) -> bool:
+        """
+        Check if this tag equals another tag"""
+
+    def __float__(self) -> float:
+        """
+        Implicitly convert to float"""
+
     @overload
     def __getitem__(self, index: int) -> Tag:
         """
@@ -65,11 +71,31 @@ class CompoundTagVariant:
         """
 
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self) -> None:
+        """
+        Default Constructor
+        """
+
     @overload
-    def __init__(self, value: Any) -> None: ...
-    def __int__(self) -> int: ...
-    def __iter__(self) -> List[CompoundTagVariant]: ...
+    def __init__(self, value: Any) -> None:
+        """
+        Construct from any Python object
+        """
+
+    def __int__(self) -> int:
+        """
+        Implicitly convert to int
+        """
+
+    def __iter__(self) -> List[CompoundTagVariant]:
+        """
+        Iterate over tags in the tag variant"""
+
+    def __len__(self) -> int:
+        """
+        Get the size of the tag
+        """
+
     def __repr__(self) -> str:
         """
         Official string representation
@@ -173,57 +199,237 @@ class CompoundTagVariant:
         Throw TypeError if wrong type
         """
 
-    def get_byte(self) -> int: ...
-    def get_byte_array(self) -> bytes: ...
-    def get_compound(self) -> Dict[str, CompoundTagVariant]: ...
-    def get_double(self) -> float: ...
-    def get_float(self) -> float: ...
-    def get_int(self) -> int: ...
-    def get_int64(self) -> int: ...
-    def get_int_array(self) -> List[int]: ...
-    def get_list(self) -> List[CompoundTagVariant]: ...
-    def get_long_array(self) -> List[int]: ...
-    def get_short(self) -> int: ...
-    def get_string(self) -> str: ...
+    def get(self) -> TagVariant:
+        """
+        Get the tag variant
+        """
+
+    def get_byte(self) -> int:
+        """
+        Get the byte value
+        Throw TypeError if wrong type
+        """
+
+    def get_bytes(self) -> bytes:
+        """
+        Get the original string value (bytes in StringTag)
+        Throw TypeError if wrong type
+        """
+
+    def get_byte_array(self) -> bytes:
+        """
+        Get the byte array value
+        Throw TypeError if wrong type
+        """
+
+    def get_compound(self) -> Dict[str, CompoundTagVariant]:
+        """
+        Get the CompoundTag as a dict value
+        Throw TypeError if wrong type
+        """
+
+    def get_double(self) -> float:
+        """
+        Get the double value
+        Throw TypeError if wrong type
+        """
+
+    def get_float(self) -> float:
+        """
+        Get the float value
+        Throw TypeError if wrong type
+        """
+
+    def get_int(self) -> int:
+        """
+        Get the int value
+        Throw TypeError if wrong type
+        """
+
+    def get_int64(self) -> int:
+        """
+        Get the int64 value
+        Throw TypeError if wrong type
+        """
+
+    def get_int_array(self) -> List[int]:
+        """
+        Get the int array value
+        Throw TypeError if wrong type
+        """
+
+    def get_list(self) -> List[CompoundTagVariant]:
+        """
+        Get the ListTag as a list value
+        Throw TypeError if wrong type
+        """
+
+    def get_long_array(self) -> List[int]:
+        """
+        Get the long array value
+        Throw TypeError if wrong type
+        """
+
+    def get_short(self) -> int:
+        """
+        Get the short value
+        Throw TypeError if wrong type
+        """
+
+    def get_string(self) -> str:
+        """
+        Get the string value
+        Throw TypeError if wrong type
+        """
+
     def contains(self, index: str) -> bool:
         """
         Check if the value is in the CompoundTag.
         Throw TypeError is not hold a CompoundTag.
         """
 
-    def copy(self) -> Tag: ...
-    def get_type(self) -> TagType: ...
-    def hold(self, index: TagType) -> bool: ...
-    def is_array(self) -> bool: ...
-    def is_binary(self) -> bool: ...
-    def is_boolean(self) -> bool: ...
-    def is_null(self) -> bool: ...
-    def is_number(self) -> bool: ...
-    def is_number_float(self) -> bool: ...
-    def is_number_integer(self) -> bool: ...
-    def is_object(self) -> bool: ...
-    def is_primitive(self) -> bool: ...
-    def is_string(self) -> bool: ...
-    def is_structured(self) -> bool: ...
-    def items(self) -> list: ...
-    def merge(self, other: CompoundTagVariant, merge_list: bool = False) -> None: ...
+    def copy(self) -> Tag:
+        """
+        Create a deep copy of this tag
+        """
+
+    def get_type(self) -> TagType:
+        """
+        Get the NBT type ID
+        """
+
+    def hold(self, type: TagType) -> bool:
+        """
+        Check the NBT type ID
+        """
+
+    def is_array(self) -> bool:
+        """
+        Check whether the tag is a ListTag
+        """
+
+    def is_binary(self) -> bool:
+        """
+        Check whether the tag is a binary tag
+        Example:
+            ByteArrayTag, IntArrayTag, LongArrayTag
+        """
+
+    def is_boolean(self) -> bool:
+        """
+        Check whether the tag is a ByteTag
+        """
+
+    def is_null(self) -> bool:
+        """
+        Check whether the tag is an EndTag
+        """
+
+    def is_number(self) -> bool:
+        """
+        Check whether the tag is a number based tag
+        Example:
+            ByteTag, ShortTag, IntTag, Int64Tag, FloatTag, DoubleTag
+        """
+
+    def is_number_float(self) -> bool:
+        """
+        Check whether the tag is a float number based tag
+        Example:
+            FloatTag, DoubleTag
+        """
+
+    def is_number_integer(self) -> bool:
+        """
+        Check whether the tag is a integer number based tag
+        Example:
+            ByteTag, ShortTag, IntTag, Int64Tag
+        """
+
+    def is_object(self) -> bool:
+        """
+        Check whether the tag is a CompoundTag
+        """
+
+    def is_primitive(self) -> bool:
+        """
+        Check whether the tag is a primitive tag
+        Example:
+            ByteTag, ShortTag, IntTag, Int64Tag, FloatTag, DoubleTag, StringTag, ByteArrayTag, IntArrayTag, LongArrayTag
+        """
+
+    def is_string(self) -> bool:
+        """
+        Check whether the tag is a StringTag
+        """
+
+    def is_structured(self) -> bool:
+        """
+        Check whether the tag is a structured tag
+        Example:
+            CompoundTag, ListTag
+        """
+
+    def items(self) -> list:
+        """
+        Get list of (key, value) pairs in this tag
+        Throw TypeError if wrong type
+        """
+
+    def merge(self, other: CompoundTagVariant, merge_list: bool = False) -> None:
+        """
+        Merge another CompoundTag into this one
+
+        Arguments:
+            other: CompoundTag to merge from
+            merge_list: If true, merge list contents instead of replacing
+        """
+
     @overload
-    def pop(self, index: str) -> bool: ...
+    def pop(self, index: str) -> bool:
+        """
+        Remove key from the CompoundTag
+        Throw TypeError if wrong type
+        """
+
     @overload
-    def pop(self, index: int) -> bool: ...
-    def rename(self, index: str, new_name: str) -> bool: ...
-    def size(self) -> int: ...
-    def to_json(self, indent: int = 4) -> str: ...
+    def pop(self, index: int) -> bool:
+        """
+        Remove key from the ListTag
+        Throw TypeError if wrong type
+        """
+
+    def rename(self, index: str, new_name: str) -> bool:
+        """
+        Rname a key in the CompoundTag
+        Throw TypeError if wrong type
+        """
+
+    def size(self) -> int:
+        """
+        Get the size of the tag
+        """
+
+    def to_json(self, indent: int = 4) -> str:
+        """
+        Convert tag to JSON string
+        """
+
     def to_snbt(
         self, snbt_format: SnbtFormat = SnbtFormat.Default, indent: int = 4
-    ) -> str: ...
-    @property
-    def value(
-        self,
-    ) -> TagVariant:
+    ) -> str:
         """
-        Access the tag variant
+        Convert tag to SNBT string
+        """
+
+    @property
+    def value(self) -> Any:
+        """
+        Access the tag value
         """
 
     @value.setter
-    def value(self, value: TagVariant) -> None: ...
+    def value(self, value: Any) -> None:
+        """
+        Access the tag value
+        """

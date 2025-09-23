@@ -51,13 +51,13 @@ void bindNbtIO(py::module& m) {
         },
         py::arg("content"),
         py::arg("strict_match_size") = true,
-        R"(Detect NBT format from binary content
-Args:
-    content (bytes): Binary content to analyzeReturns:
-    NbtFileFormat or None if format cannot be determined
-    strict_match_size (bool): Strictly match nbt content size (default: True)
-Returns:
-    NbtFileFormat or None if format cannot be determined)"
+        "Detect NBT format from binary content",
+        "Args:",
+        "    content (bytes): Binary content to analyzeReturns:",
+        "    NbtFileFormat or None if format cannot be determined",
+        "    strict_match_size (bool): Strictly match nbt content size (default: True)",
+        "Returns:",
+        "    NbtFileFormat or None if format cannot be determined)"
     );
     sm.def(
         "detect_file_format",
@@ -66,12 +66,12 @@ Returns:
         py::arg("file_memory_map")   = false,
         py::arg("strict_match_size") = true,
         R"(Detect NBT format from a file
-Args:
-    path (str): Path to the file
-    file_memory_map (bool): Use memory mapping for large files (default: False)
-    strict_match_size (bool): Strictly match nbt content size (default: True)
-Returns:
-    NbtFileFormat or None if format cannot be determined)"
+        Args:
+            path (str): Path to the file
+            file_memory_map (bool): Use memory mapping for large files (default: False)
+            strict_match_size (bool): Strictly match nbt content size (default: True)
+        Returns:
+            NbtFileFormat or None if format cannot be determined)"
     );
     sm.def(
         "loads",
@@ -82,12 +82,12 @@ Returns:
         py::arg("format")            = std::nullopt,
         py::arg("strict_match_size") = true,
         R"(Parse CompoundTag from binary data
-Args:
-    content (bytes): Binary NBT data
-    format (NbtFileFormat, optional): Force specific format (autodetect if None)
-    strict_match_size (bool): Strictly match nbt content size (default: True)
-Returns:
-    CompoundTag or None if parsing fails)"
+        Args:
+            content (bytes): Binary NBT data
+            format (NbtFileFormat, optional): Force specific format (autodetect if None)
+            strict_match_size (bool): Strictly match nbt content size (default: True)
+        Returns:
+            CompoundTag or None if parsing fails)"
     );
     sm.def(
         "load",
@@ -97,13 +97,13 @@ Returns:
         py::arg("file_memory_map")   = false,
         py::arg("strict_match_size") = true,
         R"(Parse CompoundTag from a file
-Args:
-    path (str): Path to NBT file
-    format (NbtFileFormat, optional): Force specific format (autodetect if None)
-    file_memory_map (bool): Use memory mapping for large files (default: False)
-    strict_match_size (bool): Strictly match nbt content size (default: True)
-Returns:
-    CompoundTag or None if parsing fails)"
+        Args:
+            path (str): Path to NBT file
+            format (NbtFileFormat, optional): Force specific format (autodetect if None)
+            file_memory_map (bool): Use memory mapping for large files (default: False)
+            strict_match_size (bool): Strictly match nbt content size (default: True)
+        Returns:
+            CompoundTag or None if parsing fails)"
     );
     sm.def(
         "dumps",
@@ -120,14 +120,14 @@ Returns:
         py::arg("compression_level") = nbt::io::CompressionLevel::Default,
         py::arg("header_version")    = std::nullopt,
         R"(Serialize CompoundTag to binary data
-            Args:
-    nbt (CompoundTag): Tag to serialize
-    format (NbtFileFormat): Output format (default: LittleEndian)
-    compression_type (CompressionType): Compression method (default: Gzip)
-    compression_level (CompressionLevel): Compression level (default: Default)
-    header_version (Optional[int]): NBT header storage version
-Returns:
-    bytes: Serialized binary data)"
+        Args:
+            nbt (CompoundTag): Tag to serialize
+            format (NbtFileFormat): Output format (default: LittleEndian)
+            compression_type (CompressionType): Compression method (default: Gzip)
+            compression_level (CompressionLevel): Compression level (default: Default)
+            header_version (Optional[int]): NBT header storage version
+        Returns:
+            bytes: Serialized binary data)"
     );
     sm.def(
         "dump",
@@ -139,25 +139,25 @@ Returns:
         py::arg("compression_level") = nbt::io::CompressionLevel::Default,
         py::arg("header_version")    = std::nullopt,
         R"(Save CompoundTag to a file
-Args:
-    nbt (CompoundTag): Tag to save
-    path (str): Output file path
-    format (NbtFileFormat): Output format (default: LittleEndian)
-    compression_type (CompressionType): Compression method (default: Gzip)
-    compression_level (CompressionLevel): Compression level (default: Default)
-    header_version (Optional[int]): NBT header storage version
-Returns:
-    bool: True if successful, False otherwise)"
+        Args:
+            nbt (CompoundTag): Tag to save
+            path (str): Output file path
+            format (NbtFileFormat): Output format (default: LittleEndian)
+            compression_type (CompressionType): Compression method (default: Gzip)
+            compression_level (CompressionLevel): Compression level (default: Default)
+            header_version (Optional[int]): NBT header storage version
+        Returns:
+            bool: True if successful, False otherwise)"
     );
     sm.def(
         "load_snbt",
         &nbt::io::parseSnbtFromFile,
         py::arg("path"),
         R"(Parse CompoundTag from SNBT (String NBT) file
-Args:
-    path (str): Path to SNBT file
-Returns:
-    CompoundTag or None if parsing fails)"
+        Args:
+            path (str): Path to SNBT file
+        Returns:
+            CompoundTag or None if parsing fails)"
     );
     sm.def(
         "loads_snbt",
@@ -165,10 +165,10 @@ Returns:
         py::arg("content"),
         py::arg("parsed_length") = std::nullopt,
         R"(Parse CompoundTag from SNBT (String NBT) file
-Args:
-    content (str): SNBT content
-Returns:
-    CompoundTag or None if parsing fails)"
+        Args:
+            content (str): SNBT content
+        Returns:
+            CompoundTag or None if parsing fails)"
     );
     sm.def(
         "dump_snbt",
@@ -178,13 +178,13 @@ Returns:
         py::arg("format") = nbt::SnbtFormat::Default,
         py::arg("indent") = 4,
         R"(Save CompoundTag to SNBT (String NBT) file
-Args:
-    nbt (CompoundTag): Tag to save
-    path (str): Output file path
-    format (SnbtFormat): Output formatting style (default: Default)
-    indent (int): Indentation level (default: 4)
-Returns:
-    bool: True if successful, False otherwise)"
+        Args:
+            nbt (CompoundTag): Tag to save
+            path (str): Output file path
+            format (SnbtFormat): Output formatting style (default: Default)
+            indent (int): Indentation level (default: 4)
+        Returns:
+            bool: True if successful, False otherwise)"
     );
     sm.def(
         "dumps_snbt",
@@ -193,12 +193,12 @@ Returns:
         py::arg("format") = nbt::SnbtFormat::Default,
         py::arg("indent") = 4,
         R"(Save CompoundTag to SNBT (String NBT) file
-Args:
-    nbt (CompoundTag): Tag to save
-    format (SnbtFormat): Output formatting style (default: Default)
-    indent (int): Indentation level (default: 4)
-Returns:
-    str: SNBT string)"
+        Args:
+            nbt (CompoundTag): Tag to save
+            format (SnbtFormat): Output formatting style (default: Default)
+            indent (int): Indentation level (default: 4)
+        Returns:
+            str: SNBT string)"
     );
     sm.def(
         "validate_content",
@@ -209,12 +209,12 @@ Returns:
         py::arg("format")            = nbt::io::NbtFileFormat::LittleEndian,
         py::arg("strict_match_size") = true,
         R"(Validate NBT binary content
-Args:
-    content (bytes): Binary data to validate
-    format (NbtFileFormat): Expected format (default: LittleEndian)
-    strict_match_size (bool): Strictly match nbt content size (default: True)
-Returns:
-    bool: True if valid NBT, False otherwise)"
+        Args:
+            content (bytes): Binary data to validate
+            format (NbtFileFormat): Expected format (default: LittleEndian)
+            strict_match_size (bool): Strictly match nbt content size (default: True)
+        Returns:
+            bool: True if valid NBT, False otherwise)"
     );
     sm.def(
         "validate_file",
@@ -223,14 +223,14 @@ Returns:
         py::arg("format")            = nbt::io::NbtFileFormat::LittleEndian,
         py::arg("file_memory_map")   = false,
         py::arg("strict_match_size") = true,
-        R"(Validate NBT file
-Args:
-    path (str): File path to validate
-    format (NbtFileFormat): Expected format (default: LittleEndian)
-    file_memory_map (bool): Use memory mapping (default: False)
-    strict_match_size (bool): Strictly match nbt content size (default: True)
-Returns:
-    bool: True if valid NBT file, False otherwise)"
+        "Validate NBT file",
+        "Args:",
+        "    path (str): File path to validate",
+        "    format (NbtFileFormat): Expected format (default: LittleEndian)",
+        "    file_memory_map (bool): Use memory mapping (default: False)",
+        "    strict_match_size (bool): Strictly match nbt content size (default: True)",
+        "Returns:",
+        "    bool: True if valid NBT file, False otherwise"
     );
     sm.def(
         "loads_base64",
@@ -238,13 +238,13 @@ Returns:
         py::arg("content"),
         py::arg("format")            = std::nullopt,
         py::arg("strict_match_size") = true,
-        R"(Parse CompoundTag from Base64-encoded NBT
-Args:
-    content (str): Base64-encoded NBT data
-    format (NbtFileFormat, optional): Force specific format (autodetect if None)
-    strict_match_size (bool): Strictly match nbt content size (default: True)
-Returns:
-    CompoundTag or None if parsing fails)"
+        "Parse CompoundTag from Base64-encoded NBT",
+        "Args:",
+        "    content (str): Base64-encoded NBT data",
+        "    format (NbtFileFormat, optional): Force specific format (autodetect if None)",
+        "    strict_match_size (bool): Strictly match nbt content size (default: True)",
+        "Returns:",
+        "    CompoundTag or None if parsing fails"
     );
     sm.def(
         "dumps_base64",
@@ -254,15 +254,15 @@ Returns:
         py::arg("compression_type")  = nbt::io::CompressionType::Gzip,
         py::arg("compression_level") = nbt::io::CompressionLevel::Default,
         py::arg("header_version")    = std::nullopt,
-        R"(Serialize CompoundTag to Base64 string
-Args:
-    nbt (CompoundTag): Tag to serialize
-    format (NbtFileFormat): Output format (default: LittleEndian)
-    compression_type (CompressionType): Compression method (default: Gzip)
-    compression_level (CompressionLevel): Compression level (default: Default)
-    header_version (Optional[int]): NBT header storage version
-Returns:
-    str: Base64-encoded NBT data)"
+        "Serialize CompoundTag to Base64 string",
+        "Args:",
+        "    nbt (CompoundTag): Tag to serialize",
+        "    format (NbtFileFormat): Output format (default: LittleEndian)",
+        "    compression_type (CompressionType): Compression method (default: Gzip)",
+        "    compression_level (CompressionLevel): Compression level (default: Default)",
+        "    header_version (Optional[int]): NBT header storage version",
+        "Returns:",
+        "    str: Base64-encoded NBT data"
     );
 }
 

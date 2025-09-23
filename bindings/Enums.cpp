@@ -35,9 +35,9 @@ void bindEnums(py::module& m) {
         auto sm = m.def_submodule(
             "snbt_format",
             R"(The SNBT format enum
-You can use | operation to combime flags
-Example:
-    format = SnbtFormat.Classic | SnbtFormat.ForceUppercase)"
+            You can use | operation to combime flags
+            Example:
+                format = SnbtFormat.Classic | SnbtFormat.ForceUppercase)"
         );
 
         py::enum_<nbt::SnbtFormat>(sm, "SnbtFormat", py::arithmetic())

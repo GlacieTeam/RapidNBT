@@ -15,6 +15,11 @@ void bindStringTag(py::module& m) {
     py::class_<nbt::StringTag, nbt::Tag>(sm, "StringTag", "A tag contains a string")
         .def(py::init<>(), "Construct an empty StringTag")
         .def(py::init<std::string>(), py::arg("str"), "Construct from a Python string")
+        .def(
+            py::init([](py::buffer buffer) { return std::make_unique<nbt::StringTag>(to_cppstringview(buffer)); }),
+            py::arg("str"),
+            "Construct from a Python bytes / bytearray"
+        )
 
         .def("get_type", &nbt::StringTag::getType, "Get the NBT type ID (String)")
         .def(
@@ -39,17 +44,21 @@ void bindStringTag(py::module& m) {
             "Load tag value from a binary stream (UTF-8)"
         )
 
+        .def(
+            "get",
+            [](nbt::StringTag& self) -> std::string { return self.storage(); },
+            "Get the string content of this tag"
+        )
+        .def(
+            "set",
+            [](nbt::StringTag& self, std::string value) { self.storage() = std::move(value); },
+            "Set the string content of this tag"
+        )
         .def_property(
             "value",
             [](nbt::StringTag& self) -> py::bytes { return self.storage(); },
             [](nbt::StringTag& self, py::buffer value) { self.storage() = to_cppstringview(value); },
             "Access the original string content of this tag"
-        )
-        .def_property(
-            "str",
-            [](nbt::StringTag& self) -> std::string { return self.storage(); },
-            [](nbt::StringTag& self, std::string value) { self.storage() = std::move(value); },
-            "Access the string content of this tag"
         )
 
         .def(

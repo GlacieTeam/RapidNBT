@@ -17,9 +17,9 @@ void bindIntArrayTag(py::module& m) {
         .def(
             py::init<std::vector<int> const&>(),
             py::arg("values"),
-            R"(Construct from a list of integers
-            Example:
-                IntArrayTag([1, 2, 3]))"
+            "Construct from a list of integers",
+            "Example:",
+            "    IntArrayTag([1, 2, 3]))"
         )
 
         .def("get_type", &nbt::IntArrayTag::getType, "Get the NBT type ID (int array)")
@@ -50,6 +50,7 @@ void bindIntArrayTag(py::module& m) {
             &nbt::IntArrayTag::reserve,
             py::arg("capacity"),
             R"(Reserve storage capacity for the array
+            
             Arguments:
                 capacity: Minimum capacity to reserv))"
         )
@@ -78,8 +79,7 @@ void bindIntArrayTag(py::module& m) {
             "pop",
             py::overload_cast<size_t>(&nbt::IntArrayTag::remove),
             py::arg("index"),
-            "Remove element at specified index\n"
-            "Returns True if successful, False if index out of range"
+            "Remove element at specified index\nReturns:    True if successful, False if index out of range"
         )
         .def(
             "pop",
@@ -87,10 +87,13 @@ void bindIntArrayTag(py::module& m) {
             py::arg("start_index"),
             py::arg("end_index"),
             R"(Remove elements in the range [start_index, end_index)
+
             Arguments:
-                start_index: First index to remove (inclusive)\n"
-                end_index: End index (exclusive)\n"
-            Returns True if successful, False if indices out of range)"
+                start_index: First index to remove (inclusive)
+                end_index: End index (exclusive)
+
+            Returns:
+                 True if successful, False if indices out of range)"
         )
         .def(
             "assign",
@@ -136,6 +139,7 @@ void bindIntArrayTag(py::module& m) {
             py::arg("value"),
             "Check if value is in the array"
         )
+        .def("__len__", &nbt::IntArrayTag::size, "Get number of int in the array")
         .def(
             "__str__",
             [](nbt::IntArrayTag const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },

@@ -26,7 +26,9 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
         for (auto [k, v] : dict) {
             auto  key   = py::cast<std::string>(k);
             auto& value = static_cast<py::object&>(v);
-            if (py::isinstance<nbt::Tag>(value)) {
+            if (py::isinstance<nbt::CompoundTagVariant>(value)) {
+                (*tag)[key] = *value.cast<nbt::CompoundTagVariant*>();
+            } else if (py::isinstance<nbt::Tag>(value)) {
                 tag->put(key, value.cast<nbt::Tag*>()->copy());
             } else {
                 tag->put(key, makeNativeTag(value));
@@ -38,7 +40,9 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
         auto tag  = std::make_unique<nbt::ListTag>();
         for (auto t : list) {
             auto& value = static_cast<py::object&>(t);
-            if (py::isinstance<nbt::Tag>(value)) {
+            if (py::isinstance<nbt::CompoundTagVariant>(value)) {
+                tag->push_back(*value.cast<nbt::CompoundTagVariant*>());
+            } else if (py::isinstance<nbt::Tag>(value)) {
                 tag->push_back(value.cast<nbt::Tag*>()->copy());
             } else {
                 tag->push_back(makeNativeTag(value));
@@ -69,31 +73,77 @@ void bindCompoundTagVariant(py::module& m) {
     auto sm = m.def_submodule("compound_tag_variant", "A warpper of all tags, to provide morden API for NBT");
 
     py::class_<nbt::CompoundTagVariant>(sm, "CompoundTagVariant")
-        .def(py::init<>())
-        .def(py::init([](py::object const& obj) {
-            if (py::isinstance<nbt::Tag>(obj)) {
-                return std::make_unique<nbt::CompoundTagVariant>(*obj.cast<nbt::Tag*>());
-            } else {
-                return std::make_unique<nbt::CompoundTagVariant>(makeNativeTag(obj));
-            }
-        }))
+        .def(py::init<>(), "Default Constructor")
+        .def(
+            py::init([](py::object const& obj) {
+                if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
+                    return std::make_unique<nbt::CompoundTagVariant>(*obj.cast<nbt::CompoundTagVariant*>());
+                } else if (py::isinstance<nbt::Tag>(obj)) {
+                    return std::make_unique<nbt::CompoundTagVariant>(*obj.cast<nbt::Tag*>());
+                } else {
+                    return std::make_unique<nbt::CompoundTagVariant>(makeNativeTag(obj));
+                }
+            }),
+            "Construct from any Python object"
+        )
 
-        .def("get_type", &nbt::CompoundTagVariant::getType)
-        .def("hold", [](nbt::CompoundTagVariant const& self, nbt::Tag::Type type) -> bool { return self.hold(type); })
+        .def("get_type", &nbt::CompoundTagVariant::getType, "Get the NBT type ID")
+        .def(
+            "hold",
+            [](nbt::CompoundTagVariant const& self, nbt::Tag::Type type) -> bool { return self.hold(type); },
+            "Check the NBT type ID"
+        )
 
-        .def("is_array", &nbt::CompoundTagVariant::is_array)
-        .def("is_binary", &nbt::CompoundTagVariant::is_binary)
-        .def("is_boolean", &nbt::CompoundTagVariant::is_boolean)
-        .def("is_null", &nbt::CompoundTagVariant::is_null)
-        .def("is_number_float", &nbt::CompoundTagVariant::is_number_float)
-        .def("is_number_integer", &nbt::CompoundTagVariant::is_number_integer)
-        .def("is_object", &nbt::CompoundTagVariant::is_object)
-        .def("is_string", &nbt::CompoundTagVariant::is_string)
-        .def("is_number", &nbt::CompoundTagVariant::is_number)
-        .def("is_primitive", &nbt::CompoundTagVariant::is_primitive)
-        .def("is_structured", &nbt::CompoundTagVariant::is_structured)
+        .def("is_array", &nbt::CompoundTagVariant::is_array, "Check whether the tag is a ListTag")
+        .def(
+            "is_binary",
+            &nbt::CompoundTagVariant::is_binary,
+            "Check whether the tag is a binary tag",
+            "Example:",
+            "    ByteArrayTag, IntArrayTag, LongArrayTag"
+        )
+        .def("is_boolean", &nbt::CompoundTagVariant::is_boolean, "Check whether the tag is a ByteTag")
+        .def("is_null", &nbt::CompoundTagVariant::is_null, "Check whether the tag is an EndTag")
+        .def(
+            "is_number_float",
+            &nbt::CompoundTagVariant::is_number_float,
+            "Check whether the tag is a float number based tag",
+            "Example:",
+            "    FloatTag, DoubleTag"
+        )
+        .def(
+            "is_number_integer",
+            &nbt::CompoundTagVariant::is_number_integer,
+            "Check whether the tag is a integer number based tag",
+            "Example:",
+            "    ByteTag, ShortTag, IntTag, Int64Tag"
+        )
+        .def("is_object", &nbt::CompoundTagVariant::is_object, "Check whether the tag is a CompoundTag")
+        .def("is_string", &nbt::CompoundTagVariant::is_string, "Check whether the tag is a StringTag")
+        .def(
+            "is_number",
+            &nbt::CompoundTagVariant::is_number,
+            "Check whether the tag is a number based tag",
+            "Example:",
+            "    FloatTag, DoubleTag, ByteTag, ShortTag, IntTag, Int64Tag"
+        )
+        .def(
+            "is_primitive",
+            &nbt::CompoundTagVariant::is_primitive,
+            "Check whether the tag is a primitive tag",
+            "Example:",
+            "    ByteTag, ShortTag, IntTag, Int64Tag, FloatTag, DoubleTag, StringTag, ByteArrayTag, IntArrayTag, "
+            "LongArrayTag"
+        )
+        .def(
+            "is_structured",
+            &nbt::CompoundTagVariant::is_structured,
+            "Check whether the tag is a structured tag",
+            "Example:",
+            "    CompoundTag, ListTag"
+        )
 
-        .def("size", &nbt::CompoundTagVariant::size)
+        .def("size", &nbt::CompoundTagVariant::size, "Get the size of the tag")
         .def(
             "contains",
             [](nbt::CompoundTagVariant& self, std::string_view index) -> bool { return self.contains(index); },
@@ -125,7 +175,9 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "__setitem__",
             [](nbt::CompoundTagVariant& self, std::string_view key, py::object const& obj) {
-                if (py::isinstance<nbt::Tag>(obj)) {
+                if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
+                    self[key] = *obj.cast<nbt::CompoundTagVariant*>();
+                } else if (py::isinstance<nbt::Tag>(obj)) {
                     self[key] = *obj.cast<nbt::Tag*>();
                 } else {
                     self[key] = makeNativeTag(obj);
@@ -136,7 +188,9 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "__setitem__",
             [](nbt::CompoundTagVariant& self, size_t index, py::object const& obj) {
-                if (py::isinstance<nbt::Tag>(obj)) {
+                if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
+                    self[index] = *obj.cast<nbt::CompoundTagVariant*>();
+                } else if (py::isinstance<nbt::Tag>(obj)) {
                     self[index] = *obj.cast<nbt::Tag*>();
                 } else {
                     self[index] = *makeNativeTag(obj);
@@ -145,13 +199,38 @@ void bindCompoundTagVariant(py::module& m) {
             "Set value by array index"
         )
 
-        .def("pop", py::overload_cast<std::string_view>(&nbt::CompoundTagVariant::remove))
-        .def("pop", py::overload_cast<size_t>(&nbt::CompoundTagVariant::remove))
-        .def("rename", &nbt::CompoundTagVariant::rename)
+        .def(
+            "pop",
+            [](nbt::CompoundTagVariant& self, std::string_view index) {
+                if (!self.is_object()) { throw py::type_error("tag not hold an object"); }
+                return self.remove(index);
+            },
+            py::arg("index"),
+            "Remove key from the CompoundTag",
+            "Throw TypeError if wrong type"
+        )
+        .def(
+            "pop",
+            [](nbt::CompoundTagVariant& self, size_t index) {
+                if (!self.is_array()) { throw py::type_error("tag not hold an array"); }
+                return self.remove(index);
+            },
+            py::arg("index"),
+            "Rname a key in the CompoundTag",
+            "Throw TypeError if wrong type"
+        )
+        .def(
+            "rename",
+            &nbt::CompoundTagVariant::rename,
+            "Remove key from the CompoundTag",
+            "Throw TypeError if wrong type"
+        )
         .def(
             "append",
             [](nbt::CompoundTagVariant& self, py::object const& obj) {
-                if (py::isinstance<nbt::Tag>(obj)) {
+                if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
+                    self.push_back(*obj.cast<nbt::CompoundTagVariant*>());
+                } else if (py::isinstance<nbt::Tag>(obj)) {
                     self.push_back(*obj.cast<nbt::Tag*>());
                 } else {
                     self.push_back(makeNativeTag(obj));
@@ -161,8 +240,10 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "assign",
             [](nbt::CompoundTagVariant& self, py::object const& obj) {
-                if (py::isinstance<nbt::Tag>(obj)) {
-                    self = *obj.cast<nbt::Tag*>();
+                if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
+                    self = *obj.cast<nbt::CompoundTagVariant*>();
+                } else if (py::isinstance<nbt::Tag>(obj)) {
+                    self = nbt::CompoundTagVariant(*obj.cast<nbt::Tag*>());
                 } else {
                     self = makeNativeTag(obj);
                 }
@@ -172,7 +253,8 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "__iter__",
             [](nbt::CompoundTagVariant& self) { return py::make_iterator(self.begin(), self.end()); },
-            py::keep_alive<0, 1>()
+            py::keep_alive<0, 1>(),
+            "Iterate over tags in the tag variant"
         )
         .def(
             "items",
@@ -183,19 +265,31 @@ void bindCompoundTagVariant(py::module& m) {
                     items.append(py::make_tuple(key, py::cast(value)));
                 }
                 return items;
-            }
+            },
+            "Get list of (key, value) pairs in this tag\nThrow TypeError if wrong type"
         )
 
         .def(
             "to_snbt",
             &nbt::CompoundTagVariant::toSnbt,
             py::arg("snbt_format") = nbt::SnbtFormat::Default,
-            py::arg("indent")      = 4
+            py::arg("indent")      = 4,
+            "Convert tag to SNBT string"
         )
-        .def("to_json", &nbt::CompoundTagVariant::toJson, py::arg("indent") = 4)
+        .def("to_json", &nbt::CompoundTagVariant::toJson, py::arg("indent") = 4, "Convert tag to JSON string")
 
-        .def("merge", &nbt::CompoundTagVariant::merge, py::arg("other"), py::arg("merge_list") = false)
-        .def("copy", &nbt::CompoundTagVariant::toUniqueCopy)
+        .def(
+            "merge",
+            &nbt::CompoundTagVariant::merge,
+            py::arg("other"),
+            py::arg("merge_list") = false,
+            "Merge another CompoundTag into this one",
+            "",
+            "Arguments:",
+            "    other: CompoundTag to merge from",
+            "    merge_list: If true, merge list contents instead of replacing"
+        )
+        .def("copy", &nbt::CompoundTagVariant::toUniqueCopy, "Create a deep copy of this tag")
 
         .def(
             "as_byte_tag",
@@ -311,56 +405,72 @@ void bindCompoundTagVariant(py::module& m) {
             [](nbt::CompoundTagVariant& self) -> uint8_t {
                 if (!self.hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
                 return self.as<nbt::ByteTag>().storage();
-            }
+            },
+            "Get the byte value\nThrow TypeError if wrong type"
         )
         .def(
             "get_short",
             [](nbt::CompoundTagVariant& self) -> short {
                 if (!self.hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
                 return self.as<nbt::ShortTag>().storage();
-            }
+            },
+            "Get the short value\nThrow TypeError if wrong type"
         )
         .def(
             "get_int",
             [](nbt::CompoundTagVariant& self) -> int {
                 if (!self.hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold an IntTag"); }
                 return self.as<nbt::IntTag>().storage();
-            }
+            },
+            "Get the int value\nThrow TypeError if wrong type"
         )
         .def(
             "get_int64",
             [](nbt::CompoundTagVariant& self) -> int64_t {
                 if (!self.hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold an Int64Tag"); }
                 return self.as<nbt::Int64Tag>().storage();
-            }
+            },
+            "Get the int64 value\nThrow TypeError if wrong type"
         )
         .def(
             "get_float",
             [](nbt::CompoundTagVariant& self) -> float {
                 if (!self.hold(nbt::Tag::Type::Float)) { throw py::type_error("tag not hold a FloatTag"); }
                 return self.as<nbt::FloatTag>().storage();
-            }
+            },
+            "Get the float value\nThrow TypeError if wrong type"
         )
         .def(
             "get_double",
             [](nbt::CompoundTagVariant& self) -> double {
                 if (!self.hold(nbt::Tag::Type::Double)) { throw py::type_error("tag not hold a DoubleTag"); }
                 return self.as<nbt::DoubleTag>().storage();
-            }
+            },
+            "Get the double value\nThrow TypeError if wrong type"
         )
         .def(
             "get_byte_array",
             [](nbt::CompoundTagVariant& self) -> py::bytes {
                 if (!self.hold(nbt::Tag::Type::ByteArray)) { throw py::type_error("tag not hold a ByteArrayTag"); }
                 return to_pybytes(static_cast<std::string_view>(self.as<nbt::ByteArrayTag>()));
-            }
+            },
+            "Get the byte array value\nThrow TypeError if wrong type"
         )
         .def(
             "get_string",
             [](nbt::CompoundTagVariant& self) -> std::string {
                 if (!self.hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
                 return self.as<nbt::StringTag>().storage();
-            }
+            },
+            "Get the string value\nThrow TypeError if wrong type"
+        )
+        .def(
+            "get_bytes",
+            [](nbt::CompoundTagVariant& self) -> py::bytes {
+                if (!self.hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
+                return to_pybytes(self.as<nbt::StringTag>().storage());
+            },
+            "Get the original string value (bytes in StringTag)\nThrow TypeError if wrong type"
         )
         .def(
             "get_compound",
@@ -369,7 +479,8 @@ void bindCompoundTagVariant(py::module& m) {
                 py::dict result;
                 for (auto& [key, value] : self.as<nbt::CompoundTag>()) { result[py::str(key)] = py::cast(value); }
                 return result;
-            }
+            },
+            "Get the CompoundTag as a dict value\nThrow TypeError if wrong type"
         )
         .def(
             "get_list",
@@ -378,38 +489,82 @@ void bindCompoundTagVariant(py::module& m) {
                 py::list result;
                 for (auto& tag : self.as<nbt::ListTag>()) { result.append(py::cast(nbt::CompoundTagVariant(*tag))); }
                 return result;
-            }
+            },
+            "Get the ListTag as a list value\nThrow TypeError if wrong type"
         )
         .def(
             "get_int_array",
             [](nbt::CompoundTagVariant& self) -> std::vector<int> {
                 if (!self.hold(nbt::Tag::Type::IntArray)) { throw py::type_error("tag not hold an IntArrayTag"); }
                 return self.as<nbt::IntArrayTag>().storage();
-            }
+            },
+            "Get the int array value\nThrow TypeError if wrong type"
         )
         .def(
             "get_long_array",
             [](nbt::CompoundTagVariant& self) -> std::vector<int64_t> {
                 if (!self.hold(nbt::Tag::Type::LongArray)) { throw py::type_error("tag not hold a LongArrayTag"); }
                 return self.as<nbt::LongArrayTag>().storage();
-            }
+            },
+            "Get the long array value\nThrow TypeError if wrong type"
         )
 
+        .def(
+            "get",
+            [](nbt::CompoundTagVariant& self) -> nbt::CompoundTagVariant::TagVariant { return self.mStorage; },
+            "Get the tag variant"
+        )
         .def_property(
             "value",
-            [](nbt::CompoundTagVariant& self) -> nbt::CompoundTagVariant::TagVariant { return self.mStorage; },
-            [](nbt::CompoundTagVariant& self, nbt::CompoundTagVariant::TagVariant const& value) {
-                self.mStorage = value;
+            [](nbt::CompoundTagVariant& self) -> py::object {
+                return std::visit(
+                    [](auto& value) {
+                        using T = std::decay_t<decltype(value)>;
+                        if constexpr (requires { value.storage(); }) {
+                            return py::cast(value.storage());
+                        } else if constexpr (std::is_same_v<T, nbt::CompoundTag>) {
+                            py::dict result;
+                            for (auto& [key, val] : value) { result[py::str(key)] = py::cast(val); }
+                            return static_cast<py::object>(result);
+                        } else if constexpr (std::is_same_v<T, nbt::ListTag>) {
+                            py::list result;
+                            for (auto& tag : value) { result.append(py::cast(nbt::CompoundTagVariant(*tag))); }
+                            return static_cast<py::object>(result);
+                        } else if constexpr (std::is_same_v<T, nbt::EndTag>) {
+                            return static_cast<py::object>(py::none());
+                        }
+                    },
+                    self.mStorage
+                );
             },
-            "Access the tag variant"
+            [](nbt::CompoundTagVariant& self, py::object const& value) {
+                if (py::isinstance<nbt::CompoundTagVariant>(value)) {
+                    self = *value.cast<nbt::CompoundTagVariant*>();
+                } else if (py::isinstance<nbt::Tag>(value)) {
+                    self = nbt::CompoundTagVariant(*value.cast<nbt::Tag*>());
+                } else {
+                    self = *makeNativeTag(value);
+                }
+            },
+            "Access the tag value"
         )
 
-        .def("__int__", [](nbt::CompoundTagVariant const& self) { return static_cast<int64_t>(self); })
-        .def("__float__", [](nbt::CompoundTagVariant const& self) { return static_cast<double>(self); })
+        .def(
+            "__int__",
+            [](nbt::CompoundTagVariant const& self) { return static_cast<int64_t>(self); },
+            "Implicitly convert to int"
+        )
+        .def(
+            "__float__",
+            [](nbt::CompoundTagVariant const& self) { return static_cast<double>(self); },
+            "Implicitly convert to float"
+        )
         .def(
             "__eq__",
-            [](nbt::CompoundTagVariant const& self, nbt::CompoundTagVariant const& other) { return self == other; }
+            [](nbt::CompoundTagVariant const& self, nbt::CompoundTagVariant const& other) { return self == other; },
+            "Check if this tag equals another tag"
         )
+        .def("__len__", &nbt::CompoundTagVariant::size, "Get the size of the tag")
         .def(
             "__str__",
             [](nbt::CompoundTagVariant const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },

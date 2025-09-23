@@ -332,9 +332,15 @@ class CompoundTag(Tag):
     def merge(self, other: CompoundTag, merge_list: bool = False) -> None:
         """
         Merge another CompoundTag into this one
+
         Arguments:
             other: CompoundTag to merge from
             merge_list: If true, merge list contents instead of replacing
+        """
+
+    def pop(self, key: str) -> bool:
+        """
+        Remove key from the compound
         """
 
     def put(self, key: str, value: Any) -> None:

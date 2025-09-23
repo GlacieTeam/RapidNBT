@@ -51,6 +51,7 @@ void bindLongArrayTag(py::module& m) {
             &nbt::LongArrayTag::reserve,
             py::arg("capacity"),
             R"(Reserve storage capacity for the array
+            
             Arguments:
                 capacity: Minimum capacity to reserv))"
         )
@@ -89,9 +90,10 @@ void bindLongArrayTag(py::module& m) {
             py::arg("end_index"),
             R"(Remove elements in the range [start_index, end_index)
             Arguments:
-                start_index: First index to remove (inclusive)\n"
-                end_index: End index (exclusive)\n"
-            Returns True if successful, False if indices out of range)"
+                start_index: First index to remove (inclusive)
+                end_index: End index (exclusive)
+            Returns:
+                True if successful, False if indices out of range)"
         )
         .def(
             "assign",
@@ -137,6 +139,7 @@ void bindLongArrayTag(py::module& m) {
             py::arg("value"),
             "Check if value is in the array"
         )
+        .def("__len__", &nbt::LongArrayTag::size, "Get number of int64 in the array")
         .def(
             "__str__",
             [](nbt::LongArrayTag const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },

@@ -41,6 +41,12 @@ class StringTag(Tag):
         Construct from a Python string
         """
 
+    @overload
+    def __init__(self, str: Union[bytes, bytearray]) -> None:
+        """
+        Construct from a Python bytes / bytearray
+        """
+
     def __len__(self) -> int:
         """
         Get the length of the string in bytes
@@ -91,6 +97,16 @@ class StringTag(Tag):
         Write tag to a binary stream (UTF-8 encoded)
         """
 
+    def get(self) -> str:
+        """
+        Get the string content of this tag
+        """
+
+    def set(self, value: str) -> None:
+        """
+        Set the string content of this tag
+        """
+
     @property
     def value(self) -> bytes:
         """
@@ -101,16 +117,4 @@ class StringTag(Tag):
     def value(self, value: Union[bytes, bytearray]) -> None:
         """
         Access the original string content of this tag
-        """
-
-    @property
-    def str(self) -> str:
-        """
-        Access the string content of this tag
-        """
-
-    @str.setter
-    def str(self, value: str) -> None:
-        """
-        Access the string content of this tag
         """

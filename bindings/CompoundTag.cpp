@@ -20,7 +20,9 @@ void bindCompoundTag(py::module& m) {
                 for (auto [k, v] : obj) {
                     std::string key   = py::cast<std::string>(k);
                     auto&       value = static_cast<py::object&>(v);
-                    if (py::isinstance<nbt::Tag>(value)) {
+                    if (py::isinstance<nbt::CompoundTagVariant>(value)) {
+                        (*tag)[key] = *value.cast<nbt::CompoundTagVariant*>();
+                    } else if (py::isinstance<nbt::Tag>(value)) {
                         tag->put(key, value.cast<nbt::Tag*>()->copy());
                     } else {
                         tag->put(key, makeNativeTag(value));
@@ -29,9 +31,9 @@ void bindCompoundTag(py::module& m) {
                 return tag;
             }),
             py::arg("pairs"),
-            R"(Construct from a Dict[str, Any]
-            Example:
-                CompoundTag(["key1": 42, "key2": "value"]))"
+            "Construct from a Dict[str, Any]",
+            "Example:",
+            "    CompoundTag([\" key1 \": 42, \" key2 \": \" value \"])"
         )
 
         .def(
@@ -44,7 +46,9 @@ void bindCompoundTag(py::module& m) {
         .def(
             "__setitem__",
             [](nbt::CompoundTag& self, std::string_view key, py::object value) {
-                if (py::isinstance<nbt::Tag>(value)) {
+                if (py::isinstance<nbt::CompoundTagVariant>(value)) {
+                    self[key] = *value.cast<nbt::CompoundTagVariant*>();
+                } else if (py::isinstance<nbt::Tag>(value)) {
                     self[key] = *value.cast<nbt::Tag*>();
                 } else {
                     self[key] = makeNativeTag(value);
@@ -120,10 +124,11 @@ void bindCompoundTag(py::module& m) {
             &nbt::CompoundTag::merge,
             py::arg("other"),
             py::arg("merge_list") = false,
-            R"(Merge another CompoundTag into this one
-            Arguments:
-                other: CompoundTag to merge from
-                merge_list: If true, merge list contents instead of replacing)"
+            "Merge another CompoundTag into this one",
+            "",
+            "Arguments:",
+            "    other: CompoundTag to merge from",
+            "    merge_list: If true, merge list contents instead of replacing"
         )
         .def("empty", &nbt::CompoundTag::empty, "Check if the compound is empty")
         .def("clear", &nbt::CompoundTag::clear, "Remove all elements from the compound")
@@ -154,7 +159,9 @@ void bindCompoundTag(py::module& m) {
         .def(
             "put",
             [](nbt::CompoundTag& self, std::string key, py::object value) {
-                if (py::isinstance<nbt::Tag>(value)) {
+                if (py::isinstance<nbt::CompoundTagVariant>(value)) {
+                    if (!self.contains(key)) { self[key] = *value.cast<nbt::CompoundTagVariant*>(); }
+                } else if (py::isinstance<nbt::Tag>(value)) {
                     self.put(key, value.cast<nbt::Tag*>()->copy());
                 } else {
                     self.put(key, makeNativeTag(value));
@@ -167,7 +174,9 @@ void bindCompoundTag(py::module& m) {
         .def(
             "set",
             [](nbt::CompoundTag& self, std::string key, py::object value) {
-                if (py::isinstance<nbt::Tag>(value)) {
+                if (py::isinstance<nbt::CompoundTagVariant>(value)) {
+                    self[key] = *value.cast<nbt::CompoundTagVariant*>();
+                } else if (py::isinstance<nbt::Tag>(value)) {
                     self[key] = *value.cast<nbt::Tag*>()->copy();
                 } else {
                     self[key] = makeNativeTag(value);
@@ -646,6 +655,7 @@ void bindCompoundTag(py::module& m) {
             py::arg("header")        = false,
             "Serialize to binary NBT format"
         )
+        .def("pop", &nbt::CompoundTag::remove, py::arg("key"), "Remove key from the compound")
 
         .def(
             "__contains__",

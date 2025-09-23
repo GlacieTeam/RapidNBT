@@ -93,7 +93,8 @@ def test3():
         print(e)
 
     nbt["tag_int_array"].value = IntArrayTag([5, 6, 7, 8, 9, 0])
-    print(nbt["tag_int_array"].value)
+    print(f"{nbt["tag_int_array"].value}")
+    print(f"{nbt["tag_int_array"].get()}")
     print(nbt.value)
 
 

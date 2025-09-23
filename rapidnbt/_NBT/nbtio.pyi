@@ -53,9 +53,11 @@ def detect_content_format(
 ) -> Optional[NbtFileFormat]:
     """
     Detect NBT format from binary content
+
     Args:
         content (bytes): Binary content to analyze
         strict_match_size (bool): Strictly match nbt content size (default: True)
+
     Returns:
         NbtFileFormat or None if format cannot be determined
 
@@ -66,10 +68,12 @@ def detect_file_format(
 ) -> Optional[NbtFileFormat]:
     """
     Detect NBT format from a file
+
     Args:
         path (str): Path to the file
         file_memory_map (bool): Use memory mapping for large files (default: False)
         strict_match_size (bool): Strictly match nbt content size (default: True)
+
     Returns:
         NbtFileFormat or None if format cannot be determined
 
@@ -84,12 +88,14 @@ def dump(
 ) -> bool:
     """
     Save CompoundTag to a file
+
     Args:
         nbt (CompoundTag): Tag to save
         path (str): Output file path
         format (NbtFileFormat): Output format (default: LITTLE_ENDIAN)
         compression_type (CompressionType): Compression method (default: Gzip)
         compression_level (CompressionLevel): Compression level (default: Default)
+
     Returns:
         bool: True if successful, False otherwise
 
@@ -103,11 +109,13 @@ def dump_snbt(
 ) -> bool:
     """
     Save CompoundTag to SNBT (String NBT) file
+
     Args:
         nbt (CompoundTag): Tag to save
         path (str): Output file path
         format (SnbtFormat): Output formatting style (default: Default)
         indent (int): Indentation level (default: 4)
+
     Returns:
         bool: True if successful, False otherwise
 
@@ -121,11 +129,13 @@ def dumps(
 ) -> bytes:
     """
     Serialize CompoundTag to binary data
+
     Args:
         nbt (CompoundTag): Tag to serialize
         format (NbtFileFormat): Output format (default: LITTLE_ENDIAN)
         compression_type (CompressionType): Compression method (default: Gzip)
         compression_level (CompressionLevel): Compression level (default: Default)
+
     Returns:
         bytes: Serialized binary data
 
@@ -138,10 +148,12 @@ def dumps_snbt(
 ) -> str:
     """
     Save CompoundTag to SNBT (String NBT) file
+
     Args:
         nbt (CompoundTag): Tag to save
         format (SnbtFormat): Output formatting style (default: Default)
         indent (int): Indentation level (default: 4)
+
     Returns:
         bool: SNBT string
 
@@ -155,11 +167,13 @@ def dumps_base64(
 ) -> str:
     """
     Serialize CompoundTag to Base64 string
+
     Args:
         nbt (CompoundTag): Tag to serialize
         format (NbtFileFormat): Output format (default: LITTLE_ENDIAN)
         compression_type (CompressionType): Compression method (default: Gzip)
         compression_level (CompressionLevel): Compression level (default: Default)
+
     Returns:
         str: Base64-encoded NBT data
 
@@ -173,11 +187,13 @@ def load(
 ) -> Optional[CompoundTag]:
     """
     Parse CompoundTag from a file
+
     Args:
         path (str): Path to NBT file
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
         file_memory_map (bool): Use memory mapping for large files (default: False)
         strict_match_size (bool): Strictly match nbt content size (default: True)
+
     Returns:
         CompoundTag or None if parsing fails
     """
@@ -185,8 +201,10 @@ def load(
 def load_snbt(path: os.PathLike) -> Optional[CompoundTag]:
     """
     Parse CompoundTag from SNBT (String NBT) file
+
     Args:
         path (str): Path to SNBT file
+
     Returns:
         CompoundTag or None if parsing fails
     """
@@ -198,10 +216,12 @@ def loads(
 ) -> Optional[CompoundTag]:
     """
     Parse CompoundTag from binary data
+
     Args:
         content (bytes): Binary NBT data
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
         strict_match_size (bool): Strictly match nbt content size (default: True)
+
     Returns:
         CompoundTag or None if parsing fails
     """
@@ -213,10 +233,12 @@ def loads_base64(
 ) -> Optional[CompoundTag]:
     """
     Parse CompoundTag from Base64-encoded NBT
+
     Args:
         content (str): Base64-encoded NBT data
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
         strict_match_size (bool): Strictly match nbt content size (default: True)
+
     Returns:
         CompoundTag or None if parsing fails
     """
@@ -226,8 +248,10 @@ def loads_snbt(
 ) -> Optional[CompoundTag]:
     """
     Parse CompoundTag from SNBT (String NBT) file
+
     Args:
         content (str): SNBT content
+
     Returns:
         CompoundTag or None if parsing fails
     """
@@ -239,10 +263,12 @@ def validate_content(
 ) -> bool:
     """
     Validate NBT binary content
+
     Args:
         content (bytes): Binary data to validate
         format (NbtFileFormat): Expected format (default: LITTLE_ENDIAN)
         strict_match_size (bool): Strictly match nbt content size (default: True)
+
     Returns:
         bool: True if valid NBT, False otherwise
     """
@@ -255,11 +281,13 @@ def validate_file(
 ) -> bool:
     """
     Validate NBT file
+
     Args:
         path (str): File path to validate
         format (NbtFileFormat): Expected format (default: LITTLE_ENDIAN)
         file_memory_map (bool): Use memory mapping (default: False)
         strict_match_size (bool): Strictly match nbt content size (default: True)
+
     Returns:
         bool: True if valid NBT file, False otherwise
     """
