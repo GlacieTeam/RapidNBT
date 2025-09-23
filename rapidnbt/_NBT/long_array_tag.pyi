@@ -10,13 +10,25 @@ from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
 class LongArrayTag(Tag):
-    def __hash__(self) -> int: ...
+    """
+    A tag contains a long array (int64 array)
+    """
+
+    def __hash__(self) -> int:
+        """
+        Compute hash value for Python hashing operations
+        """
+
     def __contains__(self, value: int) -> bool:
         """
         Check if value is in the array
         """
 
-    def __eq__(self, other: LongArrayTag) -> bool: ...
+    def __eq__(self, other: LongArrayTag) -> bool:
+        """
+        Equality operator (==)
+        """
+
     def __getitem__(self, index: int) -> int:
         """
         Get element at index without bounds checking
@@ -137,4 +149,16 @@ class LongArrayTag(Tag):
     def write(self, stream: ...) -> None:
         """
         Write int array to a binary stream
+        """
+
+    @property
+    def value(self) -> List[int]:
+        """
+        Access the long array as a list of integers
+        """
+
+    @value.setter
+    def value(self, value: List[int]) -> None:
+        """
+        Access the long array as a list of integers
         """

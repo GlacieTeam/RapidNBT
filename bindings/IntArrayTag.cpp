@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindIntArrayTag(py::module& m) {
-    auto sm = m.def_submodule("int_array_tag");
+    auto sm = m.def_submodule("int_array_tag", "A tag contains an int array");
 
     py::class_<nbt::IntArrayTag, nbt::Tag>(sm, "IntArrayTag")
         .def(py::init<>(), "Construct an empty IntArrayTag")
@@ -101,6 +101,13 @@ void bindIntArrayTag(py::module& m) {
             py::arg("values"),
             R"(Assign new values to the array
             Returns the modified array)"
+        )
+
+        .def_property(
+            "value",
+            [](nbt::IntArrayTag& self) -> std::vector<int> { return self.storage(); },
+            [](nbt::IntArrayTag& self, std::vector<int> const& value) { self.storage() = value; },
+            "Access the int array as a list of integers"
         )
 
         .def(

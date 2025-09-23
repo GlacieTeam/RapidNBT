@@ -22,6 +22,10 @@ from rapidnbt._NBT.int_array_tag import IntArrayTag
 from rapidnbt._NBT.long_array_tag import LongArrayTag
 
 class CompoundTag(Tag):
+    """
+    A tag contains a tag compound
+    """
+
     @staticmethod
     def from_binary_nbt(
         binary_data: Union[bytes, bytearray],
@@ -496,4 +500,16 @@ class CompoundTag(Tag):
     def write(self, stream: ...) -> None:
         """
         Write compound to a binary stream
+        """
+
+    @property
+    def value(self) -> Dict[str, CompoundTagVariant]:
+        """
+        Access the dict value of this tag
+        """
+
+    @value.setter
+    def value(self, value: Dict[str, Any]) -> None:
+        """
+        Access the dict value of this tag
         """

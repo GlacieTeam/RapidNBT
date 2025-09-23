@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindListTag(py::module& m) {
-    auto sm = m.def_submodule("list_tag");
+    auto sm = m.def_submodule("list_tag", "A tag contains a tag list");
 
     py::class_<nbt::ListTag, nbt::Tag>(sm, "ListTag")
         .def(py::init<>(), "Construct an empty ListTag")
@@ -141,6 +141,37 @@ void bindListTag(py::module& m) {
             py::arg("index"),
             py::arg("element"),
             "Insert element at specified position"
+        )
+        .def(
+            "to_list",
+            [](nbt::ListTag& self) -> py::list {
+                py::list result;
+                for (auto& tag : self) { result.append(py::cast(nbt::CompoundTagVariant(*tag))); }
+                return result;
+            }
+        )
+
+        .def_property(
+            "value",
+            [](nbt::ListTag& self) -> py::list {
+                py::list result;
+                for (auto& tag : self) { result.append(py::cast(nbt::CompoundTagVariant(*tag))); }
+                return result;
+            },
+            [](nbt::ListTag& self, py::list const& value) {
+                self.clear();
+                for (auto const& element : value) {
+                    auto& val = static_cast<py::object const&>(element);
+                    if (py::isinstance<nbt::CompoundTagVariant>(val)) {
+                        self.push_back(*val.cast<nbt::CompoundTagVariant*>());
+                    } else if (py::isinstance<nbt::Tag>(val)) {
+                        self.push_back(val.cast<nbt::Tag*>()->copy());
+                    } else {
+                        self.push_back(makeNativeTag(val));
+                    }
+                }
+            },
+            "Access the list value of this tag"
         )
 
         .def("__len__", &nbt::ListTag::size, "Get number of elements in the list")

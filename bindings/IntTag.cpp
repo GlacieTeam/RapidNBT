@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindIntTag(py::module& m) {
-    auto sm = m.def_submodule("int_tag");
+    auto sm = m.def_submodule("int_tag", "A tag contains an int");
 
     py::class_<nbt::IntTag, nbt::Tag>(sm, "IntTag")
         .def(py::init<>(), "Construct an IntTag with default value (0)")
@@ -47,13 +47,13 @@ void bindIntTag(py::module& m) {
         .def_property(
             "value",
             [](nbt::IntTag& self) -> int { return self.storage(); },
-            [](nbt::IntTag& self, int value) { self.storage() = static_cast<int>(value); },
+            [](nbt::IntTag& self, int value) { self.storage() = value; },
             "Access the integer value of this tag"
         )
 
         .def(
             "__int__",
-            [](nbt::IntTag const& self) { return static_cast<int>(self); },
+            [](nbt::IntTag const& self) { return self.storage(); },
             "Convert to Python int"
         )
         .def("__pos__", &nbt::IntTag::operator+, "Unary plus operator (+)")

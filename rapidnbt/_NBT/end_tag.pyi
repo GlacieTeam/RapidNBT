@@ -9,6 +9,10 @@ from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
 class EndTag(Tag):
+    """
+    A tag contains nothing, used as the end flag
+    """
+
     def __eq__(self, other: Tag) -> bool:
         """
         Equality operator (==), all EndTags are equal

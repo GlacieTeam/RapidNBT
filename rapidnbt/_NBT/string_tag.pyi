@@ -5,11 +5,15 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from typing import overload
+from typing import overload, Union
 from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
 class StringTag(Tag):
+    """
+    A tag contains a string
+    """
+
     def __eq__(self, other: StringTag) -> bool:
         """
         Equality operator (==), case-sensitive comparison
@@ -88,10 +92,25 @@ class StringTag(Tag):
         """
 
     @property
-    def value(self) -> str:
+    def value(self) -> bytes:
+        """
+        Access the original string content of this tag
+        """
+
+    @value.setter
+    def value(self, value: Union[bytes, bytearray]) -> None:
+        """
+        Access the original string content of this tag
+        """
+
+    @property
+    def str(self) -> str:
         """
         Access the string content of this tag
         """
 
-    @value.setter
-    def value(self, value: str) -> None: ...
+    @str.setter
+    def str(self, value: str) -> None:
+        """
+        Access the string content of this tag
+        """

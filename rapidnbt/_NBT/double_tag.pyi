@@ -10,6 +10,10 @@ from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
 class DoubleTag(Tag):
+    """
+    A tag contains a double
+    """
+
     def __eq__(self, other: Tag) -> bool:
         """
         Equality operator (==)
@@ -89,4 +93,7 @@ class DoubleTag(Tag):
         """
 
     @value.setter
-    def value(self, value: float) -> None: ...
+    def value(self, value: float) -> None:
+        """
+        Access the floating-point value of this tag
+        """

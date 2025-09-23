@@ -10,6 +10,10 @@ from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
 class ByteArrayTag(Tag):
+    """
+    A tag contains a byte array
+    """
+
     def __bytes__(self) -> bytes:
         """
         Convert to Python bytes object
@@ -146,4 +150,7 @@ class ByteArrayTag(Tag):
         """
 
     @value.setter
-    def value(self, value: Union[bytes, bytearray]) -> None: ...
+    def value(self, value: Union[bytes, bytearray]) -> None:
+        """
+        Access the byte array as a list of integers (0-255)
+        """

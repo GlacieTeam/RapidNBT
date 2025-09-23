@@ -8,6 +8,13 @@
 from enum import Enum
 
 class SnbtFormat(Enum):
+    """
+    The SNBT format enum
+    You can use | operation to combime flags
+    Example:
+        format = SnbtFormat.Classic | SnbtFormat.ForceUppercase
+    """
+
     Minimize = 0
     CompoundLineFeed = 1
     ListArrayLineFeed = 2
@@ -24,5 +31,12 @@ class SnbtFormat(Enum):
     CommentMarks = 128
     Jsonify = 167
 
-    def __or__(self, value: SnbtFormat) -> SnbtFormat: ...
-    def __and__(self, value: SnbtFormat) -> SnbtFormat: ...
+    def __or__(self, value: SnbtFormat) -> SnbtFormat:
+        """
+        operation |
+        """
+
+    def __and__(self, value: SnbtFormat) -> SnbtFormat:
+        """
+        operation &
+        """

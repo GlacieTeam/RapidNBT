@@ -6,10 +6,15 @@
 # SPDX-License-Identifier: MPL-2.0
 
 from typing import overload, List, Any
+from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
 from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
 class ListTag(Tag):
+    """
+    A tag contains a tag list
+    """
+
     def __eq__(self, other: Tag) -> bool:
         """
         Equality operator (==)
@@ -122,6 +127,11 @@ class ListTag(Tag):
         Merge another ListTag into this one (appends all elements)
         """
 
+    def get_list(self) -> List[CompoundTagVariant]:
+        """
+        Convert ListTag to a Python list
+        """
+
     @overload
     def pop(self, index: int) -> bool:
         """
@@ -147,4 +157,16 @@ class ListTag(Tag):
     def write(self, stream: ...) -> None:
         """
         Write list to a binary stream
+        """
+
+    @property
+    def value(self) -> List[CompoundTagVariant]:
+        """
+        Access the list value of this tag
+        """
+
+    @value.setter
+    def value(self, value: List[Any]) -> None:
+        """
+        Access the list value of this tag
         """

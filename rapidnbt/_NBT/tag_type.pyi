@@ -8,6 +8,10 @@
 from enum import Enum
 
 class TagType(Enum):
+    """
+    The tag type enum
+    """
+
     End = 0
     Byte = 1
     Short = 2

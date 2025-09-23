@@ -12,6 +12,10 @@ from rapidnbt._NBT.compound_tag import CompoundTag
 from rapidnbt._NBT.snbt_format import SnbtFormat
 
 class NbtFileFormat(Enum):
+    """
+    Enumeration of NBT binary file formats
+    """
+
     LITTLE_ENDIAN = 0
     LITTLE_ENDIAN_WITH_HEADER = 1
     BIG_ENDIAN = 2
@@ -19,6 +23,10 @@ class NbtFileFormat(Enum):
     BEDROCK_NETWORK = 4
 
 class NbtCompressionLevel(Enum):
+    """
+    Enumeration of compression levels
+    """
+
     DEFAULT = -1
     NO_COMPRESSION = 0
     BEST_SPEED = 1
@@ -32,6 +40,10 @@ class NbtCompressionLevel(Enum):
     BEST_COMPRESSION = 9
 
 class NbtCompressionType(Enum):
+    """
+    Enumeration of compression types for NBT serialization
+    """
+
     NONE = 0
     GZIP = 1
     ZLIB = 2

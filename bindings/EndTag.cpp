@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindEndTag(py::module& m) {
-    auto sm = m.def_submodule("end_tag");
+    auto sm = m.def_submodule("end_tag", "A tag contains nothing, used as the end flag");
 
     py::class_<nbt::EndTag, nbt::Tag>(sm, "EndTag")
         .def(py::init<>(), "Construct an EndTag")
@@ -36,7 +36,6 @@ void bindEndTag(py::module& m) {
             py::arg("stream"),
             "Load tag value from a binary stream (no data for EndTag)"
         )
-
 
         .def("__eq__", &nbt::EndTag::equals, py::arg("other"), "Equality operator (==), all EndTags are equal")
         .def("__hash__", &nbt::EndTag::hash, "Compute hash value for Python hashing operations")

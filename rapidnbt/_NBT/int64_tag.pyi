@@ -10,6 +10,10 @@ from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
 class Int64Tag(Tag):
+    """
+    A tag contains an int64
+    """
+
     def __eq__(self, other: Tag) -> bool:
         """
         Equality operator (==)
@@ -94,4 +98,7 @@ class Int64Tag(Tag):
         """
 
     @value.setter
-    def value(self, value: int) -> None: ...
+    def value(self, value: int) -> None:
+        """
+        Access the integer value of this tag
+        """

@@ -94,7 +94,7 @@ def test3():
 
     nbt["tag_int_array"].value = IntArrayTag([5, 6, 7, 8, 9, 0])
     print(nbt["tag_int_array"].value)
-    print(nbt.to_dict())
+    print(nbt.value)
 
 
 def test4():

@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindCompoundTag(py::module& m) {
-    auto sm = m.def_submodule("compound_tag");
+    auto sm = m.def_submodule("compound_tag", "A tag contains a tag compound");
 
     py::class_<nbt::CompoundTag, nbt::Tag>(sm, "CompoundTag")
         .def(py::init<>(), "Construct an empty CompoundTag")
@@ -679,6 +679,30 @@ void bindCompoundTag(py::module& m) {
                 );
             },
             "Official string representation"
+        )
+
+        .def_property(
+            "value",
+            [](nbt::CompoundTag& self) -> py::dict {
+                py::dict result;
+                for (auto& [key, value] : self) { result[py::str(key)] = py::cast(value); }
+                return result;
+            },
+            [](nbt::CompoundTag& self, py::dict const& value) {
+                self.clear();
+                for (auto const& [k, v] : value) {
+                    std::string key = py::cast<std::string>(k);
+                    auto&       val = static_cast<py::object const&>(v);
+                    if (py::isinstance<nbt::CompoundTagVariant>(val)) {
+                        self[key] = *val.cast<nbt::CompoundTagVariant*>();
+                    } else if (py::isinstance<nbt::Tag>(val)) {
+                        self.put(key, val.cast<nbt::Tag*>()->copy());
+                    } else {
+                        self.put(key, makeNativeTag(val));
+                    }
+                }
+            },
+            "Access the dict value of this tag"
         )
 
         .def_static(

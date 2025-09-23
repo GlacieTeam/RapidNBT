@@ -15,7 +15,7 @@ void bindEnums(py::module& m) {
     {
         auto sm = m.def_submodule("tag_type");
 
-        py::enum_<nbt::Tag::Type>(sm, "TagType")
+        py::enum_<nbt::Tag::Type>(sm, "TagType", "The tag type enum")
             .value("End", nbt::Tag::Type::End)
             .value("Byte", nbt::Tag::Type::Byte)
             .value("Short", nbt::Tag::Type::Short)
@@ -32,7 +32,13 @@ void bindEnums(py::module& m) {
             .export_values();
     }
     {
-        auto sm = m.def_submodule("snbt_format");
+        auto sm = m.def_submodule(
+            "snbt_format",
+            R"(The SNBT format enum
+You can use | operation to combime flags
+Example:
+    format = SnbtFormat.Classic | SnbtFormat.ForceUppercase)"
+        );
 
         py::enum_<nbt::SnbtFormat>(sm, "SnbtFormat", py::arithmetic())
             .value("Minimize", nbt::SnbtFormat::Minimize)
@@ -51,8 +57,12 @@ void bindEnums(py::module& m) {
             .value("Jsonify", nbt::SnbtFormat::Jsonify)
             .value("Default", nbt::SnbtFormat::Default)
             .export_values()
-            .def("__or__", [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs | rhs; })
-            .def("__and__", [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs & rhs; });
+            .def(
+                "__or__",
+                [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs | rhs; },
+                "operation |"
+            )
+            .def("__and__", [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs & rhs; }, "operation &");
     }
 }
 

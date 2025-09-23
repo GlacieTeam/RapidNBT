@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindFloatTag(py::module& m) {
-    auto sm = m.def_submodule("float_tag");
+    auto sm = m.def_submodule("float_tag", "A tag contains a float");
 
     py::class_<nbt::FloatTag, nbt::Tag>(sm, "FloatTag")
         .def(py::init<>(), "Construct a FloatTag with default value (0.0)")
@@ -54,7 +54,7 @@ void bindFloatTag(py::module& m) {
 
         .def(
             "__float__",
-            [](nbt::FloatTag const& self) { return static_cast<float>(self); },
+            [](nbt::FloatTag const& self) { return self.storage(); },
             "Convert to Python float (for float(tag) operations)"
         )
         .def("__hash__", &nbt::FloatTag::hash, "Compute hash value for Python hashing operations")

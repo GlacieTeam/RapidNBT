@@ -10,6 +10,10 @@ from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
 class FloatTag(Tag):
+    """
+    A tag contains a float
+    """
+
     def __eq__(self, other: Tag) -> bool:
         """
         Equality operator (==)
@@ -89,4 +93,7 @@ class FloatTag(Tag):
         """
 
     @value.setter
-    def value(self, value: float) -> None: ...
+    def value(self, value: float) -> None:
+        """
+        Access the floating-point value of this tag
+        """

@@ -66,7 +66,7 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
 }
 
 void bindCompoundTagVariant(py::module& m) {
-    auto sm = m.def_submodule("compound_tag_variant");
+    auto sm = m.def_submodule("compound_tag_variant", "A warpper of all tags, to provide morden API for NBT");
 
     py::class_<nbt::CompoundTagVariant>(sm, "CompoundTagVariant")
         .def(py::init<>())

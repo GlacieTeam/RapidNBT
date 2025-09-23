@@ -58,7 +58,7 @@ void bindTag(py::module& m) {
         .def("to_json", &nbt::Tag::toJson, py::arg("indent") = 4, "Convert tag to JSON string")
 
         .def("__eq__", &nbt::Tag::equals, "Compare two tags for equality")
-        .def("__hash__", &nbt::Tag::hash)
+        .def("__hash__", &nbt::Tag::hash, "Compute hash value for Python hashing operations")
 
         .def(
             "__getitem__",

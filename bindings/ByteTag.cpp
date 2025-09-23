@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindByteTag(py::module& m) {
-    auto sm = m.def_submodule("byte_tag");
+    auto sm = m.def_submodule("byte_tag", "A tag contains a byte");
 
     py::class_<nbt::ByteTag, nbt::Tag>(sm, "ByteTag")
         .def(py::init<>(), "Construct an ByteTag with default value (0)")
@@ -47,13 +47,13 @@ void bindByteTag(py::module& m) {
         .def_property(
             "value",
             [](nbt::ByteTag& self) -> uint8_t { return self.storage(); },
-            [](nbt::ByteTag& self, uint8_t value) { self.storage() = static_cast<uint8_t>(value); },
+            [](nbt::ByteTag& self, uint8_t value) { self.storage() = value; },
             "Access the integer value of this tag"
         )
 
         .def(
             "__int__",
-            [](nbt::ByteTag const& self) { return static_cast<uint8_t>(self); },
+            [](nbt::ByteTag const& self) { return self.storage(); },
             "Convert to Python int"
         )
         .def("__pos__", &nbt::ByteTag::operator+, "Unary plus operator (+)")

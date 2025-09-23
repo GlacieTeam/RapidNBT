@@ -10,6 +10,10 @@ from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
 class ByteTag(Tag):
+    """
+    A tag contains a byte
+    """
+
     def __eq__(self, other: Tag) -> bool:
         """
         Equality operator (==)
@@ -94,4 +98,7 @@ class ByteTag(Tag):
         """
 
     @value.setter
-    def value(self, value: int) -> None: ...
+    def value(self, value: int) -> None:
+        """
+        Access the integer value of this tag
+        """

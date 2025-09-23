@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindInt64Tag(py::module& m) {
-    auto sm = m.def_submodule("int64_tag");
+    auto sm = m.def_submodule("int64_tag", "A tag contains an int64");
 
     py::class_<nbt::Int64Tag, nbt::Tag>(sm, "Int64Tag")
         .def(py::init<>(), "Construct an Int64Tag with default value (0)")
@@ -47,13 +47,13 @@ void bindInt64Tag(py::module& m) {
         .def_property(
             "value",
             [](nbt::Int64Tag& self) -> int64_t { return self.storage(); },
-            [](nbt::Int64Tag& self, int64_t value) { self.storage() = static_cast<int64_t>(value); },
+            [](nbt::Int64Tag& self, int64_t value) { self.storage() = value; },
             "Access the integer value of this tag"
         )
 
         .def(
             "__int__",
-            [](nbt::Int64Tag const& self) { return static_cast<int64_t>(self); },
+            [](nbt::Int64Tag const& self) { return self.storage(); },
             "Convert to Python int"
         )
         .def("__pos__", &nbt::Int64Tag::operator+, "Unary plus operator (+)")

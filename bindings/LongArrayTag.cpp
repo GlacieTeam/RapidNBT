@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindLongArrayTag(py::module& m) {
-    auto sm = m.def_submodule("long_array_tag");
+    auto sm = m.def_submodule("long_array_tag", "A tag contains a long array (int64 array)");
 
     py::class_<nbt::LongArrayTag, nbt::Tag>(sm, "LongArrayTag")
         .def(py::init<>(), "Construct an empty LongArrayTag")
@@ -102,6 +102,13 @@ void bindLongArrayTag(py::module& m) {
             py::arg("values"),
             R"(Assign new values to the array
             Returns the modified array)"
+        )
+
+        .def_property(
+            "value",
+            [](nbt::LongArrayTag& self) -> std::vector<int64_t> { return self.storage(); },
+            [](nbt::LongArrayTag& self, std::vector<int64_t> const& value) { self.storage() = value; },
+            "Access the long array as a list of integers"
         )
 
         .def(

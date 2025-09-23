@@ -12,7 +12,7 @@ namespace rapidnbt {
 void bindStringTag(py::module& m) {
     auto sm = m.def_submodule("string_tag");
 
-    py::class_<nbt::StringTag, nbt::Tag>(sm, "StringTag")
+    py::class_<nbt::StringTag, nbt::Tag>(sm, "StringTag", "A tag contains a string")
         .def(py::init<>(), "Construct an empty StringTag")
         .def(py::init<std::string>(), py::arg("str"), "Construct from a Python string")
 
@@ -41,6 +41,12 @@ void bindStringTag(py::module& m) {
 
         .def_property(
             "value",
+            [](nbt::StringTag& self) -> py::bytes { return self.storage(); },
+            [](nbt::StringTag& self, py::buffer value) { self.storage() = to_cppstringview(value); },
+            "Access the original string content of this tag"
+        )
+        .def_property(
+            "str",
             [](nbt::StringTag& self) -> std::string { return self.storage(); },
             [](nbt::StringTag& self, std::string value) { self.storage() = std::move(value); },
             "Access the string content of this tag"
