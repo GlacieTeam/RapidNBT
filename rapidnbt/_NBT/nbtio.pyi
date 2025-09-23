@@ -39,24 +39,28 @@ class NbtCompressionType(Enum):
 def detect_content_format(
     content: Union[bytes, bytearray], strict_match_size: bool = True
 ) -> Optional[NbtFileFormat]:
-    """Detect NBT format from binary content
+    """
+    Detect NBT format from binary content
     Args:
         content (bytes): Binary content to analyze
         strict_match_size (bool): Strictly match nbt content size (default: True)
     Returns:
         NbtFileFormat or None if format cannot be determined
+
     """
 
 def detect_file_format(
     path: os.PathLike, file_memory_map: bool = False, strict_match_size: bool = True
 ) -> Optional[NbtFileFormat]:
-    """Detect NBT format from a file
+    """
+    Detect NBT format from a file
     Args:
         path (str): Path to the file
         file_memory_map (bool): Use memory mapping for large files (default: False)
         strict_match_size (bool): Strictly match nbt content size (default: True)
     Returns:
         NbtFileFormat or None if format cannot be determined
+
     """
 
 def dump(
@@ -66,7 +70,8 @@ def dump(
     compression_type: NbtCompressionType = NbtCompressionType.GZIP,
     compression_level: NbtCompressionLevel = NbtCompressionLevel.DEFAULT,
 ) -> bool:
-    """Save CompoundTag to a file
+    """
+    Save CompoundTag to a file
     Args:
         nbt (CompoundTag): Tag to save
         path (str): Output file path
@@ -75,6 +80,7 @@ def dump(
         compression_level (CompressionLevel): Compression level (default: Default)
     Returns:
         bool: True if successful, False otherwise
+
     """
 
 def dump_snbt(
@@ -83,7 +89,8 @@ def dump_snbt(
     format: SnbtFormat = SnbtFormat.Default,
     indent: int = 4,
 ) -> bool:
-    """Save CompoundTag to SNBT (String NBT) file
+    """
+    Save CompoundTag to SNBT (String NBT) file
     Args:
         nbt (CompoundTag): Tag to save
         path (str): Output file path
@@ -91,6 +98,7 @@ def dump_snbt(
         indent (int): Indentation level (default: 4)
     Returns:
         bool: True if successful, False otherwise
+
     """
 
 def dumps(
@@ -99,7 +107,8 @@ def dumps(
     compression_type: NbtCompressionType = NbtCompressionType.GZIP,
     compression_level: NbtCompressionLevel = NbtCompressionLevel.DEFAULT,
 ) -> bytes:
-    """Serialize CompoundTag to binary data
+    """
+    Serialize CompoundTag to binary data
     Args:
         nbt (CompoundTag): Tag to serialize
         format (NbtFileFormat): Output format (default: LITTLE_ENDIAN)
@@ -107,6 +116,7 @@ def dumps(
         compression_level (CompressionLevel): Compression level (default: Default)
     Returns:
         bytes: Serialized binary data
+
     """
 
 def dumps_snbt(
@@ -114,13 +124,15 @@ def dumps_snbt(
     format: SnbtFormat = SnbtFormat.Default,
     indent: int = 4,
 ) -> str:
-    """Save CompoundTag to SNBT (String NBT) file
+    """
+    Save CompoundTag to SNBT (String NBT) file
     Args:
         nbt (CompoundTag): Tag to save
         format (SnbtFormat): Output formatting style (default: Default)
         indent (int): Indentation level (default: 4)
     Returns:
         bool: SNBT string
+
     """
 
 def dumps_base64(
@@ -129,7 +141,8 @@ def dumps_base64(
     compression_type: NbtCompressionType = NbtCompressionType.GZIP,
     compression_level: NbtCompressionLevel = NbtCompressionLevel.DEFAULT,
 ) -> str:
-    """Serialize CompoundTag to Base64 string
+    """
+    Serialize CompoundTag to Base64 string
     Args:
         nbt (CompoundTag): Tag to serialize
         format (NbtFileFormat): Output format (default: LITTLE_ENDIAN)
@@ -137,6 +150,7 @@ def dumps_base64(
         compression_level (CompressionLevel): Compression level (default: Default)
     Returns:
         str: Base64-encoded NBT data
+
     """
 
 def load(
@@ -145,7 +159,8 @@ def load(
     file_memory_map: bool = False,
     strict_match_size: bool = True,
 ) -> Optional[CompoundTag]:
-    """Parse CompoundTag from a file
+    """
+    Parse CompoundTag from a file
     Args:
         path (str): Path to NBT file
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
@@ -156,7 +171,8 @@ def load(
     """
 
 def load_snbt(path: os.PathLike) -> Optional[CompoundTag]:
-    """Parse CompoundTag from SNBT (String NBT) file
+    """
+    Parse CompoundTag from SNBT (String NBT) file
     Args:
         path (str): Path to SNBT file
     Returns:
@@ -168,7 +184,8 @@ def loads(
     format: Optional[NbtFileFormat] = None,
     strict_match_size: bool = True,
 ) -> Optional[CompoundTag]:
-    """Parse CompoundTag from binary data
+    """
+    Parse CompoundTag from binary data
     Args:
         content (bytes): Binary NBT data
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
@@ -182,7 +199,8 @@ def loads_base64(
     format: Optional[NbtFileFormat] = None,
     strict_match_size: bool = True,
 ) -> Optional[CompoundTag]:
-    """Parse CompoundTag from Base64-encoded NBT
+    """
+    Parse CompoundTag from Base64-encoded NBT
     Args:
         content (str): Base64-encoded NBT data
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
@@ -194,7 +212,8 @@ def loads_base64(
 def loads_snbt(
     content: str, parsed_length: Optional[int] = None
 ) -> Optional[CompoundTag]:
-    """Parse CompoundTag from SNBT (String NBT) file
+    """
+    Parse CompoundTag from SNBT (String NBT) file
     Args:
         content (str): SNBT content
     Returns:
@@ -206,7 +225,8 @@ def validate_content(
     format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
     strict_match_size: bool = True,
 ) -> bool:
-    """Validate NBT binary content
+    """
+    Validate NBT binary content
     Args:
         content (bytes): Binary data to validate
         format (NbtFileFormat): Expected format (default: LITTLE_ENDIAN)
@@ -221,7 +241,8 @@ def validate_file(
     file_memory_map: bool = False,
     strict_match_size: bool = True,
 ) -> bool:
-    """Validate NBT file
+    """
+    Validate NBT file
     Args:
         path (str): File path to validate
         format (NbtFileFormat): Expected format (default: LITTLE_ENDIAN)

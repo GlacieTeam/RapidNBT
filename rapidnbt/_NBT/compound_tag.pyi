@@ -28,83 +28,127 @@ class CompoundTag(Tag):
         little_endian: bool = True,
         header: bool = False,
     ) -> Optional[CompoundTag]:
-        """Deserialize from binary NBT format"""
+        """
+        Deserialize from binary NBT format
+        """
 
     @staticmethod
     def from_network_nbt(
         binary_data: Union[bytes, bytearray],
     ) -> Optional[CompoundTag]:
-        """Deserialize from Network NBT format"""
+        """
+        Deserialize from Network NBT format
+        """
 
     @staticmethod
     def from_snbt(
         snbt: str, parsed_length: Optional[int] = None
     ) -> Optional[CompoundTag]:
-        """Parse from String NBT (SNBT) format"""
+        """
+        Parse from String NBT (SNBT) format
+        """
 
     def __contains__(self, key: str) -> bool:
-        """Check if key exists in the compound"""
+        """
+        Check if key exists in the compound
+        """
 
     def __delitem__(self, key: str) -> bool:
-        """Remove key from the compound"""
+        """
+        Remove key from the compound
+        """
 
     def __eq__(self, other: Tag) -> bool:
-        """Equality operator (==)"""
+        """
+        Equality operator (==)
+        """
 
     def __getitem__(self, key: str) -> CompoundTagVariant:
         """
-        Get value by key (no exception, auto create if not found)"""
+
+        Get value by key (no exception, auto create if not found)
+        """
 
     def __hash__(self) -> int:
-        """Compute hash value for Python hashing operations"""
+        """
+        Compute hash value for Python hashing operations
+        """
 
     @overload
     def __init__(self) -> None:
-        """Construct an empty CompoundTag"""
+        """
+        Construct an empty CompoundTag
+        """
 
     @overload
     def __init__(self, pairs: Dict[str, Any]) -> None:
-        """Construct from a Dict[str, Any]
+        """
+        Construct from a Dict[str, Any]
         Example:
             CompoundTag(["key1": 42, "key2": "value"])
+
         """
 
     def __iter__(self) -> List[str]:
-        """Iterate over keys in the compound"""
+        """
+        Iterate over keys in the compound
+        """
 
     def __len__(self) -> int:
         """
-        Get number of key-value pairs"""
+
+        Get number of key-value pairs
+        """
 
     def __repr__(self) -> str:
-        """Official string representation"""
+        """
+        Official string representation
+        """
 
     def __setitem__(self, key: str, value: Any) -> None:
-        """Set value by key"""
+        """
+        Set value by key
+        """
 
     def __str__(self) -> str:
-        """String representation (SNBT minimized format)"""
+        """
+        String representation (SNBT minimized format)
+        """
 
     def clear(self) -> None:
-        """Remove all elements from the compound"""
+        """
+        Remove all elements from the compound
+        """
 
     def clone(self) -> CompoundTag:
-        """Create a deep copy of this compound tag"""
+        """
+        Create a deep copy of this compound tag
+        """
 
     def contains(self, key: str) -> bool:
-        """Check if key exists"""
+        """
+        Check if key exists
+        """
 
     def copy(self) -> Tag:
-        """Create a deep copy of this tag"""
+        """
+        Create a deep copy of this tag
+        """
 
     def deserialize(self, stream: ...) -> None:
-        """Deserialize compound from a binary stream"""
+        """
+        Deserialize compound from a binary stream
+        """
 
     def empty(self) -> bool:
-        """Check if the compound is empty"""
+        """
+        Check if the compound is empty
+        """
 
     def equals(self, other: Tag) -> bool:
-        """Check if this tag equals another tag"""
+        """
+        Check if this tag equals another tag
+        """
 
     def get(self, key: str) -> CompoundTagVariant:
         """
@@ -258,10 +302,13 @@ class CompoundTag(Tag):
 
     def get_type(self) -> TagType:
         """
-        Get the NBT type ID (Compound)"""
+        Get the NBT type ID (Compound)
+        """
 
     def hash(self) -> int:
-        """Compute hash value of this tag"""
+        """
+        Compute hash value of this tag
+        """
 
     def items(self) -> list:
         """
@@ -274,107 +321,172 @@ class CompoundTag(Tag):
         """
 
     def load(self, stream: ...) -> None:
-        """Load compound from a binary stream"""
+        """
+        Load compound from a binary stream
+        """
 
     def merge(self, other: CompoundTag, merge_list: bool = False) -> None:
-        """Merge another CompoundTag into this one
+        """
+        Merge another CompoundTag into this one
         Arguments:
             other: CompoundTag to merge from
             merge_list: If true, merge list contents instead of replacing
         """
 
     def put(self, key: str, value: Any) -> None:
-        """Put a value into the compound (automatically converted to appropriate tag type)"""
+        """
+        Put a value into the compound (automatically converted to appropriate tag type)
+        """
 
     def put_byte(self, key: str, value: int) -> None:
-        """Put a byte (uint8) value"""
+        """
+        Put a byte (uint8) value
+        """
 
     def put_byte_array(self, key: str, value: Union[bytes, bytearray]) -> None:
-        """Put a byte array (list of uint8)"""
+        """
+        Put a byte array (list of uint8)
+        """
 
     def put_compound(self, key: str, value: Any) -> None:
-        """Put a CompoundTag value (or dict that will be converted)"""
+        """
+        Put a CompoundTag value (or dict that will be converted)
+        """
 
     def put_double(self, key: str, value: float) -> None:
-        """Put a double value"""
+        """
+        Put a double value
+        """
 
     def put_float(self, key: str, value: float) -> None:
-        """Put a float value"""
+        """
+        Put a float value
+        """
 
     def put_int(self, key: str, value: int) -> None:
-        """Put an int (int32) value"""
+        """
+        Put an int (int32) value
+        """
 
     def put_int64(self, key: str, value: int) -> None:
-        """Put a long (int64) value"""
+        """
+        Put a long (int64) value
+        """
 
     def put_int_array(self, key: str, value: List[int]) -> None:
-        """Put an int array (list of int32)"""
+        """
+        Put an int array (list of int32)
+        """
 
     def put_list(self, key: str, value: Any) -> None:
-        """Put a ListTag value (or list/tuple that will be converted)"""
+        """
+        Put a ListTag value (or list/tuple that will be converted)
+        """
 
     def put_long_array(self, key: str, value: List[int]) -> None:
-        """Put a long array (list of int64)"""
+        """
+        Put a long array (list of int64)
+        """
 
     def put_short(self, key: str, value: int) -> None:
-        """Put a short (int16) value"""
+        """
+        Put a short (int16) value
+        """
 
     def put_string(self, key: str, value: str) -> None:
-        """Put a string value"""
+        """
+        Put a string value
+        """
 
     def rename(self, old_key: str, new_key: str) -> bool:
-        """Rename a key in the compound"""
+        """
+        Rename a key in the compound
+        """
 
     def set(self, key: str, value: Any) -> None:
-        """Set a value into the compound (automatically converted to appropriate tag type)"""
+        """
+        Set a value into the compound (automatically converted to appropriate tag type)
+        """
 
     def set_byte(self, key: str, value: int) -> None:
-        """Set a byte (uint8) value"""
+        """
+        Set a byte (uint8) value
+        """
 
     def set_byte_array(self, key: str, value: Union[bytes, bytearray]) -> None:
-        """Set a byte array (list of uint8)"""
+        """
+        Set a byte array (list of uint8)
+        """
 
     def set_compound(self, key: str, value: Any) -> None:
-        """Set a CompoundTag value (or dict that will be converted)"""
+        """
+        Set a CompoundTag value (or dict that will be converted)
+        """
 
     def set_double(self, key: str, value: float) -> None:
-        """Set a double value"""
+        """
+        Set a double value
+        """
 
     def set_float(self, key: str, value: float) -> None:
-        """Set a float value"""
+        """
+        Set a float value
+        """
 
     def set_int(self, key: str, value: int) -> None:
-        """Set an int (int32) value"""
+        """
+        Set an int (int32) value
+        """
 
     def set_int64(self, key: str, value: int) -> None:
-        """Set a long (int64) value"""
+        """
+        Set a long (int64) value
+        """
 
     def set_int_array(self, key: str, value: List[int]) -> None:
-        """Set an int array (list of int32)"""
+        """
+        Set an int array (list of int32)
+        """
 
     def set_list(self, key: str, value: Any) -> None:
-        """Set a ListTag value (or list/tuple that will be converted)"""
+        """
+        Set a ListTag value (or list/tuple that will be converted)
+        """
 
     def set_long_array(self, key: str, value: List[int]) -> None:
-        """Set a long array (list of int64)"""
+        """
+        Set a long array (list of int64)
+        """
 
     def set_short(self, key: str, value: int) -> None:
-        """Set a short (int16) value"""
+        """
+        Set a short (int16) value
+        """
 
     def set_string(self, key: str, value: str) -> None:
-        """Set a string value"""
+        """
+        Set a string value
+        """
 
     def serialize(self, stream: ...) -> None:
-        """Serialize compound to a binary stream"""
+        """
+        Serialize compound to a binary stream
+        """
 
     def to_binary_nbt(self, little_endian: bool = True, header: bool = False) -> bytes:
-        """Serialize to binary NBT format"""
+        """
+        Serialize to binary NBT format
+        """
 
     def to_dict(self) -> dict:
-        """Convert CompoundTag to a Python dictionary"""
+        """
+        Convert CompoundTag to a Python dictionary
+        """
 
     def to_network_nbt(self) -> bytes:
-        """Serialize to Network NBT format (used in Minecraft networking)"""
+        """
+        Serialize to Network NBT format (used in Minecraft networking)
+        """
 
     def values(self) -> list:
         """
@@ -382,4 +494,6 @@ class CompoundTag(Tag):
         """
 
     def write(self, stream: ...) -> None:
-        """Write compound to a binary stream"""
+        """
+        Write compound to a binary stream
+        """

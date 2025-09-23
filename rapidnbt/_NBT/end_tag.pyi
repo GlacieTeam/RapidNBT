@@ -10,34 +10,56 @@ from rapidnbt._NBT.tag_type import TagType
 
 class EndTag(Tag):
     def __eq__(self, other: Tag) -> bool:
-        """Equality operator (==), all EndTags are equal"""
+        """
+        Equality operator (==), all EndTags are equal
+        """
 
     def __hash__(self) -> int:
-        """Compute hash value for Python hashing operations"""
+        """
+        Compute hash value for Python hashing operations
+        """
 
     def __init__(self) -> None:
-        """Construct an EndTag"""
+        """
+        Construct an EndTag
+        """
 
     def __repr__(self) -> str:
-        """Official string representation"""
+        """
+        Official string representation
+        """
 
     def __str__(self) -> str:
-        """String representation (SNBT minimized format)"""
+        """
+        String representation (SNBT minimized format)
+        """
 
     def copy(self) -> Tag:
-        """Create a deep copy of this tag"""
+        """
+        Create a deep copy of this tag
+        """
 
     def equals(self, other: Tag) -> bool:
-        """Check if this tag equals another tag (all EndTags are equal)"""
+        """
+        Check if this tag equals another tag (all EndTags are equal)
+        """
 
     def get_type(self) -> TagType:
-        """Get the NBT type ID (End)"""
+        """
+        Get the NBT type ID (End)
+        """
 
     def hash(self) -> int:
-        """Compute hash value of this tag"""
+        """
+        Compute hash value of this tag
+        """
 
     def load(self, stream: ...) -> None:
-        """Load tag value from a binary stream (no data for EndTag)"""
+        """
+        Load tag value from a binary stream (no data for EndTag)
+        """
 
     def write(self, stream: ...) -> None:
-        """Write tag to a binary stream (no data for EndTag)"""
+        """
+        Write tag to a binary stream (no data for EndTag)
+        """

@@ -203,7 +203,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
                 return self.as<nbt::ByteTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a ByteTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_short_tag",
@@ -211,7 +212,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
                 return self.as<nbt::ShortTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a ShortTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_int_tag",
@@ -219,7 +221,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold an IntTag"); }
                 return self.as<nbt::IntTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a IntTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_int64_tag",
@@ -227,7 +230,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold an Int64Tag"); }
                 return self.as<nbt::Int64Tag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a Int64Tag\nThrow TypeError if wrong type"
         )
         .def(
             "as_float_tag",
@@ -235,7 +239,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::Float)) { throw py::type_error("tag not hold a FloatTag"); }
                 return self.as<nbt::FloatTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a FloatTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_double_tag",
@@ -243,7 +248,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::Double)) { throw py::type_error("tag not hold a DoubleTag"); }
                 return self.as<nbt::DoubleTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a DoubleTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_byte_array_tag",
@@ -251,7 +257,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::ByteArray)) { throw py::type_error("tag not hold a ByteArrayTag"); }
                 return self.as<nbt::ByteArrayTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a ByteArrayTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_string_tag",
@@ -259,7 +266,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
                 return self.as<nbt::StringTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a StringTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_compound_tag",
@@ -267,7 +275,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::Compound)) { throw py::type_error("tag not hold a CompoundTag"); }
                 return self.as<nbt::CompoundTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a CompoundTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_list_tag",
@@ -275,7 +284,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold a ListTag"); }
                 return self.as<nbt::ListTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a ListTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_int_array_tag",
@@ -283,7 +293,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::IntArray)) { throw py::type_error("tag not hold an IntArrayTag"); }
                 return self.as<nbt::IntArrayTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a IntArrayTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_long_array_tag",
@@ -291,7 +302,8 @@ void bindCompoundTagVariant(py::module& m) {
                 if (!self.hold(nbt::Tag::Type::LongArray)) { throw py::type_error("tag not hold a LongArrayTag"); }
                 return self.as<nbt::LongArrayTag>();
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Convert to a LongArrayTag\nThrow TypeError if wrong type"
         )
 
         .def(

@@ -11,52 +11,82 @@ from rapidnbt._NBT.tag_type import TagType
 
 class DoubleTag(Tag):
     def __eq__(self, other: Tag) -> bool:
-        """Equality operator (==)"""
+        """
+        Equality operator (==)
+        """
 
     def __float__(self) -> float:
-        """Convert to Python float (for float(tag) operations)"""
+        """
+        Convert to Python float (for float(tag) operations)
+        """
 
     def __hash__(self) -> int:
-        """Compute hash value for Python hashing operations"""
+        """
+        Compute hash value for Python hashing operations
+        """
 
     @overload
     def __init__(self) -> None:
-        """Construct a DoubleTag with default value (0.0)"""
+        """
+        Construct a DoubleTag with default value (0.0)
+        """
 
     @overload
     def __init__(self, value: float) -> None:
-        """Construct a DoubleTag from a floating-point value"""
+        """
+        Construct a DoubleTag from a floating-point value
+        """
 
     def __repr__(self) -> str:
-        """Official string representation including type information"""
+        """
+        Official string representation including type information
+        """
 
     def __str__(self) -> str:
-        """String representation (SNBT minimized format)"""
+        """
+        String representation (SNBT minimized format)
+        """
 
     def assign(self, value: float) -> DoubleTag:
-        """Assign a new floating-point value to this tag"""
+        """
+        Assign a new floating-point value to this tag
+        """
 
     def copy(self) -> Tag:
-        """Create a deep copy of this tag"""
+        """
+        Create a deep copy of this tag
+        """
 
     def equals(self, other: Tag) -> bool:
-        """Check if this tag equals another tag"""
+        """
+        Check if this tag equals another tag
+        """
 
     def get_type(self) -> TagType:
-        """Get the NBT type ID (Double)"""
+        """
+        Get the NBT type ID (Double)
+        """
 
     def hash(self) -> int:
-        """Compute hash value of this tag"""
+        """
+        Compute hash value of this tag
+        """
 
     def load(self, stream: ...) -> None:
-        """Load tag value from a binary stream"""
+        """
+        Load tag value from a binary stream
+        """
 
     def write(self, stream: ...) -> None:
-        """Write tag to a binary stream"""
+        """
+        Write tag to a binary stream
+        """
 
     @property
     def value(self) -> float:
-        """Access the floating-point value of this tag"""
+        """
+        Access the floating-point value of this tag
+        """
 
     @value.setter
     def value(self, value: float) -> None: ...

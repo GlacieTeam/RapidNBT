@@ -50,11 +50,15 @@ class CompoundTagVariant:
     def __float__(self) -> float: ...
     @overload
     def __getitem__(self, index: int) -> Tag:
-        """Get value by object key"""
+        """
+        Get value by object key
+        """
 
     @overload
     def __getitem__(self, index: str) -> CompoundTagVariant:
-        """Get value by array index"""
+        """
+        Get value by array index
+        """
 
     @overload
     def __init__(self) -> None: ...
@@ -63,37 +67,108 @@ class CompoundTagVariant:
     def __int__(self) -> int: ...
     def __iter__(self) -> List[CompoundTagVariant]: ...
     def __repr__(self) -> str:
-        """Official string representation"""
+        """
+        Official string representation
+        """
 
     @overload
     def __setitem__(self, index: str, value: Any) -> None:
-        """Set value by object key"""
+        """
+        Set value by object key
+        """
 
     @overload
     def __setitem__(self, index: int, value: Any) -> None:
-        """Set value by array index"""
+        """
+        Set value by array index
+        """
 
     def __str__(self) -> str:
-        """String representation (SNBT minimized format)"""
+        """
+        String representation (SNBT minimized format)
+        """
 
     def append(self, value: Any) -> None:
-        """Append a Tag element if self is ListTag"""
+        """
+        Append a Tag element if self is ListTag
+        Throw TypeError if wrong type
+        """
 
     def assign(self, value: Any) -> None:
         """Assign value"""
 
-    def as_byte_tag(self) -> ByteTag: ...
-    def as_byte_array_tag(self) -> ByteArrayTag: ...
-    def as_compound_tag(self) -> CompoundTag: ...
-    def as_double_tag(self) -> DoubleTag: ...
-    def as_float_tag(self) -> FloatTag: ...
-    def as_int_tag(self) -> IntTag: ...
-    def as_int64_tag(self) -> Int64Tag: ...
-    def as_int_array_tag(self) -> IntArrayTag: ...
-    def as_list_tag(self) -> ListTag: ...
-    def as_long_array_tag(self) -> LongArrayTag: ...
-    def as_short_tag(self) -> ShortTag: ...
-    def as_string_tag(self) -> StringTag: ...
+    def as_byte_tag(self) -> ByteTag:
+        """
+        Convert to a ByteTag
+        Throw TypeError if wrong type
+        """
+
+    def as_byte_array_tag(self) -> ByteArrayTag:
+        """
+        Convert to a ByteArrayTag
+        Throw TypeError if wrong type
+        """
+
+    def as_compound_tag(self) -> CompoundTag:
+        """
+        Convert to a CompoundTag
+        Throw TypeError if wrong type
+        """
+
+    def as_double_tag(self) -> DoubleTag:
+        """
+        Convert to a DoubleTag
+        Throw TypeError if wrong type
+        """
+
+    def as_float_tag(self) -> FloatTag:
+        """
+        Convert to a FLoatTag
+        Throw TypeError if wrong type
+        """
+
+    def as_int_tag(self) -> IntTag:
+        """
+        Convert to a IntTag
+        Throw TypeError if wrong type
+        """
+
+    def as_int64_tag(self) -> Int64Tag:
+        """
+        Convert to a Int64Tag
+        Throw TypeError if wrong type
+        """
+
+    def as_int_array_tag(self) -> IntArrayTag:
+        """
+        Convert to a IntArrayTag
+        Throw TypeError if wrong type
+        """
+
+    def as_list_tag(self) -> ListTag:
+        """
+        Convert to a ListTag
+        Throw TypeError if wrong type
+        """
+
+    def as_long_array_tag(self) -> LongArrayTag:
+        """
+        Convert to a LongArrayTag
+        Throw TypeError if wrong type
+        """
+
+    def as_short_tag(self) -> ShortTag:
+        """
+        Convert to a ShortTag
+        Throw TypeError if wrong type
+        """
+
+    def as_string_tag(self) -> StringTag:
+        """
+        Convert to a StringTag
+        Throw TypeError if wrong type
+        """
+
     def get_byte(self) -> int: ...
     def get_byte_array(self) -> bytes: ...
     def get_compound(self) -> Dict[str, CompoundTagVariant]: ...
