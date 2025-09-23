@@ -143,10 +143,13 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "get",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::Tag* { return self.get(key); },
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::CompoundTagVariant& {
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                return self.at(key);
+            },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get tag by key or None if not found"
+            "Get tag by key\nThrow IndexError if not found"
         )
         .def(
             "put",
@@ -342,237 +345,277 @@ void bindCompoundTag(py::module& m) {
         .def(
             "get_byte_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::ByteTag* {
-                if (!self[key].hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
                 return self.getByte(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get ByteTag\nThrow TypeError if not found or wrong type"
+            "Get ByteTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_short_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::ShortTag* {
-                if (!self[key].hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
                 return self.getShort(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get ShortTag\nThrow TypeError if not found or wrong type"
+            "Get ShortTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_int_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::IntTag* {
-                if (!self[key].hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold a IntTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold a IntTag"); }
                 return self.getInt(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get IntTag\nThrow TypeError if not found or wrong type"
+            "Get IntTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_int64_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::Int64Tag* {
-                if (!self[key].hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold a Int64Tag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold a Int64Tag"); }
                 return self.getInt64(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get Int64Tag\nThrow TypeError if not found or wrong type"
+            "Get Int64Tag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_float_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::FloatTag* {
-                if (!self[key].hold(nbt::Tag::Type::Float)) { throw py::type_error("tag not hold a FloatTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Float)) { throw py::type_error("tag not hold a FloatTag"); }
                 return self.getFloat(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get FloatTag\nThrow TypeError if not found or wrong type"
+            "Get FloatTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_double_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::DoubleTag* {
-                if (!self[key].hold(nbt::Tag::Type::Double)) { throw py::type_error("tag not hold a DoubleTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Double)) { throw py::type_error("tag not hold a DoubleTag"); }
                 return self.getDouble(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get DoubleTag\nThrow TypeError if not found or wrong type"
+            "Get DoubleTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_string_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::StringTag* {
-                if (!self[key].hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
                 return self.getString(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get StringTag\nThrow TypeError if not found or wrong type"
+            "Get StringTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_byte_array_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::ByteArrayTag* {
-                if (!self[key].hold(nbt::Tag::Type::ByteArray)) { throw py::type_error("tag not hold a ByteArrayTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::ByteArray)) {
+                    throw py::type_error("tag not hold a ByteArrayTag");
+                }
                 return self.getByteArray(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get ByteArrayTag\nThrow TypeError if not found or wrong type"
+            "Get ByteArrayTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_int_array_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::IntArrayTag* {
-                if (!self[key].hold(nbt::Tag::Type::IntArray)) { throw py::type_error("tag not hold a IntArrayTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::IntArray)) {
+                    throw py::type_error("tag not hold a IntArrayTag");
+                }
                 return self.getIntArray(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get IntArrayTag\nThrow TypeError if not found or wrong type"
+            "Get IntArrayTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_long_array_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::LongArrayTag* {
-                if (!self[key].hold(nbt::Tag::Type::LongArray)) { throw py::type_error("tag not hold a LongArrayTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::LongArray)) {
+                    throw py::type_error("tag not hold a LongArrayTag");
+                }
                 return self.getLongArray(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get LongArrayTag\nThrow TypeError if not found or wrong type"
+            "Get LongArrayTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_compound_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::CompoundTag* {
-                if (!self[key].hold(nbt::Tag::Type::Compound)) { throw py::type_error("tag not hold a CompoundTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Compound)) {
+                    throw py::type_error("tag not hold a CompoundTag");
+                }
                 return self.getCompound(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get CompoundTag\nThrow TypeError if not found or wrong type"
+            "Get CompoundTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_list_tag",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::ListTag* {
-                if (!self[key].hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold a ListTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold a ListTag"); }
                 return self.getList(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get ListTag\nThrow TypeError if not found or wrong type"
+            "Get ListTag\nThrow IndexError if not found or TypeError if wrong type"
         )
 
         .def(
             "get_byte",
             [](nbt::CompoundTag& self, std::string_view key) -> uint8_t {
-                if (!self[key].hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
-                return self[key].as<nbt::ByteTag>().storage();
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
+                return self.at(key).as<nbt::ByteTag>().storage();
             },
             py::arg("key"),
-            "Get byte value\nThrow TypeError if not found or wrong type"
+            "Get byte value\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_short",
             [](nbt::CompoundTag& self, std::string_view key) -> short {
-                if (!self[key].hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
-                return self[key].as<nbt::ShortTag>().storage();
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
+                return self.at(key).as<nbt::ShortTag>().storage();
             },
             py::arg("key"),
-            "Get short value\nThrow TypeError if not found or wrong type"
+            "Get short value\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_int",
             [](nbt::CompoundTag& self, std::string_view key) -> int {
-                if (!self[key].hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold a IntTag"); }
-                return self[key].as<nbt::IntTag>().storage();
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold a IntTag"); }
+                return self.at(key).as<nbt::IntTag>().storage();
             },
             py::arg("key"),
-            "Get int value\nThrow TypeError if not found or wrong type"
+            "Get int value\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_int64",
             [](nbt::CompoundTag& self, std::string_view key) -> int64_t {
-                if (!self[key].hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold a Int64Tag"); }
-                return self[key].as<nbt::Int64Tag>().storage();
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold a Int64Tag"); }
+                return self.at(key).as<nbt::Int64Tag>().storage();
             },
             py::arg("key"),
-            "Get long value\nThrow TypeError if not found or wrong type"
+            "Get long value\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_float",
             [](nbt::CompoundTag& self, std::string_view key) -> float {
-                if (!self[key].hold(nbt::Tag::Type::Float)) { throw py::type_error("tag not hold a FloatTag"); }
-                return self[key].as<nbt::FloatTag>().storage();
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Float)) { throw py::type_error("tag not hold a FloatTag"); }
+                return self.at(key).as<nbt::FloatTag>().storage();
             },
             py::arg("key"),
-            "Get float value\nThrow TypeError if not found or wrong type"
+            "Get float value\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_double",
             [](nbt::CompoundTag& self, std::string_view key) -> double {
-                if (!self[key].hold(nbt::Tag::Type::Double)) { throw py::type_error("tag not hold a DoubleTag"); }
-                return self[key].as<nbt::DoubleTag>().storage();
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Double)) { throw py::type_error("tag not hold a DoubleTag"); }
+                return self.at(key).as<nbt::DoubleTag>().storage();
             },
             py::arg("key"),
-            "Get double value\nThrow TypeError if not found or wrong type"
+            "Get double value\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_string",
             [](nbt::CompoundTag& self, std::string_view key) -> std::string {
-                if (!self[key].hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
-                return self[key].as<nbt::StringTag>().storage();
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
+                return self.at(key).as<nbt::StringTag>().storage();
             },
             py::arg("key"),
-            "Get string value\nThrow TypeError if not found or wrong type"
+            "Get string value\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_byte_array",
             [](nbt::CompoundTag& self, std::string_view key) -> py::bytes {
-                if (!self[key].hold(nbt::Tag::Type::ByteArray)) { throw py::type_error("tag not hold a ByteArrayTag"); }
-                return to_pybytes(static_cast<std::string_view>(self[key].as<nbt::ByteArrayTag>()));
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::ByteArray)) {
+                    throw py::type_error("tag not hold a ByteArrayTag");
+                }
+                return to_pybytes(static_cast<std::string_view>(self.at(key).as<nbt::ByteArrayTag>()));
             },
             py::arg("key"),
-            "Get byte array\nThrow TypeError if not found or wrong type"
+            "Get byte array\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_int_array",
             [](nbt::CompoundTag& self, std::string_view key) -> std::vector<int> {
-                if (!self[key].hold(nbt::Tag::Type::IntArray)) { throw py::type_error("tag not hold a IntArrayTag"); }
-                return self[key].as<nbt::IntArrayTag>().storage();
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::IntArray)) {
+                    throw py::type_error("tag not hold a IntArrayTag");
+                }
+                return self.at(key).as<nbt::IntArrayTag>().storage();
             },
             py::arg("key"),
-            "Get int array\nThrow TypeError if not found or wrong type"
+            "Get int array\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_long_array",
             [](nbt::CompoundTag& self, std::string_view key) -> std::vector<int64_t> {
-                if (!self[key].hold(nbt::Tag::Type::LongArray)) { throw py::type_error("tag not hold a LongArrayTag"); }
-                return self[key].as<nbt::LongArrayTag>().storage();
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::LongArray)) {
+                    throw py::type_error("tag not hold a LongArrayTag");
+                }
+                return self.at(key).as<nbt::LongArrayTag>().storage();
             },
             py::arg("key"),
-            "Get long array\nThrow TypeError if not found or wrong type"
+            "Get long array\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_compound",
             [](nbt::CompoundTag& self, std::string_view key) -> py::dict {
-                if (!self[key].hold(nbt::Tag::Type::Compound)) { throw py::type_error("tag not hold a CompoundTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::Compound)) {
+                    throw py::type_error("tag not hold a CompoundTag");
+                }
                 py::dict result;
-                for (auto& [k, v] : self[key].as<nbt::CompoundTag>()) { result[py::str(k)] = py::cast(v); }
+                for (auto& [k, v] : self.at(key).as<nbt::CompoundTag>()) { result[py::str(k)] = py::cast(v); }
                 return result;
             },
             py::arg("key"),
-            "Get CompoundTag\nThrow TypeError if not found or wrong type"
+            "Get CompoundTag\nThrow IndexError if not found or TypeError if wrong type"
         )
         .def(
             "get_list",
             [](nbt::CompoundTag& self, std::string_view key) -> py::list {
-                if (!self[key].hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold a ListTag"); }
+                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.at(key).hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold a ListTag"); }
                 py::list result;
-                for (auto& tag : self[key].as<nbt::ListTag>()) {
+                for (auto& tag : self.at(key).as<nbt::ListTag>()) {
                     result.append(py::cast(nbt::CompoundTagVariant(*tag)));
                 }
                 return result;
             },
             py::arg("key"),
-            "Get ListTag\nThrow TypeError if not found or wrong type"
+            "Get ListTag\nThrow IndexError if not found or TypeError if wrong type"
         )
 
         .def(

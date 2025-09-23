@@ -383,6 +383,15 @@ void bindCompoundTagVariant(py::module& m) {
             }
         )
 
+        .def_property(
+            "value",
+            [](nbt::CompoundTagVariant& self) -> nbt::CompoundTagVariant::TagVariant { return self.mStorage; },
+            [](nbt::CompoundTagVariant& self, nbt::CompoundTagVariant::TagVariant const& value) {
+                self.mStorage = value;
+            },
+            "Access the tag variant"
+        )
+
         .def("__int__", [](nbt::CompoundTagVariant const& self) { return static_cast<int64_t>(self); })
         .def("__float__", [](nbt::CompoundTagVariant const& self) { return static_cast<double>(self); })
         .def(

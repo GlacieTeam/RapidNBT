@@ -81,7 +81,13 @@ def test3():
     print(f'{nbt.get_list("tag_list")}')
     print(f'{nbt.get_compound("tag_compound")}')
     print(f'{nbt.get_int_array("tag_int_array")}')
-    print(f'{nbt.get_byte("not exist")}')
+    try:
+        print(f'{nbt.get_byte("not exist")}')
+    except (TypeError, IndexError) as e:
+        print(e)
+    nbt["tag_int_array"].value = IntArrayTag([5, 6, 7, 8, 9, 0])
+    print(nbt["tag_int_array"].value)
+    print(nbt.to_dict())
 
 
 def test4():

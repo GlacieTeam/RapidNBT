@@ -73,18 +73,6 @@ void bindTag(py::module& m) {
             py::return_value_policy::reference_internal
         )
 
-        .def(
-            "as_string",
-            [](nbt::Tag& self) -> std::string { return static_cast<std::string>(self); },
-            "Convert tag to string"
-        )
-
-        .def(
-            "as_bytes",
-            [](const nbt::Tag& self) -> py::bytes { return py::bytes(static_cast<std::string>(self)); },
-            "Convert tag to bytes"
-        )
-
         .def_static(
             "new_tag",
             [](nbt::Tag::Type type) -> TagHolder { return nbt::Tag::newTag(type); },

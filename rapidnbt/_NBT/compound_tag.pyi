@@ -106,153 +106,154 @@ class CompoundTag(Tag):
     def equals(self, other: Tag) -> bool:
         """Check if this tag equals another tag"""
 
-    def get(self, key: str) -> Tag:
+    def get(self, key: str) -> CompoundTagVariant:
         """
         Get tag by key
-        Throw TypeError if not found"""
+        Throw IndexError if not found
+        """
 
     def get_byte_tag(self, key: str) -> Optional[ByteTag]:
         """
         Get ByteTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_byte_array_tag(self, key: str) -> Optional[ByteArrayTag]:
         """
         Get ByteArrayTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_compound_tag(self, key: str) -> Optional[CompoundTag]:
         """
         Get CompoundTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_double_tag(self, key: str) -> Optional[DoubleTag]:
         """
         Get DoubleTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_float_tag(self, key: str) -> Optional[FloatTag]:
         """
         Get FloatTag value
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_int_tag(self, key: str) -> Optional[IntTag]:
         """
         Get IntTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_int64_tag(self, key: str) -> Optional[Int64Tag]:
         """
         Get Int64Tag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_int_array_tag(self, key: str) -> Optional[IntArrayTag]:
         """
         Get IntArrayTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_list_tag(self, key: str) -> Optional[ListTag]:
         """
         Get ListTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_long_array_tag(self, key: str) -> Optional[LongArrayTag]:
         """
         Get LongArrayTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_short_tag(self, key: str) -> Optional[ShortTag]:
         """
         Get ShortTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_string_tag(self, key: str) -> Optional[StringTag]:
         """
         Get StringTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_byte(self, key: str) -> Optional[int]:
         """
         Get byte value
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_byte_array(self, key: str) -> Optional[bytes]:
         """
         Get byte array
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_compound(self, key: str) -> Optional[Dict[str, CompoundTagVariant]]:
         """
         Get CompoundTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_double(self, key: str) -> Optional[float]:
         """
         Get double value
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_float(self, key: str) -> Optional[float]:
         """
         Get float value
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_int(self, key: str) -> Optional[int]:
         """
         Get int value
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_int64(self, key: str) -> Optional[int]:
         """
         Get long value
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_int_array(self, key: str) -> Optional[List[int]]:
         """
         Get int array
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_list(self, key: str) -> Optional[List[CompoundTagVariant]]:
         """
         Get ListTag
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_long_array(self, key: str) -> Optional[List[int]]:
         """
         Get long array
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_short(self, key: str) -> Optional[int]:
         """
         Get short value
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_string(self, key: str) -> Optional[str]:
         """
         Get string value
-        Throw TypeError if not found or wrong type
+        Throw IndexError if not found or TypeError if wrong type
         """
 
     def get_type(self) -> TagType:

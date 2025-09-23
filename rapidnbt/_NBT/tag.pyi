@@ -30,12 +30,6 @@ class Tag(ABC):
     def __hash__(self) -> int: ...
     def __repr__(self) -> str: ...
     def __str__(self) -> str: ...
-    def as_bytes(self) -> bytes:
-        """Convert tag to bytes"""
-
-    def as_string(self) -> str:
-        """Convert tag to string"""
-
     @abstractmethod
     def copy(self) -> Tag:
         """Create a deep copy of this tag"""
