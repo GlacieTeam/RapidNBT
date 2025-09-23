@@ -96,20 +96,30 @@ void bindCompoundTagVariant(py::module& m) {
         .def("size", &nbt::CompoundTagVariant::size)
         .def(
             "contains",
-            [](nbt::CompoundTagVariant& self, std::string_view index) -> bool { return self.contains(index); }
+            [](nbt::CompoundTagVariant& self, std::string_view index) -> bool { return self.contains(index); },
+            py::arg("index"),
+            "Check if the value is in the CompoundTag.\nThrow TypeError is not hold a CompoundTag."
         )
 
         .def(
+            "__contains__",
+            [](nbt::CompoundTagVariant& self, std::string_view index) -> bool { return self.contains(index); },
+            py::arg("index"),
+            "Check if the value is in the CompoundTag.\nThrow TypeError is not hold a CompoundTag."
+        )
+        .def(
             "__getitem__",
             [](nbt::CompoundTagVariant& self, size_t index) -> nbt::Tag& { return self[index]; },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Get value by object key"
         )
         .def(
             "__getitem__",
             [](nbt::CompoundTagVariant& self, std::string_view index) -> nbt::CompoundTagVariant& {
                 return self[index];
             },
-            py::return_value_policy::reference_internal
+            py::return_value_policy::reference_internal,
+            "Get value by array index"
         )
 
         .def(
@@ -120,7 +130,8 @@ void bindCompoundTagVariant(py::module& m) {
                 } else {
                     self[key] = makeNativeTag(obj);
                 }
-            }
+            },
+            "Set value by object key"
         )
         .def(
             "__setitem__",
@@ -130,7 +141,8 @@ void bindCompoundTagVariant(py::module& m) {
                 } else {
                     self[index] = *makeNativeTag(obj);
                 }
-            }
+            },
+            "Set value by array index"
         )
 
         .def("pop", py::overload_cast<std::string_view>(&nbt::CompoundTagVariant::remove))

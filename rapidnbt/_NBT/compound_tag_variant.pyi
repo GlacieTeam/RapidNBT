@@ -23,12 +23,22 @@ from rapidnbt._NBT.int_array_tag import IntArrayTag
 from rapidnbt._NBT.long_array_tag import LongArrayTag
 
 class CompoundTagVariant:
+    def __contains__(self, index: str) -> bool:
+        """
+        Check if the value is in the CompoundTag.
+        Throw TypeError is not hold a CompoundTag.
+        """
+
     def __eq__(self, other: CompoundTagVariant) -> bool: ...
     def __float__(self) -> float: ...
     @overload
-    def __getitem__(self, index: int) -> Tag: ...
+    def __getitem__(self, index: int) -> Tag:
+        """Get value by object key"""
+
     @overload
-    def __getitem__(self, index: str) -> CompoundTagVariant: ...
+    def __getitem__(self, index: str) -> CompoundTagVariant:
+        """Get value by array index"""
+
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -39,9 +49,13 @@ class CompoundTagVariant:
         """Official string representation"""
 
     @overload
-    def __setitem__(self, index: str, value: Any) -> None: ...
+    def __setitem__(self, index: str, value: Any) -> None:
+        """Set value by object key"""
+
     @overload
-    def __setitem__(self, index: int, value: Any) -> None: ...
+    def __setitem__(self, index: int, value: Any) -> None:
+        """Set value by array index"""
+
     def __str__(self) -> str:
         """String representation (SNBT minimized format)"""
 
@@ -75,7 +89,12 @@ class CompoundTagVariant:
     def get_long_array(self) -> List[int]: ...
     def get_short(self) -> int: ...
     def get_string(self) -> str: ...
-    def contains(self, index: str) -> bool: ...
+    def contains(self, index: str) -> bool:
+        """
+        Check if the value is in the CompoundTag.
+        Throw TypeError is not hold a CompoundTag.
+        """
+
     def copy(self) -> Tag: ...
     def get_type(self) -> TagType: ...
     def hold(self, index: TagType) -> bool: ...
