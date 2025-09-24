@@ -64,6 +64,47 @@ void bindEnums(py::module& m) {
             )
             .def("__and__", [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs & rhs; }, "operation &");
     }
+    {
+        auto sm = m.def_submodule("nbt_file_format");
+
+        py::enum_<nbt::NbtFileFormat>(sm, "NbtFileFormat", "Enumeration of NBT binary file formats")
+            .value("LITTLE_ENDIAN", nbt::NbtFileFormat::LittleEndian)
+            .value("LITTLE_ENDIAN_WITH_HEADER", nbt::NbtFileFormat::LittleEndianWithHeader)
+            .value("BIG_ENDIAN", nbt::NbtFileFormat::BigEndian)
+            .value("BIG_ENDIAN_WITH_HEADER", nbt::NbtFileFormat::BigEndianWithHeader)
+            .value("BEDROCK_NETWORK", nbt::NbtFileFormat::BedrockNetwork)
+            .export_values();
+    }
+    {
+        auto sm = m.def_submodule("nbt_compression_type");
+
+        py::enum_<nbt::NbtCompressionType>(
+            sm,
+            "NbtCompressionType",
+            "Enumeration of compression types for NBT serialization"
+        )
+            .value("NONE", nbt::NbtCompressionType::None)
+            .value("GZIP", nbt::NbtCompressionType::Gzip)
+            .value("ZLIB", nbt::NbtCompressionType::Zlib)
+            .export_values();
+    }
+    {
+        auto sm = m.def_submodule("nbt_compression_level");
+
+        py::enum_<nbt::NbtCompressionLevel>(sm, "NbtCompressionLevel", "Enumeration of compression levels")
+            .value("DEFAULT", nbt::NbtCompressionLevel::Default)
+            .value("NO_COMPRESSION", nbt::NbtCompressionLevel::NoCompression)
+            .value("BEST_SPEED", nbt::NbtCompressionLevel::BestSpeed)
+            .value("LOW", nbt::NbtCompressionLevel::Low)
+            .value("MEDIUM_LOW", nbt::NbtCompressionLevel::MediumLow)
+            .value("MEDIUM", nbt::NbtCompressionLevel::Medium)
+            .value("MEDIUM_HIGH", nbt::NbtCompressionLevel::MediumHigh)
+            .value("HIGH", nbt::NbtCompressionLevel::High)
+            .value("VERY_HIGH", nbt::NbtCompressionLevel::VeryHigh)
+            .value("ULTRA", nbt::NbtCompressionLevel::Ultra)
+            .value("BEST_COMPRESSION", nbt::NbtCompressionLevel::BestCompression)
+            .export_values();
+    }
 }
 
 } // namespace rapidnbt

@@ -24,7 +24,9 @@ from rapidnbt._NBT.list_tag import ListTag
 from rapidnbt._NBT.compound_tag import CompoundTag
 from rapidnbt._NBT.int_array_tag import IntArrayTag
 from rapidnbt._NBT.long_array_tag import LongArrayTag
-from rapidnbt._NBT.nbtio import NbtCompressionLevel, NbtCompressionType, NbtFileFormat
+from rapidnbt._NBT.nbt_file_format import NbtFileFormat
+from rapidnbt._NBT.nbt_compression_level import NbtCompressionLevel
+from rapidnbt._NBT.nbt_compression_type import NbtCompressionType
 from rapidnbt._NBT import nbtio
 
 __all__ = [

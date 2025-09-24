@@ -49,5 +49,6 @@ void bindCompoundTag(py::module& m);
 void bindIntArrayTag(py::module& m);
 void bindLongArrayTag(py::module& m);
 void bindNbtIO(py::module& m);
+void bindNbtFile(py::module& m);
 
 } // namespace rapidnbt

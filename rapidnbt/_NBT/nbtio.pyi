@@ -7,46 +7,12 @@
 
 import os
 from typing import Union, Optional
-from enum import Enum
 from rapidnbt._NBT.compound_tag import CompoundTag
 from rapidnbt._NBT.snbt_format import SnbtFormat
-
-class NbtFileFormat(Enum):
-    """
-    Enumeration of NBT binary file formats
-    """
-
-    LITTLE_ENDIAN = 0
-    LITTLE_ENDIAN_WITH_HEADER = 1
-    BIG_ENDIAN = 2
-    BIG_ENDIAN_WITH_HEADER = 3
-    BEDROCK_NETWORK = 4
-
-class NbtCompressionLevel(Enum):
-    """
-    Enumeration of compression levels
-    """
-
-    DEFAULT = -1
-    NO_COMPRESSION = 0
-    BEST_SPEED = 1
-    LOW = 2
-    MEDIUM_LOW = 3
-    MEDIUM = 4
-    MEDIUM_HIGH = 5
-    HIGH = 6
-    VERY_HIGH = 7
-    ULTRA = 8
-    BEST_COMPRESSION = 9
-
-class NbtCompressionType(Enum):
-    """
-    Enumeration of compression types for NBT serialization
-    """
-
-    NONE = 0
-    GZIP = 1
-    ZLIB = 2
+from rapidnbt._NBT.nbt_file_format import NbtFileFormat
+from rapidnbt._NBT.nbt_compression_level import NbtCompressionLevel
+from rapidnbt._NBT.nbt_compression_type import NbtCompressionType
+from rapidnbt._NBT.nbt_file import NbtFile
 
 def detect_content_format(
     content: Union[bytes, bytearray], strict_match_size: bool = True
@@ -70,7 +36,7 @@ def detect_file_format(
     Detect NBT format from a file
 
     Args:
-        path (str): Path to the file
+        path (os.PathLike): Path to the file
         file_memory_map (bool): Use memory mapping for large files (default: False)
         strict_match_size (bool): Strictly match nbt content size (default: True)
 
@@ -100,7 +66,7 @@ def detect_file_compression_type(
     Detect NBT format from a file
 
     Args:
-        path (str): Path to the file
+        path (os.PathLike): Path to the file
         file_memory_map (bool): Use memory mapping for large files (default: False)
 
     Returns:
@@ -120,7 +86,7 @@ def dump(
 
     Args:
         nbt (CompoundTag): Tag to save
-        path (str): Output file path
+        path (os.PathLike): Output file path
         format (NbtFileFormat): Output format (default: LITTLE_ENDIAN)
         compression_type (CompressionType): Compression method (default: Gzip)
         compression_level (CompressionLevel): Compression level (default: Default)
@@ -141,7 +107,7 @@ def dump_snbt(
 
     Args:
         nbt (CompoundTag): Tag to save
-        path (str): Output file path
+        path (os.PathLike): Output file path
         format (SnbtFormat): Output formatting style (default: Default)
         indent (int): Indentation level (default: 4)
 
@@ -218,7 +184,7 @@ def load(
     Parse CompoundTag from a file
 
     Args:
-        path (str): Path to NBT file
+        path (os.PathLike): Path to NBT file
         format (NbtFileFormat, optional): Force specific format (autodetect if None)
         file_memory_map (bool): Use memory mapping for large files (default: False)
         strict_match_size (bool): Strictly match nbt content size (default: True)
@@ -232,7 +198,7 @@ def load_snbt(path: os.PathLike) -> Optional[CompoundTag]:
     Parse CompoundTag from SNBT (String NBT) file
 
     Args:
-        path (str): Path to SNBT file
+        path (os.PathLike): Path to SNBT file
 
     Returns:
         CompoundTag or None if parsing fails
@@ -285,6 +251,17 @@ def loads_snbt(
         CompoundTag or None if parsing fails
     """
 
+def open(path: os.PathLike) -> Optional[NbtFile]:
+    """
+    Open a NBT file (auto detect)
+
+    Args:
+        path (os.PathLike): NBT file path
+
+    Returns:
+        Optional[NbtFile]: NbtFile or None if open failed
+    """
+
 def validate_content(
     content: Union[bytes, bytearray],
     format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
@@ -312,7 +289,7 @@ def validate_file(
     Validate NBT file
 
     Args:
-        path (str): File path to validate
+        path (os.PathLike): File path to validate
         format (NbtFileFormat): Expected format (default: LITTLE_ENDIAN)
         file_memory_map (bool): Use memory mapping (default: False)
         strict_match_size (bool): Strictly match nbt content size (default: True)
