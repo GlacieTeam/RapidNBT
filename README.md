@@ -42,20 +42,22 @@ Parsing NBT file (870 MB, little-endian binary NBT)
 > Tested on Intel i7 14700-HX with 32GB DDR5-5400 using 720MB little-endian binary NBT
 
 ## Quick Start 🚀
+RapidNBT provides a morden and safe API, and it is easy to use.
+
 1. Load NBT from file and modify it
 ```Python
 from rapidnbt import nbtio, Int64Tag
 from ctypes import c_int16
 
-def example(path: str):
+def example():
     nbt = nbtio.load("./level.dat") # Automatically detect nbt file format and decompress (if compressed)
     # nbt = nbtio.load("./level.dat", NbtFileFormat.BIG_ENDIAN) # You can also specify the file format
 
     # Modify NBT
     nbt["abc"]["def"] = True # bool will automatically convert to ByteTag(1)
     nbt["ghi"]["hjk"] = c_int16(23) # ctypes.c_int16 will automatically convert to ShortTag(23)
-    nbt["lmn"] = ["test1", "test2"] # list will automatically convert to ListTag([StringTag("test1"), StringTag("test2")])
-    nbt["opq"]["rst"] = {
+    nbt["lmn"] = ["test1", "test2"] # Python list will automatically convert to ListTag([StringTag("test1"), StringTag("test2")])
+    nbt["opq"]["rst"] = { # Python dict will automatically convert to CompoundTag
         "key1": False,
         "key2": b"2345",  # bytes/bytearray will automatically convert to ByteArrayTag
         "key3": Int64Tag(114514), # You can also directly use Tag
@@ -102,7 +104,7 @@ nbtio.dump(nbt, "./test.nbt", NbtFileFormat.LITTLE_ENDIAN)
 
 ```
 3. Use context manager to operate NBT file
-```python
+```Python
 from rapidnbt import Int64Tag, nbtio
 
 # use context manager
@@ -110,6 +112,28 @@ with nbtio.open("level.dat") as file:
     file["RandomSeed"] = Int64Tag(1145141919810) # modify NBT
     # Auto save file as original format when exit context manager
 ```
+
+4. Read NBT data
+```Python
+from rapidnbt import nbtio
+
+def example():
+    nbt = nbtio.load("./test.nbt") # Automatically detect nbt file format and decompress (if compressed)
+    
+    value1 = nbt["abc"]["def"].value # Use .value method to get any tag value, and returns a Python object (Python int, str, dict, etc...)
+
+    value2 = nbt["ghi"]["hjk"].get_short() # Use .get_xxx method to safely get tag value, and will throw TypeError if tag is wrong type
+
+    exits = "lmn" in nbt # Check if a tag exist in this NBT
+    # exits = nbt.contains("lmn") You can also use .contains() method to check
+
+    del nbt["opq"]["rst"] # Delete a tag in NBT
+    # nbt["opq"].remove("rst") You can also use .remove() method to delete
+    
+    nbt.rename("abc", "ABC") # Rename a key in NBT
+```
+
+> ### More details please see the docstring in `.pyi` file
 
 ## CLI 🔧
 You can use CLI commands to opeartor NBT files easily.  

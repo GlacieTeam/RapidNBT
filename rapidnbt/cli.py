@@ -168,7 +168,7 @@ def process_write_options(args, nbt: CompoundTag, fmt: NbtFileFormat, fp: str):
 def main():
     args = parse_args()
     fp = args.file
-    fmt = nbtio.detect_file_format()
+    fmt = nbtio.detect_file_format(fp)
     nbt = parse_file(fp, fmt)
     if nbt is not None:
         process_print_options(args, nbt)

@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindNbtFile(py::module& m) {
-    auto sm = m.def_submodule("nbt_file");
+    auto sm = m.def_submodule("nbt_file", "NBT file\nUse nbtio.open() to open a NBT file.");
 
     py::class_<nbt::NbtFile>(sm, "NbtFile")
         .def(
@@ -135,6 +135,7 @@ void bindNbtFile(py::module& m) {
             },
             "Convert CompoundTag to a Python dictionary"
         )
+        .def("save", &nbt::NbtFile::save, "Save NBT to file")
 
         .def(
             "to_network_nbt",

@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 from pathlib import Path
-from typing import List, Any
+from typing import List, Any, Optional
 from rapidnbt._NBT.compound_tag import CompoundTag
 from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
 from rapidnbt._NBT.nbt_compression_level import NbtCompressionLevel
@@ -15,6 +15,11 @@ from rapidnbt._NBT.nbt_file_format import NbtFileFormat
 from rapidnbt._NBT.snbt_format import SnbtFormat
 
 class NbtFile:
+    """
+    NBT file
+    Use nbtio.open() to open a NBT file.
+    """
+
     def __contains__(self, key: str) -> bool:
         """
         Check if key exists in the compound
@@ -116,6 +121,11 @@ class NbtFile:
         Rename a key in the compound
         """
 
+    def save(self) -> None:
+        """
+        Save NBT to file
+        """
+
     def set(self, key: str, value: Any) -> None:
         """
         Set value in the compound (automatically converted to appropriate tag type)
@@ -154,13 +164,13 @@ class NbtFile:
     @property
     def compression_level(
         self,
-    ) -> NbtCompressionLevel | None:
+    ) -> Optional[NbtCompressionLevel]:
         """
         File compression level
         """
 
     @compression_level.setter
-    def compression_level(self, value: NbtCompressionLevel | None) -> None:
+    def compression_level(self, value: Optional[NbtCompressionLevel]) -> None:
         """
         File compression level
         """
@@ -168,13 +178,13 @@ class NbtFile:
     @property
     def compression_type(
         self,
-    ) -> NbtCompressionType | None:
+    ) -> Optional[NbtCompressionType]:
         """
         File compression type
         """
 
     @compression_type.setter
-    def compression_type(self, value: NbtCompressionType | None) -> None:
+    def compression_type(self, value: Optional[NbtCompressionType]) -> None:
         """
         File compression type
         """
@@ -192,13 +202,13 @@ class NbtFile:
         """
 
     @property
-    def file_format(self) -> NbtFileFormat | None:
+    def file_format(self) -> Optional[NbtFileFormat]:
         """
         Binary file format
         """
 
     @file_format.setter
-    def file_format(self, value: NbtFileFormat | None) -> None:
+    def file_format(self, value: Optional[NbtFileFormat]) -> None:
         """
         Binary file format
         """
@@ -234,13 +244,13 @@ class NbtFile:
         """
 
     @property
-    def snbt_indent(self) -> int | None:
+    def snbt_indent(self) -> Optional[int]:
         """
         File Snbt indent
         """
 
     @snbt_indent.setter
-    def snbt_indent(self, value: int | None) -> None:
+    def snbt_indent(self, value: Optional[int]) -> None:
         """
         File Snbt indent
         """
