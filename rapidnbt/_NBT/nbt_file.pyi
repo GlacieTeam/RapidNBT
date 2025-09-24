@@ -131,6 +131,11 @@ class NbtFile:
         Set value in the compound (automatically converted to appropriate tag type)
         """
 
+    def size(self) -> int:
+        """
+        Get the size of the compound in file
+        """
+
     def to_binary_nbt(self, little_endian: bool = True, header: bool = False) -> bytes:
         """
         Serialize to binary NBT format

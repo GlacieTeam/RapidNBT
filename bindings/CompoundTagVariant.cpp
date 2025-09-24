@@ -520,9 +520,7 @@ void bindCompoundTagVariant(py::module& m) {
                 return std::visit(
                     [](auto& value) {
                         using T = std::decay_t<decltype(value)>;
-                        if constexpr (requires { value.storage(); }) {
-                            return py::cast(value.storage());
-                        } else if constexpr (std::is_same_v<T, nbt::CompoundTag>) {
+                        if constexpr (std::is_same_v<T, nbt::CompoundTag>) {
                             py::dict result;
                             for (auto& [key, val] : value) { result[py::str(key)] = py::cast(val); }
                             return static_cast<py::object>(result);
@@ -530,6 +528,8 @@ void bindCompoundTagVariant(py::module& m) {
                             py::list result;
                             for (auto& tag : value) { result.append(py::cast(nbt::CompoundTagVariant(*tag))); }
                             return static_cast<py::object>(result);
+                        } else if constexpr (requires { value.storage(); }) {
+                            return py::cast(value.storage());
                         } else if constexpr (std::is_same_v<T, nbt::EndTag>) {
                             return static_cast<py::object>(py::none());
                         }

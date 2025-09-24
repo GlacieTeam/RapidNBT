@@ -125,6 +125,7 @@ void bindNbtFile(py::module& m) {
             py::arg("value"),
             "Set value in the compound (automatically converted to appropriate tag type)"
         )
+        .def("size", &nbt::NbtFile::size, "Get the size of the compound in file")
 
         .def(
             "to_dict",

@@ -59,6 +59,7 @@ void bindCompoundTag(py::module& m) {
             "Set value by key"
         )
 
+        .def("size", &nbt::CompoundTag::size, "Get the size of the compound")
         .def(
             "keys",
             [](nbt::CompoundTag& self) {

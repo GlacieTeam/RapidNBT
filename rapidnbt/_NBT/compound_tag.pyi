@@ -483,6 +483,11 @@ class CompoundTag(Tag):
         Serialize compound to a binary stream
         """
 
+    def size(self) -> int:
+        """
+        Get the size of the compound
+        """
+
     def to_binary_nbt(self, little_endian: bool = True, header: bool = False) -> bytes:
         """
         Serialize to binary NBT format
