@@ -28,8 +28,11 @@ class SnbtFormat(Enum):
     ForceQuote = 32
     Classic = 35
     ForceUppercase = 64
-    CommentMarks = 128
-    Jsonify = 167
+    MarkIntTag = 128
+    MarkDoubleTag = 256
+    MarkExtra = 384
+    CommentMarks = 512
+    Jsonify = 551
 
     def __or__(self, value: SnbtFormat) -> SnbtFormat:
         """

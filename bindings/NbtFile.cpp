@@ -154,6 +154,17 @@ void bindNbtFile(py::module& m) {
             py::arg("header")        = false,
             "Serialize to binary NBT format"
         )
+        .def(
+            "to_snbt",
+            [](const nbt::NbtFile& self, nbt::SnbtFormat format = nbt::SnbtFormat::Default, uint8_t indent = 4) {
+                return self.toSnbt(format, indent);
+            },
+            py::arg("format") = nbt::SnbtFormat::Default,
+            py::arg("indent") = 4,
+            "Convert tag to SNBT string"
+        )
+        .def("to_json", &nbt::NbtFile::toJson, py::arg("indent") = 4, "Convert tag to JSON string")
+
         .def("pop", &nbt::NbtFile::remove, py::arg("key"), "Remove key from the compound")
 
         .def(

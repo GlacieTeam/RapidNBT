@@ -91,11 +91,24 @@ nbt = CompoundTag(
     }
 )
 
-print(nbt.to_snbt()) # Print SNBT
+# Print SNBT
+print(nbt.to_snbt()) 
+# Or you can specify SNBT format
+print(file.to_snbt(format=SnbtFormat.Classic | SnbtFormat.MarkExtra, indent=4))
+# Use | to combime format 
 
 # Save NBT to file
 nbtio.dump(nbt, "./test.nbt", NbtFileFormat.LITTLE_ENDIAN)
 
+```
+3. Use context manager to operate NBT file
+```python
+from rapidnbt import Int64Tag, nbtio
+
+# use context manager
+with nbtio.open("level.dat") as file:
+    file["RandomSeed"] = Int64Tag(1145141919810) # modify NBT
+    # Auto save file as original format when exit context manager
 ```
 
 ## CLI 🔧

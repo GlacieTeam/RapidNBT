@@ -12,6 +12,7 @@ from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
 from rapidnbt._NBT.nbt_compression_level import NbtCompressionLevel
 from rapidnbt._NBT.nbt_compression_type import NbtCompressionType
 from rapidnbt._NBT.nbt_file_format import NbtFileFormat
+from rapidnbt._NBT.snbt_format import SnbtFormat
 
 class NbtFile:
     def __contains__(self, key: str) -> bool:
@@ -133,6 +134,16 @@ class NbtFile:
     def to_network_nbt(self) -> bytes:
         """
         Serialize to Network NBT format (used in Minecraft networking)
+        """
+
+    def to_json(self, indent: int = 4) -> str:
+        """
+        Convert tag to JSON string
+        """
+
+    def to_snbt(self, format: SnbtFormat = SnbtFormat.Default, indent: int = 4) -> str:
+        """
+        Convert tag to SNBT string
         """
 
     def values(self) -> list:
