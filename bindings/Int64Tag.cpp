@@ -14,7 +14,7 @@ void bindInt64Tag(py::module& m) {
 
     py::class_<nbt::Int64Tag, nbt::Tag>(sm, "Int64Tag")
         .def(py::init<>(), "Construct an Int64Tag with default value (0)")
-        .def(py::init<int>(), py::arg("value"), "Construct an Int64Tag from an integer value")
+        .def(py::init<int64_t>(), py::arg("value"), "Construct an Int64Tag from an integer value")
 
         .def(
             "assign",

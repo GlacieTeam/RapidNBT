@@ -14,7 +14,7 @@ void bindShortTag(py::module& m) {
 
     py::class_<nbt::ShortTag, nbt::Tag>(sm, "ShortTag", "A tag contains a short")
         .def(py::init<>(), "Construct an ShortTag with default value (0)")
-        .def(py::init<int>(), py::arg("value"), "Construct an ShortTag from an integer value")
+        .def(py::init<short>(), py::arg("value"), "Construct an ShortTag from an integer value")
 
         .def(
             "assign",

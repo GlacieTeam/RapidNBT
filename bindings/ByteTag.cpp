@@ -14,7 +14,7 @@ void bindByteTag(py::module& m) {
 
     py::class_<nbt::ByteTag, nbt::Tag>(sm, "ByteTag")
         .def(py::init<>(), "Construct an ByteTag with default value (0)")
-        .def(py::init<int>(), py::arg("value"), "Construct an ByteTag from an integer value")
+        .def(py::init<uint8_t>(), py::arg("value"), "Construct an ByteTag from an integer value")
 
         .def(
             "assign",
