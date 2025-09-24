@@ -79,6 +79,35 @@ def detect_file_format(
 
     """
 
+def detect_content_compression_type(
+    content: Union[bytes, bytearray],
+) -> NbtCompressionType:
+    """
+    Detect NBT format from binary content
+
+    Args:
+        content (bytes): Binary content to analyze
+
+    Returns:
+        NbtCompressionType
+
+    """
+
+def detect_file_compression_type(
+    path: os.PathLike, file_memory_map: bool = False
+) -> NbtCompressionType:
+    """
+    Detect NBT format from a file
+
+    Args:
+        path (str): Path to the file
+        file_memory_map (bool): Use memory mapping for large files (default: False)
+
+    Returns:
+        NbtCompressionType
+
+    """
+
 def dump(
     nbt: CompoundTag,
     path: os.PathLike,
