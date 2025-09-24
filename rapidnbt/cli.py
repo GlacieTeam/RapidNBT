@@ -105,7 +105,7 @@ def process_print_options(args, nbt: CompoundTag):
             print(nbt.to_snbt(indent=args.indent))
 
 
-def process_write_options(args, nbt: CompoundTag, fmt: NbtFileFormat):
+def process_write_options(args, nbt: CompoundTag, fmt: NbtFileFormat, fp: str):
     if args.output is not None:
         if os.path.isabs(args.output):
             output = args.output
@@ -127,11 +127,13 @@ def process_write_options(args, nbt: CompoundTag, fmt: NbtFileFormat):
             elif args.network:
                 fmt = NbtFileFormat.BEDROCK_NETWORK
 
-            compression = NbtCompressionType.NONE
+            compression = nbtio.detect_file_compression_type(fp)
             if args.compression == "gzip":
                 compression = NbtCompressionType.GZIP
             elif args.compression == "zlib":
                 compression = NbtCompressionType.ZLIB
+            elif args.compression == "none":
+                compression = NbtCompressionType.NONE
 
             if args.merge is False:
                 nbtio.dump(nbt, output, fmt, compression)
@@ -165,10 +167,11 @@ def process_write_options(args, nbt: CompoundTag, fmt: NbtFileFormat):
 
 def main():
     args = parse_args()
-    fmt = nbtio.detect_file_format(args.file)
-    nbt = parse_file(args.file, fmt)
+    fp = args.file
+    fmt = nbtio.detect_file_format()
+    nbt = parse_file(fp, fmt)
     if nbt is not None:
         process_print_options(args, nbt)
-        process_write_options(args, nbt, fmt)
+        process_write_options(args, nbt, fmt, fp)
     else:
-        Error(f"No file exists to open: {args.file}")
+        Error(f"No file exists to open: {fp}")
