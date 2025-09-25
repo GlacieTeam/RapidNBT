@@ -88,7 +88,7 @@ class NbtFile:
     def get(self, key: str) -> CompoundTagVariant:
         """
         Get tag by key
-        Throw IndexError if not found
+        Throw KeyError if not found
         """
 
     def items(self) -> list:

@@ -88,12 +88,12 @@ void bindNbtFile(py::module& m) {
         .def(
             "get",
             [](nbt::NbtFile& self, std::string_view key) -> nbt::CompoundTagVariant& {
-                if (!self.contains(key)) { throw py::index_error("tag not exist"); }
+                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
                 return self.at(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get tag by key\nThrow IndexError if not found"
+            "Get tag by key\nThrow KeyError if not found"
         )
         .def(
             "put",
