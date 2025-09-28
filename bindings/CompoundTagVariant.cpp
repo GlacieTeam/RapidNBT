@@ -568,12 +568,37 @@ void bindCompoundTagVariant(py::module& m) {
                 );
             },
             [](nbt::CompoundTagVariant& self, py::object const& value) {
-                if (py::isinstance<nbt::CompoundTagVariant>(value)) {
-                    self = *value.cast<nbt::CompoundTagVariant*>();
-                } else if (py::isinstance<nbt::Tag>(value)) {
-                    self = nbt::CompoundTagVariant(*value.cast<nbt::Tag*>());
-                } else {
-                    self = *makeNativeTag(value);
+                auto shouldReplace = std::visit(
+                    [&](auto& val) {
+                        if constexpr (requires { val.storage(); }) {
+                            using T = std::decay_t<decltype(val.storage())>;
+                            if constexpr (std::is_integral_v<T>) {
+                                if (py::isinstance<py::int_>(value)) {
+                                    val.storage() = to_cpp_int<T>(
+                                        value,
+                                        std::format("{}Tag", magic_enum::enum_name(val.getType()))
+                                    );
+                                    return false;
+                                }
+                            } else if constexpr (std::is_floating_point_v<T>) {
+                                if (py::isinstance<py::float_>(value)) {
+                                    val.storage() = static_cast<T>(value.cast<double>());
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    },
+                    self.mStorage
+                );
+                if (shouldReplace) {
+                    if (py::isinstance<nbt::CompoundTagVariant>(value)) {
+                        self = *value.cast<nbt::CompoundTagVariant*>();
+                    } else if (py::isinstance<nbt::Tag>(value)) {
+                        self = nbt::CompoundTagVariant(*value.cast<nbt::Tag*>());
+                    } else {
+                        self = *makeNativeTag(value);
+                    }
                 }
             },
             "Access the tag value"

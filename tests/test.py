@@ -132,7 +132,8 @@ def test4():
         }
     )
     nbt.merge(merge_nbt, True)
-    nbt["test"] = ByteTag(2222)
+    nbt["test"] = ShortTag(-122)
+    nbt["test"].value = 233122
     print(nbt.to_snbt())
 
 
