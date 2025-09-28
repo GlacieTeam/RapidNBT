@@ -129,9 +129,16 @@ class CompoundTag(Tag):
         Create a deep copy of this compound tag
         """
 
+    @overload
     def contains(self, key: str) -> bool:
         """
         Check if key exists
+        """
+
+    @overload
+    def contains(self, key: str, type: TagType) -> bool:
+        """
+        Check if key exists and value type is the specific type
         """
 
     def copy(self) -> Tag:

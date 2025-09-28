@@ -148,6 +148,15 @@ void bindCompoundTag(py::module& m) {
             "Check if key exists"
         )
         .def(
+            "contains",
+            [](nbt::CompoundTag const& self, std::string_view key, nbt::Tag::Type type) {
+                return self.contains(key, type);
+            },
+            py::arg("key"),
+            py::arg("type"),
+            "Check if key exists and value type is the specific type"
+        )
+        .def(
             "get",
             [](nbt::CompoundTag& self, std::string_view key) -> nbt::CompoundTagVariant& {
                 if (!self.contains(key)) { throw py::key_error("tag not exist"); }

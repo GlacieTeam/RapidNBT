@@ -6,7 +6,8 @@
 # SPDX-License-Identifier: MPL-2.0
 
 from pathlib import Path
-from typing import List, Any, Optional
+from typing import overload, List, Any, Optional
+from rapidnbt._NBT.tag_type import TagType
 from rapidnbt._NBT.compound_tag import CompoundTag
 from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
 from rapidnbt._NBT.nbt_compression_level import NbtCompressionLevel
@@ -75,9 +76,16 @@ class NbtFile:
         Remove all elements from the compound
         """
 
+    @overload
     def contains(self, key: str) -> bool:
         """
         Check if key exists
+        """
+
+    @overload
+    def contains(self, key: str, type: TagType) -> bool:
+        """
+        Check if key exists and value type is the specific type
         """
 
     def empty(self) -> bool:

@@ -144,11 +144,22 @@ void bindCompoundTagVariant(py::module& m) {
         )
 
         .def("size", &nbt::CompoundTagVariant::size, "Get the size of the tag")
+        .def("clear", &nbt::CompoundTagVariant::clear, "Clear the tag")
         .def(
             "contains",
             [](nbt::CompoundTagVariant& self, std::string_view index) -> bool { return self.contains(index); },
             py::arg("index"),
             "Check if the value is in the CompoundTag.\nThrow TypeError is not hold a CompoundTag."
+        )
+        .def(
+            "contains",
+            [](nbt::CompoundTagVariant& self, std::string_view index, nbt::Tag::Type type) -> bool {
+                return self.contains(index, type);
+            },
+            py::arg("index"),
+            py::arg("type"),
+            "Check if the value is in the CompoundTag and value type is the specific type.\nThrow TypeError is not "
+            "hold a CompoundTag."
         )
 
         .def(

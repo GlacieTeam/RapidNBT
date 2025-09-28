@@ -282,9 +282,17 @@ class CompoundTagVariant:
         Throw TypeError if wrong type
         """
 
+    @overload
     def contains(self, index: str) -> bool:
         """
         Check if the value is in the CompoundTag.
+        Throw TypeError is not hold a CompoundTag.
+        """
+
+    @overload
+    def contains(self, key: str, type: TagType) -> bool:
+        """
+        Check if the value is in the CompoundTag and value type is the specific type.
         Throw TypeError is not hold a CompoundTag.
         """
 
