@@ -11,6 +11,7 @@
 #include <nbt/NBT.hpp>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl/filesystem.h>
@@ -28,6 +29,24 @@ inline std::string_view to_cppstringview(py::buffer buffer) {
     const char*     data = static_cast<const char*>(info.ptr);
     size_t          size = info.size;
     return std::string_view(data, size);
+}
+
+template <std::integral T>
+inline T to_cpp_int(py::int_ value, std::string_view typeName) {
+    using UT = std::make_unsigned<T>::type;
+    using ST = std::make_signed<T>::type;
+    if (value >= py::int_(0)) {
+        if (value >= py::int_(std::numeric_limits<UT>::min()) && value <= py::int_(std::numeric_limits<UT>::max())) {
+            return value.cast<UT>();
+        }
+    } else {
+        if (value >= py::int_(std::numeric_limits<ST>::min()) && value <= py::int_(std::numeric_limits<ST>::max())) {
+            return value.cast<ST>();
+        }
+    }
+    throw py::value_error(
+        std::format("Integer out of range for {0}, value: {1}", typeName, py::str(value).cast<std::string>())
+    );
 }
 
 std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj);

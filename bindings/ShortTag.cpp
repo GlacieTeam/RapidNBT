@@ -14,7 +14,13 @@ void bindShortTag(py::module& m) {
 
     py::class_<nbt::ShortTag, nbt::Tag>(sm, "ShortTag", "A tag contains a short")
         .def(py::init<>(), "Construct an ShortTag with default value (0)")
-        .def(py::init<short>(), py::arg("value"), "Construct an ShortTag from an integer value")
+        .def(
+            py::init([](py::int_ value) {
+                return std::make_unique<nbt::ShortTag>(to_cpp_int<short>(value, "ShortTag"));
+            }),
+            py::arg("value"),
+            "Construct an ShortTag from an integer value"
+        )
 
         .def(
             "assign",
@@ -47,7 +53,7 @@ void bindShortTag(py::module& m) {
         .def_property(
             "value",
             [](nbt::ShortTag& self) -> short { return self.storage(); },
-            [](nbt::ShortTag& self, short value) { self.storage() = static_cast<short>(value); },
+            [](nbt::ByteTag& self, py::int_ value) { self.storage() = to_cpp_int<short>(value, "ShortTag"); },
             "Access the integer value of this tag"
         )
 

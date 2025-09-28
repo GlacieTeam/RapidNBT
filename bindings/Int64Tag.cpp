@@ -14,7 +14,13 @@ void bindInt64Tag(py::module& m) {
 
     py::class_<nbt::Int64Tag, nbt::Tag>(sm, "Int64Tag")
         .def(py::init<>(), "Construct an Int64Tag with default value (0)")
-        .def(py::init<int64_t>(), py::arg("value"), "Construct an Int64Tag from an integer value")
+        .def(
+            py::init([](py::int_ value) {
+                return std::make_unique<nbt::Int64Tag>(to_cpp_int<int64_t>(value, "Int64Tag"));
+            }),
+            py::arg("value"),
+            "Construct an Int64Tag from an integer value"
+        )
 
         .def(
             "assign",
@@ -47,7 +53,7 @@ void bindInt64Tag(py::module& m) {
         .def_property(
             "value",
             [](nbt::Int64Tag& self) -> int64_t { return self.storage(); },
-            [](nbt::Int64Tag& self, int64_t value) { self.storage() = value; },
+            [](nbt::ByteTag& self, py::int_ value) { self.storage() = to_cpp_int<int64_t>(value, "Int64Tag"); },
             "Access the integer value of this tag"
         )
 

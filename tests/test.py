@@ -84,7 +84,7 @@ def test3():
 
     try:
         print(f'{nbt.get_byte("not exist")}')
-    except IndexError as e:
+    except KeyError as e:
         print(e)
 
     try:
@@ -132,6 +132,7 @@ def test4():
         }
     )
     nbt.merge(merge_nbt, True)
+    nbt["test"] = ByteTag(2222)
     print(nbt.to_snbt())
 
 

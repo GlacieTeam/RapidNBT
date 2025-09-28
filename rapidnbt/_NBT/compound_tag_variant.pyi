@@ -296,6 +296,12 @@ class CompoundTagVariant:
         Throw TypeError is not hold a CompoundTag.
         """
 
+    def clear(self) -> None:
+        """
+        Clear the data in the tag
+        Throw TypeError if the tag can not be cleared.
+        """
+
     def copy(self) -> Tag:
         """
         Create a deep copy of this tag

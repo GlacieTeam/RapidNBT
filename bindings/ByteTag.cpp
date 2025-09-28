@@ -14,7 +14,13 @@ void bindByteTag(py::module& m) {
 
     py::class_<nbt::ByteTag, nbt::Tag>(sm, "ByteTag")
         .def(py::init<>(), "Construct an ByteTag with default value (0)")
-        .def(py::init<uint8_t>(), py::arg("value"), "Construct an ByteTag from an integer value")
+        .def(
+            py::init([](py::int_ value) {
+                return std::make_unique<nbt::ByteTag>(to_cpp_int<uint8_t>(value, "ByteTag"));
+            }),
+            py::arg("value"),
+            "Construct an ByteTag from an integer value"
+        )
 
         .def(
             "assign",
@@ -47,7 +53,7 @@ void bindByteTag(py::module& m) {
         .def_property(
             "value",
             [](nbt::ByteTag& self) -> uint8_t { return self.storage(); },
-            [](nbt::ByteTag& self, uint8_t value) { self.storage() = value; },
+            [](nbt::ByteTag& self, py::int_ value) { self.storage() = to_cpp_int<uint8_t>(value, "ByteTag"); },
             "Access the integer value of this tag"
         )
 

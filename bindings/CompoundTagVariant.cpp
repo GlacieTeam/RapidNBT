@@ -13,7 +13,7 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
     if (py::isinstance<py::bool_>(obj)) {
         return std::make_unique<nbt::ByteTag>(obj.cast<uint8_t>());
     } else if (py::isinstance<py::int_>(obj)) {
-        return std::make_unique<nbt::IntTag>(obj.cast<int>());
+        return std::make_unique<nbt::IntTag>(to_cpp_int<int>(obj, "IntTag"));
     } else if (py::isinstance<py::str>(obj)) {
         return std::make_unique<nbt::StringTag>(obj.cast<std::string>());
     } else if (py::isinstance<py::float_>(obj)) {
@@ -146,7 +146,11 @@ void bindCompoundTagVariant(py::module& m) {
         )
 
         .def("size", &nbt::CompoundTagVariant::size, "Get the size of the tag")
-        .def("clear", &nbt::CompoundTagVariant::clear, "Clear the tag")
+        .def(
+            "clear",
+            &nbt::CompoundTagVariant::clear,
+            "Clear the data in the tag\nThrow TypeError if the tag can not be cleared."
+        )
         .def(
             "contains",
             [](nbt::CompoundTagVariant& self, std::string_view index) -> bool { return self.contains(index); },
