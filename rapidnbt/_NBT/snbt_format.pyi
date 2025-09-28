@@ -34,12 +34,12 @@ class SnbtFormat(Enum):
     CommentMarks = 512
     Jsonify = 551
 
-    def __or__(self, value: SnbtFormat) -> SnbtFormat:
+    def __or__(self, arg0: SnbtFormat) -> SnbtFormat:
         """
         operation |
         """
 
-    def __and__(self, value: SnbtFormat) -> SnbtFormat:
+    def __and__(self, arg0: SnbtFormat) -> SnbtFormat:
         """
         operation &
         """

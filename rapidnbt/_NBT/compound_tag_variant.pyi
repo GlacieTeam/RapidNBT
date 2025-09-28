@@ -409,7 +409,7 @@ class CompoundTagVariant:
 
     def rename(self, index: str, new_name: str) -> bool:
         """
-        Rname a key in the CompoundTag
+        Rename a key in the CompoundTag
         Throw TypeError if wrong type
         """
 

@@ -52,6 +52,7 @@ void bindStringTag(py::module& m) {
         .def(
             "set",
             [](nbt::StringTag& self, std::string value) { self.storage() = std::move(value); },
+            py::arg("value"),
             "Set the string content of this tag"
         )
         .def_property(

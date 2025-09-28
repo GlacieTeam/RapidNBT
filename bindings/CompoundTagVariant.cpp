@@ -84,6 +84,7 @@ void bindCompoundTagVariant(py::module& m) {
                     return std::make_unique<nbt::CompoundTagVariant>(makeNativeTag(obj));
                 }
             }),
+            py::arg("value"),
             "Construct from any Python object"
         )
 
@@ -91,6 +92,7 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "hold",
             [](nbt::CompoundTagVariant const& self, nbt::Tag::Type type) -> bool { return self.hold(type); },
+            py::arg("type"),
             "Check the NBT type ID"
         )
 
@@ -171,6 +173,7 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "__getitem__",
             [](nbt::CompoundTagVariant& self, size_t index) -> nbt::Tag& { return self[index]; },
+            py::arg("index"),
             py::return_value_policy::reference_internal,
             "Get value by object key"
         )
@@ -179,6 +182,7 @@ void bindCompoundTagVariant(py::module& m) {
             [](nbt::CompoundTagVariant& self, std::string_view index) -> nbt::CompoundTagVariant& {
                 return self[index];
             },
+            py::arg("index"),
             py::return_value_policy::reference_internal,
             "Get value by array index"
         )
@@ -194,6 +198,8 @@ void bindCompoundTagVariant(py::module& m) {
                     self[key] = makeNativeTag(obj);
                 }
             },
+            py::arg("index"),
+            py::arg("value"),
             "Set value by object key"
         )
         .def(
@@ -207,6 +213,8 @@ void bindCompoundTagVariant(py::module& m) {
                     self[index] = *makeNativeTag(obj);
                 }
             },
+            py::arg("index"),
+            py::arg("value"),
             "Set value by array index"
         )
 
@@ -234,7 +242,10 @@ void bindCompoundTagVariant(py::module& m) {
             "rename",
             &nbt::CompoundTagVariant::rename,
             "Remove key from the CompoundTag",
-            "Throw TypeError if wrong type"
+            "Throw TypeError if wrong type",
+            py::arg("index"),
+            py::arg("new_name"),
+            "Rename a key in the CompoundTag\nThrow TypeError if wrong type"
         )
         .def(
             "append",
@@ -246,7 +257,9 @@ void bindCompoundTagVariant(py::module& m) {
                 } else {
                     self.push_back(makeNativeTag(obj));
                 }
-            }
+            },
+            py::arg("value"),
+            "Append a Tag element if self is ListTag\nThrow TypeError if wrong type"
         )
         .def(
             "assign",
@@ -258,7 +271,9 @@ void bindCompoundTagVariant(py::module& m) {
                 } else {
                     self = makeNativeTag(obj);
                 }
-            }
+            },
+            py::arg("value"),
+            "Assign value"
         )
 
         .def(
@@ -573,6 +588,7 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "__eq__",
             [](nbt::CompoundTagVariant const& self, nbt::CompoundTagVariant const& other) { return self == other; },
+            py::arg("other"),
             "Check if this tag equals another tag"
         )
         .def("__len__", &nbt::CompoundTagVariant::size, "Get the size of the tag")

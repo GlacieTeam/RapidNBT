@@ -154,17 +154,17 @@ class NbtFile:
         Convert CompoundTag to a Python dictionary
         """
 
-    def to_network_nbt(self) -> bytes:
-        """
-        Serialize to Network NBT format (used in Minecraft networking)
-        """
-
     def to_json(self, indent: int = 4) -> str:
         """
         Convert tag to JSON string
         """
 
-    def to_snbt(self, format: SnbtFormat = SnbtFormat.Default, indent: int = 4) -> str:
+    def to_network_nbt(self) -> bytes:
+        """
+        Serialize to Network NBT format (used in Minecraft networking)
+        """
+
+    def to_snbt(self, format: SnbtFormat = SnbtFormat, indent: int = 4) -> str:
         """
         Convert tag to SNBT string
         """
@@ -183,7 +183,7 @@ class NbtFile:
         """
 
     @compression_level.setter
-    def compression_level(self, value: Optional[NbtCompressionLevel]) -> None:
+    def compression_level(self, arg0: Optional[NbtCompressionLevel]) -> None:
         """
         File compression level
         """
@@ -197,7 +197,7 @@ class NbtFile:
         """
 
     @compression_type.setter
-    def compression_type(self, value: Optional[NbtCompressionType]) -> None:
+    def compression_type(self, arg0: Optional[NbtCompressionType]) -> None:
         """
         File compression type
         """
@@ -209,7 +209,7 @@ class NbtFile:
         """
 
     @file_data.setter
-    def file_data(self, value: CompoundTag) -> None:
+    def file_data(self, arg0: CompoundTag) -> None:
         """
         File NBT data
         """
@@ -221,7 +221,7 @@ class NbtFile:
         """
 
     @file_format.setter
-    def file_format(self, value: Optional[NbtFileFormat]) -> None:
+    def file_format(self, arg0: Optional[NbtFileFormat]) -> None:
         """
         Binary file format
         """
@@ -239,21 +239,21 @@ class NbtFile:
         """
 
     @is_snbt.setter
-    def is_snbt(self, value: bool) -> None:
+    def is_snbt(self, arg0: bool) -> None:
         """
         File is Snbt File
         """
 
     @property
-    def snbt_format(self) -> bool:
+    def snbt_format(self) -> Optional[SnbtFormat]:
         """
-        File should save as Snbt file
+        File Snbt format
         """
 
     @snbt_format.setter
-    def snbt_format(self, value: bool) -> None:
+    def snbt_format(self, arg0: Optional[SnbtFormat]) -> None:
         """
-        File should save as Snbt file
+        File Snbt format
         """
 
     @property
@@ -263,7 +263,7 @@ class NbtFile:
         """
 
     @snbt_indent.setter
-    def snbt_indent(self, value: Optional[int]) -> None:
+    def snbt_indent(self, arg0: Optional[int]) -> None:
         """
         File Snbt indent
         """
