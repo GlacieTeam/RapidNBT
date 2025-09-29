@@ -64,7 +64,7 @@ void bindStringTag(py::module& m) {
                         if constexpr (std::is_same_v<std::decay_t<decltype(val)>, py::buffer>) {
                             self.storage() = to_cppstringview(val);
                         } else {
-                            self.storage() = val.cast<std::string>();
+                            self.storage() = val.template cast<std::string>();
                         }
                     },
                     value
