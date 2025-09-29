@@ -53,7 +53,7 @@ void bindInt64Tag(py::module& m) {
         .def_property(
             "value",
             [](nbt::Int64Tag& self) -> int64_t { return self.storage(); },
-            [](nbt::ByteTag& self, py::int_ value) { self.storage() = to_cpp_int<int64_t>(value, "Int64Tag"); },
+            [](nbt::Int64Tag& self, py::int_ value) { self.storage() = to_cpp_int<int64_t>(value, "Int64Tag"); },
             "Access the integer value of this tag"
         )
 

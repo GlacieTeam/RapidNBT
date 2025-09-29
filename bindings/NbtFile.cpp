@@ -22,7 +22,7 @@ void bindNbtFile(py::module& m) {
         )
         .def(
             "__setitem__",
-            [](nbt::NbtFile& self, std::string_view key, py::object value) {
+            [](nbt::NbtFile& self, std::string_view key, py::object const& value) {
                 if (py::isinstance<nbt::CompoundTagVariant>(value)) {
                     self[key] = *value.cast<nbt::CompoundTagVariant*>();
                 } else if (py::isinstance<nbt::Tag>(value)) {
@@ -106,7 +106,7 @@ void bindNbtFile(py::module& m) {
         )
         .def(
             "put",
-            [](nbt::NbtFile& self, std::string key, py::object value) {
+            [](nbt::NbtFile& self, std::string key, py::object const& value) {
                 if (py::isinstance<nbt::CompoundTagVariant>(value)) {
                     if (!self.contains(key)) { self[key] = *value.cast<nbt::CompoundTagVariant*>(); }
                 } else if (py::isinstance<nbt::Tag>(value)) {
@@ -121,7 +121,7 @@ void bindNbtFile(py::module& m) {
         )
         .def(
             "set",
-            [](nbt::NbtFile& self, std::string key, py::object value) {
+            [](nbt::NbtFile& self, std::string key, py::object const& value) {
                 if (py::isinstance<nbt::CompoundTagVariant>(value)) {
                     self[key] = *value.cast<nbt::CompoundTagVariant*>();
                 } else if (py::isinstance<nbt::Tag>(value)) {

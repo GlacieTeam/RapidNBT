@@ -51,7 +51,7 @@ void bindIntTag(py::module& m) {
         .def_property(
             "value",
             [](nbt::IntTag& self) -> int { return self.storage(); },
-            [](nbt::ByteTag& self, py::int_ value) { self.storage() = to_cpp_int<int>(value, "IntTag"); },
+            [](nbt::IntTag& self, py::int_ value) { self.storage() = to_cpp_int<int>(value, "IntTag"); },
             "Access the integer value of this tag"
         )
 

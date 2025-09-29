@@ -45,7 +45,7 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "__setitem__",
-            [](nbt::CompoundTag& self, std::string_view key, py::object value) {
+            [](nbt::CompoundTag& self, std::string_view key, py::object const& value) {
                 if (py::isinstance<nbt::CompoundTagVariant>(value)) {
                     self[key] = *value.cast<nbt::CompoundTagVariant*>();
                 } else if (py::isinstance<nbt::Tag>(value)) {
@@ -168,7 +168,7 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "put",
-            [](nbt::CompoundTag& self, std::string key, py::object value) {
+            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
                 if (py::isinstance<nbt::CompoundTagVariant>(value)) {
                     if (!self.contains(key)) { self[key] = *value.cast<nbt::CompoundTagVariant*>(); }
                 } else if (py::isinstance<nbt::Tag>(value)) {
@@ -183,7 +183,7 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "set",
-            [](nbt::CompoundTag& self, std::string key, py::object value) {
+            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
                 if (py::isinstance<nbt::CompoundTagVariant>(value)) {
                     self[key] = *value.cast<nbt::CompoundTagVariant*>();
                 } else if (py::isinstance<nbt::Tag>(value)) {
@@ -229,7 +229,7 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "put_compound",
-            [](nbt::CompoundTag& self, std::string key, py::object value) {
+            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
                 if (py::isinstance<nbt::CompoundTag>(value)) {
                     self.putCompound(key, value.cast<nbt::CompoundTag>());
                 } else if (py::isinstance<py::dict>(value)) {
@@ -244,7 +244,7 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "put_list",
-            [](nbt::CompoundTag& self, std::string key, py::object value) {
+            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
                 if (py::isinstance<nbt::ListTag>(value)) {
                     self.putList(key, value.cast<nbt::ListTag>());
                 } else if (py::isinstance<py::list>(value)) {
@@ -332,7 +332,7 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "set_compound",
-            [](nbt::CompoundTag& self, std::string key, py::object value) {
+            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
                 if (py::isinstance<nbt::CompoundTag>(value)) {
                     self[key] = value.cast<nbt::CompoundTag>();
                 } else if (py::isinstance<py::dict>(value)) {
@@ -347,7 +347,7 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "set_list",
-            [](nbt::CompoundTag& self, std::string key, py::object value) {
+            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
                 if (py::isinstance<nbt::ListTag>(value)) {
                     self[key] = value.cast<nbt::ListTag>();
                 } else if (py::isinstance<py::list>(value)) {

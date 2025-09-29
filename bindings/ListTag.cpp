@@ -9,6 +9,18 @@
 
 namespace rapidnbt {
 
+std::unique_ptr<nbt::Tag> makeListTagElement(py::object const& element) {
+    std::unique_ptr<nbt::Tag> tag = nullptr;
+    if (py::isinstance<nbt::CompoundTagVariant>(element)) {
+        tag = element.cast<nbt::CompoundTagVariant*>()->toUniqueCopy();
+    } else if (py::isinstance<nbt::Tag>(element)) {
+        tag = element.cast<nbt::Tag*>()->copy();
+    } else {
+        tag = makeNativeTag(element);
+    }
+    return tag;
+}
+
 void bindListTag(py::module& m) {
     auto sm = m.def_submodule("list_tag", "A tag contains a tag list");
 
@@ -16,18 +28,27 @@ void bindListTag(py::module& m) {
         .def(py::init<>(), "Construct an empty ListTag")
         .def(
             py::init([](std::vector<py::object> elements) {
-                auto tag = std::make_unique<nbt::ListTag>();
+                auto result = std::make_unique<nbt::ListTag>();
                 for (auto& element : elements) {
+                    auto  type  = result->getElementType();
                     auto& value = static_cast<py::object&>(element);
-                    if (py::isinstance<nbt::CompoundTagVariant>(value)) {
-                        tag->push_back(*value.cast<nbt::CompoundTagVariant*>());
-                    } else if (py::isinstance<nbt::Tag>(value)) {
-                        tag->push_back(value.cast<nbt::Tag*>()->copy());
+                    if (auto tag = makeListTagElement(value)) {
+                        if (type == tag->getType() || type == nbt::Tag::Type::End) {
+                            result->push_back(*tag);
+                        } else {
+                            throw py::value_error(
+                                std::format(
+                                    "Value for ListTag requires values in the list can convert to a same tag type, "
+                                    "expected type: TagType.{}",
+                                    magic_enum::enum_name(type)
+                                )
+                            );
+                        }
                     } else {
-                        tag->push_back(makeNativeTag(value));
+                        throw py::value_error("Invalid element for ListTag");
                     }
                 }
-                return tag;
+                return result;
             }),
             py::arg("elements"),
             "Construct from a list of Tag elements (e.g., [IntTag(1), StringTag('test')])"
@@ -63,13 +84,22 @@ void bindListTag(py::module& m) {
 
         .def(
             "append",
-            [](nbt::ListTag& self, py::object element) {
-                if (py::isinstance<nbt::CompoundTagVariant>(element)) {
-                    self.push_back(*element.cast<nbt::CompoundTagVariant*>());
-                } else if (py::isinstance<nbt::Tag>(element)) {
-                    self.push_back(element.cast<nbt::Tag*>()->copy());
+            [](nbt::ListTag& self, py::object const& element) {
+                auto type = self.getElementType();
+                if (auto tag = makeListTagElement(element)) {
+                    if (type == tag->getType() || type == nbt::Tag::Type::End) {
+                        self.push_back(*tag);
+                    } else {
+                        throw py::value_error(
+                            std::format(
+                                "New tag type must be same as the original element type in the ListTag, expected type: "
+                                "TagType.{}",
+                                magic_enum::enum_name(type)
+                            )
+                        );
+                    }
                 } else {
-                    self.push_back(makeNativeTag(element));
+                    throw py::value_error("Invalid element for ListTag");
                 }
             },
             py::arg("element"),
@@ -134,16 +164,25 @@ void bindListTag(py::module& m) {
 
         .def(
             "insert",
-            [](nbt::ListTag& self, size_t index, py::object element) {
+            [](nbt::ListTag& self, size_t index, py::object const& element) {
                 if (index > self.size()) { throw py::index_error("Index out of range"); }
                 auto it = self.begin();
                 std::advance(it, index);
-                if (py::isinstance<nbt::CompoundTagVariant>(element)) {
-                    self.storage().insert(it, element.cast<nbt::CompoundTagVariant*>()->toUniqueCopy());
-                } else if (py::isinstance<nbt::Tag>(element)) {
-                    self.storage().insert(it, element.cast<nbt::Tag*>()->copy());
+                auto type = self.getElementType();
+                if (auto tag = makeListTagElement(element)) {
+                    if (type == tag->getType() || type == nbt::Tag::Type::End) {
+                        self.storage().insert(it, std::move(tag));
+                    } else {
+                        throw py::value_error(
+                            std::format(
+                                "New tag type must be same as the original element type in the ListTag, expected type: "
+                                "TagType.{}",
+                                magic_enum::enum_name(type)
+                            )
+                        );
+                    }
                 } else {
-                    self.storage().insert(it, makeNativeTag(element));
+                    throw py::value_error("Invalid element for ListTag");
                 }
             },
             py::arg("index"),
@@ -169,13 +208,22 @@ void bindListTag(py::module& m) {
             [](nbt::ListTag& self, py::list const& value) {
                 self.clear();
                 for (auto const& element : value) {
-                    auto& val = static_cast<py::object const&>(element);
-                    if (py::isinstance<nbt::CompoundTagVariant>(val)) {
-                        self.push_back(*val.cast<nbt::CompoundTagVariant*>());
-                    } else if (py::isinstance<nbt::Tag>(val)) {
-                        self.push_back(val.cast<nbt::Tag*>()->copy());
+                    auto  type = self.getElementType();
+                    auto& val  = static_cast<py::object const&>(element);
+                    if (auto tag = makeListTagElement(val)) {
+                        if (type == tag->getType() || type == nbt::Tag::Type::End) {
+                            self.push_back(*tag);
+                        } else {
+                            throw py::value_error(
+                                std::format(
+                                    "Value for ListTag requires values in the list can convert to a same tag type, "
+                                    "expected type: TagType.{}",
+                                    magic_enum::enum_name(type)
+                                )
+                            );
+                        }
                     } else {
-                        self.push_back(makeNativeTag(val));
+                        throw py::value_error("Invalid element for ListTag");
                     }
                 }
             },

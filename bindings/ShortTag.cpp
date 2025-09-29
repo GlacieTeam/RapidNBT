@@ -53,7 +53,7 @@ void bindShortTag(py::module& m) {
         .def_property(
             "value",
             [](nbt::ShortTag& self) -> short { return self.storage(); },
-            [](nbt::ByteTag& self, py::int_ value) { self.storage() = to_cpp_int<short>(value, "ShortTag"); },
+            [](nbt::ShortTag& self, py::int_ value) { self.storage() = to_cpp_int<short>(value, "ShortTag"); },
             "Access the integer value of this tag"
         )
 
