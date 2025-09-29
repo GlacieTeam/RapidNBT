@@ -60,6 +60,8 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
         return tag;
     } else if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
         return obj.cast<nbt::CompoundTagVariant>().toUniqueCopy();
+    } else if (py::isinstance<py::none>(obj)) {
+        return std::make_unique<nbt::EndTag>();
     }
     auto ctypes = py::module::import("ctypes");
     if (py::isinstance(obj, ctypes.attr("c_int8")) || py::isinstance(obj, ctypes.attr("c_uint8"))) {
@@ -75,7 +77,10 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
     } else if (py::isinstance(obj, ctypes.attr("c_double"))) {
         return std::make_unique<nbt::DoubleTag>(obj.attr("value").cast<double>());
     }
-    return nullptr;
+    py::str typeName = py::type::handle_of(obj).attr("__name__");
+    throw py::type_error(
+        std::format("Invalid tag type: couldn't convert {} instance to any tag type", typeName.cast<std::string>())
+    );
 }
 
 void bindCompoundTagVariant(py::module& m) {
