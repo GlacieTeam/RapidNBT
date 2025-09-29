@@ -268,9 +268,8 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "append",
             [](nbt::CompoundTagVariant& self, py::object const& obj) {
-                if (self.is_null()) {
-                    self = nbt::ListTag();
-                } else if (self.hold(nbt::Tag::Type::List)) {
+                if (self.is_null()) { self = nbt::ListTag(); }
+                if (self.hold(nbt::Tag::Type::List)) {
                     auto type = self.as<nbt::ListTag>().getElementType();
                     if (auto tag = makeListTagElement(obj)) {
                         if (type == tag->getType() || type == nbt::Tag::Type::End) {
