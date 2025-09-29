@@ -58,7 +58,18 @@ void bindStringTag(py::module& m) {
         .def_property(
             "value",
             [](nbt::StringTag& self) -> py::bytes { return self.storage(); },
-            [](nbt::StringTag& self, py::buffer value) { self.storage() = to_cppstringview(value); },
+            [](nbt::StringTag& self, std::variant<py::str, py::buffer> value) {
+                std::visit(
+                    [&](auto&& val) {
+                        if constexpr (std::is_same_v<std::decay_t<decltype(val)>, py::buffer>) {
+                            self.storage() = to_cppstringview(val);
+                        } else {
+                            self.storage() = val.cast<std::string>();
+                        }
+                    },
+                    value
+                );
+            },
             "Access the original string content of this tag"
         )
 

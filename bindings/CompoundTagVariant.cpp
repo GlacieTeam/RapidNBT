@@ -588,10 +588,11 @@ void bindCompoundTagVariant(py::module& m) {
                                     throw py::value_error(std::format("Value for {} must be a float", tagName));
                                 }
                             } else if constexpr (std::is_same_v<T, std::string>) {
-                                if (py::isinstance<py::bytes>(value) || py::isinstance<py::bytearray>(value)) {
+                                if (py::isinstance<py::bytes>(value) || py::isinstance<py::bytearray>(value)
+                                    || py::isinstance<py::str>(value)) {
                                     val.storage() = value.cast<std::string>();
                                 } else {
-                                    throw py::value_error("Value for StringTag must be a bytes or bytearray");
+                                    throw py::value_error("Value for StringTag must be a str, bytes or bytearray");
                                 }
                             } else if constexpr (std::is_same_v<std::decay_t<decltype(val)>, nbt::ListTag>) {
                                 if (py::isinstance<py::list>(value)) {

@@ -133,7 +133,7 @@ def test4():
     )
     nbt.merge(merge_nbt, True)
     nbt["test"] = LongArrayTag([-122, 1673892, 9825678])
-    nbt["test"].value = [233122, 37477]
+    nbt["test"].value = "[233122, 37477]"
     print(nbt.to_snbt())
 
 

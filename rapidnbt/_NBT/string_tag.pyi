@@ -114,7 +114,7 @@ class StringTag(Tag):
         """
 
     @value.setter
-    def value(self, value: Union[bytes, bytearray]) -> None:
+    def value(self, value: Union[bytes, bytearray, str]) -> None:
         """
         Access the original string content of this tag
         """
