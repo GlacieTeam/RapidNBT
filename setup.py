@@ -1,8 +1,9 @@
-import subprocess, os, shutil
-from setuptools import setup, Distribution
+import os
+import shutil
+import subprocess
+from setuptools import Distribution, setup
 from setuptools.command.build_ext import build_ext
 from setuptools.command.build_py import build_py
-
 
 PACKAGE_NAME = "rapidnbt"
 EXTENSION_FILENAME = "_NBT"
