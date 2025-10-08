@@ -5,31 +5,19 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
+from typing import Any, Optional
 from pathlib import Path
-from typing import overload, List, Any, Optional
-from rapidnbt._NBT.tag_type import TagType
 from rapidnbt._NBT.compound_tag import CompoundTag
-from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
 from rapidnbt._NBT.nbt_compression_level import NbtCompressionLevel
 from rapidnbt._NBT.nbt_compression_type import NbtCompressionType
 from rapidnbt._NBT.nbt_file_format import NbtFileFormat
 from rapidnbt._NBT.snbt_format import SnbtFormat
 
-class NbtFile:
+class NbtFile(CompoundTag):
     """
     NBT file
     Use nbtio.open() to open a NBT file.
     """
-
-    def __contains__(self, key: str) -> bool:
-        """
-        Check if key exists in the compound
-        """
-
-    def __delitem__(self, key: str) -> bool:
-        """
-        Remove key from the compound
-        """
 
     def __enter__(self) -> NbtFile:
         """
@@ -41,29 +29,9 @@ class NbtFile:
         Exit context manager
         """
 
-    def __getitem__(self, key: str) -> CompoundTagVariant:
-        """
-        Get value by key (no exception, auto create if not found)
-        """
-
-    def __iter__(self) -> List[str]:
-        """
-        Iterate over keys in the compound
-        """
-
-    def __len__(self) -> int:
-        """
-        Get number of key-value pairs
-        """
-
     def __repr__(self) -> str:
         """
         Official string representation
-        """
-
-    def __setitem__(self, key: str, value: Any) -> None:
-        """
-        Set value by key
         """
 
     def __str__(self) -> str:
@@ -71,107 +39,9 @@ class NbtFile:
         String representation
         """
 
-    def clear(self) -> None:
+    def flush(self) -> None:
         """
-        Remove all elements from the compound
-        """
-
-    @overload
-    def contains(self, key: str) -> bool:
-        """
-        Check if key exists
-        """
-
-    @overload
-    def contains(self, key: str, type: TagType) -> bool:
-        """
-        Check if key exists and value type is the specific type
-        """
-
-    def empty(self) -> bool:
-        """
-        Check if the compound is empty
-        """
-
-    def get(self, key: str) -> CompoundTagVariant:
-        """
-        Get tag by key
-        Throw KeyError if not found
-        """
-
-    def items(self) -> list:
-        """
-        Get list of (key, value) pairs in the compound
-        """
-
-    def keys(self) -> list:
-        """
-        Get list of all keys in the compound
-        """
-
-    def merge(self, other: CompoundTag, merge_list: bool = False) -> None:
-        """
-        merge_list: If true, merge list contents instead of replacing
-        """
-
-    def pop(self, key: str) -> bool:
-        """
-        Remove key from the compound
-        """
-
-    def put(self, key: str, value: Any) -> None:
-        """
-        Put a value into the compound (automatically converted to appropriate tag type)
-        """
-
-    def rename(self, old_key: str, new_key: str) -> bool:
-        """
-        Rename a key in the compound
-        """
-
-    def save(self) -> None:
-        """
-        Save NBT to file
-        """
-
-    def set(self, key: str, value: Any) -> None:
-        """
-        Set value in the compound (automatically converted to appropriate tag type)
-        """
-
-    def size(self) -> int:
-        """
-        Get the size of the compound in file
-        """
-
-    def to_binary_nbt(self, little_endian: bool = True, header: bool = False) -> bytes:
-        """
-        Serialize to binary NBT format
-        """
-
-    def to_dict(self) -> dict:
-        """
-        Convert CompoundTag to a Python dictionary
-        """
-
-    def to_json(self, indent: int = 4) -> str:
-        """
-        Convert tag to JSON string
-        """
-
-    def to_network_nbt(self) -> bytes:
-        """
-        Serialize to Network NBT format (used in Minecraft networking)
-        """
-
-    def to_snbt(self, format: SnbtFormat = SnbtFormat, indent: int = 4) -> str:
-        """
-        Convert tag to SNBT string
-        """
-
-    def values(self) -> list:
-        """
-        Get list of all values in the compound
+        flush data to the file.
         """
 
     @property
@@ -183,11 +53,7 @@ class NbtFile:
         """
 
     @compression_level.setter
-    def compression_level(self, arg0: Optional[NbtCompressionLevel]) -> None:
-        """
-        File compression level
-        """
-
+    def compression_level(self, arg0: Optional[NbtCompressionLevel]) -> None: ...
     @property
     def compression_type(
         self,
@@ -200,18 +66,6 @@ class NbtFile:
     def compression_type(self, arg0: Optional[NbtCompressionType]) -> None:
         """
         File compression type
-        """
-
-    @property
-    def file_data(self) -> CompoundTag:
-        """
-        File NBT data
-        """
-
-    @file_data.setter
-    def file_data(self, arg0: CompoundTag) -> None:
-        """
-        File NBT data
         """
 
     @property
@@ -266,16 +120,4 @@ class NbtFile:
     def snbt_indent(self, arg0: Optional[int]) -> None:
         """
         File Snbt indent
-        """
-
-    @property
-    def value(self) -> dict:
-        """
-        Access the dict value of this file
-        """
-
-    @value.setter
-    def value(self, arg1: dict) -> None:
-        """
-        Access the dict value of this file
         """

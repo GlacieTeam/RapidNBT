@@ -163,7 +163,7 @@ class CompoundTagVariant:
         Throw TypeError if wrong type
         """
 
-    def as_int64_tag(self) -> LongTag:
+    def as_long_tag(self) -> LongTag:
         """
         Convert to a LongTag
         Throw TypeError if wrong type

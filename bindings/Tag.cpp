@@ -101,7 +101,7 @@ void bindTag(py::module& m) {
             "Convert to a IntTag\nThrow TypeError if wrong type"
         )
         .def(
-            "as_int64_tag",
+            "as_long_tag",
             [](nbt::Tag& self) -> nbt::LongTag& {
                 if (self.getType() != nbt::Tag::Type::Long) { throw py::type_error("tag not hold an LongTag"); }
                 return self.as<nbt::LongTag>();

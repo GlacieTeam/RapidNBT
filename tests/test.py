@@ -31,7 +31,7 @@ def test1():
             "test_list": ["237892", "homo", "114514"],
         }
     )
-    nbt["test"]["int64_tag"] = ctypes.c_int64(1145141919810)
+    nbt["test"]["long_tag"] = ctypes.c_int64(1145141919810)
     nbt["test"]["float_tag"] = 114.514
     nbt["test"]["double_tag"] = ctypes.c_double(3.1415926535897)
     nbt["byte_array_tag"] = b"13276273923"
