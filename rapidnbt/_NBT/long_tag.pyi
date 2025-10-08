@@ -73,7 +73,7 @@ class LongTag(Tag):
 
     def get_type(self) -> TagType:
         """
-        Get the NBT type ID (Int64)
+        Get the NBT type ID (Long)
         """
 
     def hash(self) -> int:

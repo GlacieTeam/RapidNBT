@@ -10,7 +10,7 @@
 namespace rapidnbt {
 
 void bindLongTag(py::module& m) {
-    auto sm = m.def_submodule("int64_tag", "A tag contains an int64");
+    auto sm = m.def_submodule("long_tag", "A tag contains an int64");
 
     py::class_<nbt::LongTag, nbt::Tag>(sm, "LongTag")
         .def(py::init<>(), "Construct an LongTag with default value (0)")
@@ -32,7 +32,7 @@ void bindLongTag(py::module& m) {
             py::return_value_policy::reference_internal,
             "Assign a new integer value to this tag"
         )
-        .def("get_type", &nbt::LongTag::getType, "Get the NBT type ID (Int64)")
+        .def("get_type", &nbt::LongTag::getType, "Get the NBT type ID (Long)")
         .def("equals", &nbt::LongTag::equals, py::arg("other"), "Check if this tag equals another tag")
         .def("copy", &nbt::LongTag::copy, "Create a deep copy of this tag")
         .def("hash", &nbt::LongTag::hash, "Compute hash value of this tag")

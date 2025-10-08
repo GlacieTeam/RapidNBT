@@ -15,12 +15,12 @@ void bindEnums(py::module& m) {
     {
         auto sm = m.def_submodule("tag_type");
 
-        py::enum_<nbt::Tag::Type>(sm, "TagType", "The tag type enum")
+        py::native_enum<nbt::Tag::Type>(sm, "TagType", "enum.Enum", "The tag type enum")
             .value("End", nbt::Tag::Type::End)
             .value("Byte", nbt::Tag::Type::Byte)
             .value("Short", nbt::Tag::Type::Short)
             .value("Int", nbt::Tag::Type::Int)
-            .value("Int64", nbt::Tag::Type::Long)
+            .value("Long", nbt::Tag::Type::Long)
             .value("Float", nbt::Tag::Type::Float)
             .value("Double", nbt::Tag::Type::Double)
             .value("ByteArray", nbt::Tag::Type::ByteArray)
@@ -29,7 +29,8 @@ void bindEnums(py::module& m) {
             .value("Compound", nbt::Tag::Type::Compound)
             .value("IntArray", nbt::Tag::Type::IntArray)
             .value("LongArray", nbt::Tag::Type::LongArray)
-            .export_values();
+            .export_values()
+            .finalize();
     }
     {
         auto sm = m.def_submodule(
@@ -40,7 +41,7 @@ void bindEnums(py::module& m) {
                 format = SnbtFormat.Classic | SnbtFormat.ForceUppercase)"
         );
 
-        py::enum_<nbt::SnbtFormat>(sm, "SnbtFormat", py::arithmetic())
+        py::native_enum<nbt::SnbtFormat>(sm, "SnbtFormat", "enum.IntFlag")
             .value("Minimize", nbt::SnbtFormat::Minimize)
             .value("CompoundLineFeed", nbt::SnbtFormat::CompoundLineFeed)
             .value("ListArrayLineFeed", nbt::SnbtFormat::ListArrayLineFeed)
@@ -60,41 +61,44 @@ void bindEnums(py::module& m) {
             .value("Jsonify", nbt::SnbtFormat::Jsonify)
             .value("Default", nbt::SnbtFormat::Default)
             .export_values()
-            .def(
-                "__or__",
-                [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs | rhs; },
-                "operation |"
-            )
-            .def("__and__", [](nbt::SnbtFormat lhs, nbt::SnbtFormat rhs) { return lhs & rhs; }, "operation &");
+            .finalize();
     }
     {
         auto sm = m.def_submodule("nbt_file_format");
 
-        py::enum_<nbt::NbtFileFormat>(sm, "NbtFileFormat", "Enumeration of NBT binary file formats")
+        py::native_enum<nbt::NbtFileFormat>(sm, "NbtFileFormat", "enum.Enum", "Enumeration of NBT binary file formats")
             .value("LITTLE_ENDIAN", nbt::NbtFileFormat::LittleEndian)
             .value("LITTLE_ENDIAN_WITH_HEADER", nbt::NbtFileFormat::LittleEndianWithHeader)
             .value("BIG_ENDIAN", nbt::NbtFileFormat::BigEndian)
             .value("BIG_ENDIAN_WITH_HEADER", nbt::NbtFileFormat::BigEndianWithHeader)
             .value("BEDROCK_NETWORK", nbt::NbtFileFormat::BedrockNetwork)
-            .export_values();
+            .export_values()
+            .finalize();
     }
     {
         auto sm = m.def_submodule("nbt_compression_type");
 
-        py::enum_<nbt::NbtCompressionType>(
+        py::native_enum<nbt::NbtCompressionType>(
             sm,
             "NbtCompressionType",
+            "enum.Enum",
             "Enumeration of compression types for NBT serialization"
         )
             .value("NONE", nbt::NbtCompressionType::None)
             .value("GZIP", nbt::NbtCompressionType::Gzip)
             .value("ZLIB", nbt::NbtCompressionType::Zlib)
-            .export_values();
+            .export_values()
+            .finalize();
     }
     {
         auto sm = m.def_submodule("nbt_compression_level");
 
-        py::enum_<nbt::NbtCompressionLevel>(sm, "NbtCompressionLevel", "Enumeration of compression levels")
+        py::native_enum<nbt::NbtCompressionLevel>(
+            sm,
+            "NbtCompressionLevel",
+            "enum.Enum",
+            "Enumeration of compression levels"
+        )
             .value("DEFAULT", nbt::NbtCompressionLevel::Default)
             .value("NO_COMPRESSION", nbt::NbtCompressionLevel::NoCompression)
             .value("BEST_SPEED", nbt::NbtCompressionLevel::BestSpeed)
@@ -106,7 +110,8 @@ void bindEnums(py::module& m) {
             .value("VERY_HIGH", nbt::NbtCompressionLevel::VeryHigh)
             .value("ULTRA", nbt::NbtCompressionLevel::Ultra)
             .value("BEST_COMPRESSION", nbt::NbtCompressionLevel::BestCompression)
-            .export_values();
+            .export_values()
+            .finalize();
     }
 }
 

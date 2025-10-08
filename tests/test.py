@@ -16,6 +16,7 @@ from rapidnbt import (
     StringTag,
     ByteTag,
     ShortTag,
+    SnbtFormat,
 )
 
 
@@ -70,7 +71,7 @@ def test3():
     nbt.put_list("tag_list", [nbt, nbt])
     nbt.put_int_array("tag_int_array", [1, 2, 3, 4, 5, 6, 7])
     nbt.put_compound("tag_compound", {})
-    print(nbt.to_snbt())
+    print(nbt.to_json())
     print(f'{nbt.get_string("tag_string")}')
     print(f'{nbt.get_byte("tag_byte")}')
     print(f'{nbt.get_short("tag_short")}')
@@ -135,7 +136,8 @@ def test4():
     nbt.merge(merge_nbt, True)
     nbt["test"] = ListTag([-122, 1673892, 9825678])
     nbt["test"] = [233122, 37477]
-    print(nbt.to_snbt())
+    print(nbt.to_snbt(SnbtFormat.Classic | SnbtFormat.MarkExtra))
+    print(nbt["test"].get_type())
 
 
 if __name__ == "__main__":

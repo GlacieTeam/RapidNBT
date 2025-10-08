@@ -11,6 +11,7 @@
 #include <nbt/NBT.hpp>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/native_enum.h>
 #include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>

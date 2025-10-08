@@ -5,9 +5,9 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from enum import Enum
+from enum import IntFlag
 
-class SnbtFormat(Enum):
+class SnbtFormat(IntFlag):
     """
     The SNBT format enum
     You can use | operation to combime flags
@@ -33,13 +33,3 @@ class SnbtFormat(Enum):
     MarkExtra = 384
     CommentMarks = 512
     Jsonify = 551
-
-    def __or__(self, arg0: SnbtFormat) -> SnbtFormat:
-        """
-        operation |
-        """
-
-    def __and__(self, arg0: SnbtFormat) -> SnbtFormat:
-        """
-        operation &
-        """

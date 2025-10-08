@@ -16,7 +16,7 @@ class TagType(Enum):
     Byte = 1
     Short = 2
     Int = 3
-    Int64 = 4
+    Long = 4
     Float = 5
     Double = 6
     ByteArray = 7
