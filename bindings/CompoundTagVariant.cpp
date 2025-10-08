@@ -71,7 +71,7 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
     } else if (py::isinstance(obj, ctypes.attr("c_int32")) || py::isinstance(obj, ctypes.attr("c_uint32"))) {
         return std::make_unique<nbt::IntTag>(obj.attr("value").cast<int>());
     } else if (py::isinstance(obj, ctypes.attr("c_int64")) || py::isinstance(obj, ctypes.attr("c_uint64"))) {
-        return std::make_unique<nbt::Int64Tag>(obj.attr("value").cast<int64_t>());
+        return std::make_unique<nbt::LongTag>(obj.attr("value").cast<int64_t>());
     } else if (py::isinstance(obj, ctypes.attr("c_float"))) {
         return std::make_unique<nbt::FloatTag>(obj.attr("value").cast<float>());
     } else if (py::isinstance(obj, ctypes.attr("c_double"))) {
@@ -132,7 +132,7 @@ void bindCompoundTagVariant(py::module& m) {
             &nbt::CompoundTagVariant::is_number_integer,
             "Check whether the tag is a integer number based tag",
             "Example:",
-            "    ByteTag, ShortTag, IntTag, Int64Tag"
+            "    ByteTag, ShortTag, IntTag, LongTag"
         )
         .def("is_object", &nbt::CompoundTagVariant::is_object, "Check whether the tag is a CompoundTag")
         .def("is_string", &nbt::CompoundTagVariant::is_string, "Check whether the tag is a StringTag")
@@ -141,14 +141,14 @@ void bindCompoundTagVariant(py::module& m) {
             &nbt::CompoundTagVariant::is_number,
             "Check whether the tag is a number based tag",
             "Example:",
-            "    FloatTag, DoubleTag, ByteTag, ShortTag, IntTag, Int64Tag"
+            "    FloatTag, DoubleTag, ByteTag, ShortTag, IntTag, LongTag"
         )
         .def(
             "is_primitive",
             &nbt::CompoundTagVariant::is_primitive,
             "Check whether the tag is a primitive tag",
             "Example:",
-            "    ByteTag, ShortTag, IntTag, Int64Tag, FloatTag, DoubleTag, StringTag, ByteArrayTag, IntArrayTag, "
+            "    ByteTag, ShortTag, IntTag, LongTag, FloatTag, DoubleTag, StringTag, ByteArrayTag, IntArrayTag, "
             "LongArrayTag"
         )
         .def(
@@ -378,12 +378,12 @@ void bindCompoundTagVariant(py::module& m) {
         )
         .def(
             "as_int64_tag",
-            [](nbt::CompoundTagVariant& self) -> nbt::Int64Tag& {
-                if (!self.hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold an Int64Tag"); }
-                return self.as<nbt::Int64Tag>();
+            [](nbt::CompoundTagVariant& self) -> nbt::LongTag& {
+                if (!self.hold(nbt::Tag::Type::Long)) { throw py::type_error("tag not hold an LongTag"); }
+                return self.as<nbt::LongTag>();
             },
             py::return_value_policy::reference_internal,
-            "Convert to a Int64Tag\nThrow TypeError if wrong type"
+            "Convert to a LongTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_float_tag",
@@ -483,10 +483,10 @@ void bindCompoundTagVariant(py::module& m) {
             "Get the int value\nThrow TypeError if wrong type"
         )
         .def(
-            "get_int64",
+            "get_long",
             [](nbt::CompoundTagVariant& self) -> int64_t {
-                if (!self.hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold an Int64Tag"); }
-                return self.as<nbt::Int64Tag>().storage();
+                if (!self.hold(nbt::Tag::Type::Long)) { throw py::type_error("tag not hold an LongTag"); }
+                return self.as<nbt::LongTag>().storage();
             },
             "Get the int64 value\nThrow TypeError if wrong type"
         )

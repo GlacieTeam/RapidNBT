@@ -200,7 +200,7 @@ void bindCompoundTag(py::module& m) {
         .def("put_byte", &nbt::CompoundTag::putByte, py::arg("key"), py::arg("value"), "Put a byte (uint8) value")
         .def("put_short", &nbt::CompoundTag::putShort, py::arg("key"), py::arg("value"), "Put a short (int16) value")
         .def("put_int", &nbt::CompoundTag::putInt, py::arg("key"), py::arg("value"), "Put an int (int32) value")
-        .def("put_int64", &nbt::CompoundTag::putInt64, py::arg("key"), py::arg("value"), "Put a long (int64) value")
+        .def("put_long", &nbt::CompoundTag::putLong, py::arg("key"), py::arg("value"), "Put a long (int64) value")
         .def("put_float", &nbt::CompoundTag::putFloat, py::arg("key"), py::arg("value"), "Put a float value")
         .def("put_double", &nbt::CompoundTag::putDouble, py::arg("key"), py::arg("value"), "Put a double value")
         .def("put_string", &nbt::CompoundTag::putString, py::arg("key"), py::arg("value"), "Put a string value")
@@ -280,7 +280,7 @@ void bindCompoundTag(py::module& m) {
             "Set an int (int32) value"
         )
         .def(
-            "set_int64",
+            "set_long",
             [](nbt::CompoundTag& self, std::string_view key, int64_t value) { self[key] = value; },
             py::arg("key"),
             py::arg("value"),
@@ -395,15 +395,15 @@ void bindCompoundTag(py::module& m) {
             "Get IntTag\nThrow KeyError if not found or TypeError if wrong type"
         )
         .def(
-            "get_int64_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::Int64Tag* {
+            "get_long_tag",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::LongTag* {
                 if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold a Int64Tag"); }
-                return self.getInt64(key);
+                if (!self.at(key).hold(nbt::Tag::Type::Long)) { throw py::type_error("tag not hold a LongTag"); }
+                return self.getLong(key);
             },
             py::return_value_policy::reference_internal,
             py::arg("key"),
-            "Get Int64Tag\nThrow KeyError if not found or TypeError if wrong type"
+            "Get LongTag\nThrow KeyError if not found or TypeError if wrong type"
         )
         .def(
             "get_float_tag",
@@ -533,11 +533,11 @@ void bindCompoundTag(py::module& m) {
             "Get int value\nThrow KeyError if not found or TypeError if wrong type"
         )
         .def(
-            "get_int64",
+            "get_long",
             [](nbt::CompoundTag& self, std::string_view key) -> int64_t {
                 if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Int64)) { throw py::type_error("tag not hold a Int64Tag"); }
-                return self.at(key).as<nbt::Int64Tag>().storage();
+                if (!self.at(key).hold(nbt::Tag::Type::Long)) { throw py::type_error("tag not hold a LongTag"); }
+                return self.at(key).as<nbt::LongTag>().storage();
             },
             py::arg("key"),
             "Get long value\nThrow KeyError if not found or TypeError if wrong type"

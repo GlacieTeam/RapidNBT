@@ -260,7 +260,7 @@ void bindNbtIO(py::module& m) {
         )
         .def(
             "open",
-            [](std::filesystem::path const& path) { return nbt::io::openFile(std::filesystem::absolute(path)); },
+            [](std::filesystem::path const& path) { return nbt::open(path); },
             py::arg("path"),
             "Open a NBT file (auto detect)",
             "Args:",

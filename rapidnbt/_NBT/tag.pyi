@@ -13,7 +13,7 @@ from rapidnbt._NBT.tag_type import TagType
 from rapidnbt._NBT.byte_tag import ByteTag
 from rapidnbt._NBT.short_tag import ShortTag
 from rapidnbt._NBT.int_tag import IntTag
-from rapidnbt._NBT.int64_tag import Int64Tag
+from rapidnbt._NBT.int64_tag import LongTag
 from rapidnbt._NBT.float_tag import FloatTag
 from rapidnbt._NBT.double_tag import DoubleTag
 from rapidnbt._NBT.byte_array_tag import ByteArrayTag
@@ -86,9 +86,9 @@ class Tag(ABC):
         Throw TypeError if wrong type
         """
 
-    def as_int64_tag(self) -> Int64Tag:
+    def as_int64_tag(self) -> LongTag:
         """
-        Convert to a Int64Tag
+        Convert to a LongTag
         Throw TypeError if wrong type
         """
 

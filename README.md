@@ -46,7 +46,7 @@ RapidNBT provides a morden and safe API, and it is easy to use.
 
 1. Load NBT from file and modify it
 ```Python
-from rapidnbt import nbtio, Int64Tag
+from rapidnbt import nbtio, LongTag
 from ctypes import c_int16
 
 def example():
@@ -60,7 +60,7 @@ def example():
     nbt["opq"]["rst"] = { # Python dict will automatically convert to CompoundTag
         "key1": False,
         "key2": b"2345",  # bytes/bytearray will automatically convert to ByteArrayTag
-        "key3": Int64Tag(114514), # You can also directly use Tag
+        "key3": LongTag(114514), # You can also directly use Tag
     }
     """
     You need not to create the NBT node first.
@@ -72,7 +72,7 @@ def example():
 
 2. Create a NBT in memory and save it to file
 ```Python
-from rapidnbt import nbtio, CompoundTag, ShortTag, Int64Tag, DoubleTag, IntArrayTag, NbtFileFormat
+from rapidnbt import nbtio, CompoundTag, ShortTag, LongTag, DoubleTag, IntArrayTag, NbtFileFormat
 from ctypes import c_uint8, c_double
 
 # Create a NBT in memory
@@ -82,7 +82,7 @@ nbt = CompoundTag(
         "byte": c_uint8(114),
         "short": ShortTag(19132),
         "int": 114514,
-        "int64": Int64Tag(1145141919810),
+        "int64": LongTag(1145141919810),
         "float": 1.4142,
         "double": c_double(3.1415926535897),
         "byte_array": b"13276273923",
@@ -105,11 +105,11 @@ nbtio.dump(nbt, "./test.nbt", NbtFileFormat.LITTLE_ENDIAN)
 ```
 3. Use context manager to operate NBT file
 ```Python
-from rapidnbt import Int64Tag, nbtio
+from rapidnbt import LongTag, nbtio
 
 # use context manager
 with nbtio.open("level.dat") as file:
-    file["RandomSeed"] = Int64Tag(1145141919810) # modify NBT
+    file["RandomSeed"] = LongTag(1145141919810) # modify NBT
     # Auto save file as original format when exit context manager
 ```
 

@@ -13,7 +13,7 @@ from rapidnbt._NBT.end_tag import EndTag
 from rapidnbt._NBT.byte_tag import ByteTag
 from rapidnbt._NBT.short_tag import ShortTag
 from rapidnbt._NBT.int_tag import IntTag
-from rapidnbt._NBT.int64_tag import Int64Tag
+from rapidnbt._NBT.int64_tag import LongTag
 from rapidnbt._NBT.float_tag import FloatTag
 from rapidnbt._NBT.double_tag import DoubleTag
 from rapidnbt._NBT.byte_array_tag import ByteArrayTag
@@ -28,7 +28,7 @@ TagVariant = Union[
     ByteTag,
     ShortTag,
     IntTag,
-    Int64Tag,
+    LongTag,
     FloatTag,
     DoubleTag,
     StringTag,
@@ -163,9 +163,9 @@ class CompoundTagVariant:
         Throw TypeError if wrong type
         """
 
-    def as_int64_tag(self) -> Int64Tag:
+    def as_int64_tag(self) -> LongTag:
         """
-        Convert to a Int64Tag
+        Convert to a LongTag
         Throw TypeError if wrong type
         """
 
@@ -246,7 +246,7 @@ class CompoundTagVariant:
         Throw TypeError if wrong type
         """
 
-    def get_int64(self) -> int:
+    def get_long(self) -> int:
         """
         Get the int64 value
         Throw TypeError if wrong type
@@ -343,7 +343,7 @@ class CompoundTagVariant:
         """
         Check whether the tag is a number based tag
         Example:
-            ByteTag, ShortTag, IntTag, Int64Tag, FloatTag, DoubleTag
+            ByteTag, ShortTag, IntTag, LongTag, FloatTag, DoubleTag
         """
 
     def is_number_float(self) -> bool:
@@ -357,7 +357,7 @@ class CompoundTagVariant:
         """
         Check whether the tag is a integer number based tag
         Example:
-            ByteTag, ShortTag, IntTag, Int64Tag
+            ByteTag, ShortTag, IntTag, LongTag
         """
 
     def is_object(self) -> bool:
@@ -369,7 +369,7 @@ class CompoundTagVariant:
         """
         Check whether the tag is a primitive tag
         Example:
-            ByteTag, ShortTag, IntTag, Int64Tag, FloatTag, DoubleTag, StringTag, ByteArrayTag, IntArrayTag, LongArrayTag
+            ByteTag, ShortTag, IntTag, LongTag, FloatTag, DoubleTag, StringTag, ByteArrayTag, IntArrayTag, LongArrayTag
         """
 
     def is_string(self) -> bool:

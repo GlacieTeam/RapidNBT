@@ -218,7 +218,6 @@ void bindNbtFile(py::module& m) {
         .def_readwrite("is_snbt", &nbt::NbtFile::mIsSnbtFile, "File is Snbt File")
         .def_readwrite("compression_type", &nbt::NbtFile::mCompressionType, "File compression type")
         .def_readwrite("compression_level", &nbt::NbtFile::mCompressionLevel, "File compression level")
-        .def_readwrite("file_data", &nbt::NbtFile::mFileData, "File NBT data")
         .def_readonly("file_path", &nbt::NbtFile::mFilePath, "File path")
 
         .def_property(

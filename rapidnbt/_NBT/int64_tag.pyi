@@ -9,7 +9,7 @@ from typing import overload
 from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
-class Int64Tag(Tag):
+class LongTag(Tag):
     """
     A tag contains an int64
     """
@@ -27,13 +27,13 @@ class Int64Tag(Tag):
     @overload
     def __init__(self) -> None:
         """
-        Construct an Int64Tag with default value (0)
+        Construct an LongTag with default value (0)
         """
 
     @overload
     def __init__(self, value: int) -> None:
         """
-        Construct an Int64Tag from an integer value
+        Construct an LongTag from an integer value
         """
 
     def __int__(self) -> int:
@@ -41,7 +41,7 @@ class Int64Tag(Tag):
         Convert to Python int
         """
 
-    def __pos__(self) -> Int64Tag:
+    def __pos__(self) -> LongTag:
         """
         Unary plus operator (+)
         """
@@ -56,7 +56,7 @@ class Int64Tag(Tag):
         String representation (SNBT minimized format)
         """
 
-    def assign(self, value: int) -> Int64Tag:
+    def assign(self, value: int) -> LongTag:
         """
         Assign a new integer value to this tag
         """

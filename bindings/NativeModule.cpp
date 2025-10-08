@@ -18,7 +18,7 @@ PYBIND11_MODULE(_NBT, m) {
     bindByteTag(m);
     bindShortTag(m);
     bindIntTag(m);
-    bindInt64Tag(m);
+    bindLongTag(m);
     bindFloatTag(m);
     bindDoubleTag(m);
     bindByteArrayTag(m);

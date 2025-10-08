@@ -20,7 +20,7 @@ void bindEnums(py::module& m) {
             .value("Byte", nbt::Tag::Type::Byte)
             .value("Short", nbt::Tag::Type::Short)
             .value("Int", nbt::Tag::Type::Int)
-            .value("Int64", nbt::Tag::Type::Int64)
+            .value("Int64", nbt::Tag::Type::Long)
             .value("Float", nbt::Tag::Type::Float)
             .value("Double", nbt::Tag::Type::Double)
             .value("ByteArray", nbt::Tag::Type::ByteArray)

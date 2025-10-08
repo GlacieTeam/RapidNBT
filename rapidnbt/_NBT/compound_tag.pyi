@@ -12,7 +12,7 @@ from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
 from rapidnbt._NBT.byte_tag import ByteTag
 from rapidnbt._NBT.short_tag import ShortTag
 from rapidnbt._NBT.int_tag import IntTag
-from rapidnbt._NBT.int64_tag import Int64Tag
+from rapidnbt._NBT.int64_tag import LongTag
 from rapidnbt._NBT.float_tag import FloatTag
 from rapidnbt._NBT.double_tag import DoubleTag
 from rapidnbt._NBT.byte_array_tag import ByteArrayTag
@@ -203,9 +203,9 @@ class CompoundTag(Tag):
         Throw KeyError if not found or TypeError if wrong type
         """
 
-    def get_int64_tag(self, key: str) -> Optional[Int64Tag]:
+    def get_long_tag(self, key: str) -> Optional[LongTag]:
         """
-        Get Int64Tag
+        Get LongTag
         Throw KeyError if not found or TypeError if wrong type
         """
 
@@ -275,7 +275,7 @@ class CompoundTag(Tag):
         Throw KeyError if not found or TypeError if wrong type
         """
 
-    def get_int64(self, key: str) -> Optional[int]:
+    def get_long(self, key: str) -> Optional[int]:
         """
         Get long value
         Throw KeyError if not found or TypeError if wrong type
@@ -385,7 +385,7 @@ class CompoundTag(Tag):
         Put an int (int32) value
         """
 
-    def put_int64(self, key: str, value: int) -> None:
+    def put_long(self, key: str, value: int) -> None:
         """
         Put a long (int64) value
         """
@@ -455,7 +455,7 @@ class CompoundTag(Tag):
         Set an int (int32) value
         """
 
-    def set_int64(self, key: str, value: int) -> None:
+    def set_long(self, key: str, value: int) -> None:
         """
         Set a long (int64) value
         """

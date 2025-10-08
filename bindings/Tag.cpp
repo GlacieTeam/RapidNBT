@@ -102,12 +102,12 @@ void bindTag(py::module& m) {
         )
         .def(
             "as_int64_tag",
-            [](nbt::Tag& self) -> nbt::Int64Tag& {
-                if (self.getType() != nbt::Tag::Type::Int64) { throw py::type_error("tag not hold an Int64Tag"); }
-                return self.as<nbt::Int64Tag>();
+            [](nbt::Tag& self) -> nbt::LongTag& {
+                if (self.getType() != nbt::Tag::Type::Long) { throw py::type_error("tag not hold an LongTag"); }
+                return self.as<nbt::LongTag>();
             },
             py::return_value_policy::reference_internal,
-            "Convert to a Int64Tag\nThrow TypeError if wrong type"
+            "Convert to a LongTag\nThrow TypeError if wrong type"
         )
         .def(
             "as_float_tag",
