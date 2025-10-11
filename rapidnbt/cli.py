@@ -8,7 +8,7 @@
 import os
 from argparse import ArgumentParser
 from pathlib import Path
-from rapidnbt import CompoundTag, NbtCompressionType, NbtFileFormat, nbtio
+from rapidnbt import CompoundTag, NbtCompressionType, NbtFileFormat, nbtio, SnbtFormat
 
 
 def Info(output: str):  # pylint: disable=invalid-name
@@ -42,6 +42,9 @@ def parse_args():
     parser.add_argument("-i", "--indent", type=int, default=4, help="NBT format indent")
     parser.add_argument(
         "-j", "--json", action="store_true", help="format NBT as a json string"
+    )
+    parser.add_argument(
+        "--snbt-format", type=int, default=3, help="SNBT format IntFlag Enum"
     )
 
     # Write Options
@@ -102,7 +105,7 @@ def process_print_options(args, nbt: CompoundTag):
         if args.json:
             print(nbt.to_json(args.indent))
         else:
-            print(nbt.to_snbt(indent=args.indent))
+            print(nbt.to_snbt(SnbtFormat(args.snbt_format), args.indent))
 
 
 def process_write_options(args, nbt: CompoundTag, fmt: NbtFileFormat, fp: str):
@@ -150,17 +153,21 @@ def process_write_options(args, nbt: CompoundTag, fmt: NbtFileFormat, fp: str):
 
         else:
             if args.merge is False:
-                nbtio.dump_snbt(nbt, output, indent=args.indent)
+                nbtio.dump_snbt(nbt, output, SnbtFormat(args.snbt_format), args.indent)
             else:
                 old = nbtio.load_snbt(output)
                 if old is not None:
                     old.merge(nbt, args.merge_list)
-                    nbtio.dump_snbt(old, output, indent=args.indent)
+                    nbtio.dump_snbt(
+                        old, output, SnbtFormat(args.snbt_format), args.indent
+                    )
                 else:
                     Warn(
                         f"File {Path(output).absolute()} does not exist, skipping merge."
                     )
-                    nbtio.dump_snbt(nbt, output, indent=args.indent)
+                    nbtio.dump_snbt(
+                        nbt, output, SnbtFormat(args.snbt_format), args.indent
+                    )
 
         Info(f"NBT file generated at: {Path(output).absolute()}")
 

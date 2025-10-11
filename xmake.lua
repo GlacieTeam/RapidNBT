@@ -54,7 +54,6 @@ target("_NBT")
         if is_plat("linux") then 
             add_shflags(
                 "-static-libgcc",
-                "-Wl,--no-undefined",
                 "-Wl,--exclude-libs,ALL"
             )
         end
