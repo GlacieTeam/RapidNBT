@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 from typing import overload, List, Any, Dict, Union
-from rapidnbt._NBT.snbt_format import SnbtFormat
+from rapidnbt._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
 from rapidnbt._NBT.tag_type import TagType
 from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.end_tag import EndTag
@@ -430,7 +430,10 @@ class CompoundTagVariant:
         """
 
     def to_snbt(
-        self, snbt_format: SnbtFormat = SnbtFormat.Default, indent: int = 4
+        self,
+        snbt_format: SnbtFormat = SnbtFormat.Default,
+        indent: int = 4,
+        number_format: SnbtNumberFormat = SnbtNumberFormat.Decimal,
     ) -> str:
         """
         Convert tag to SNBT string

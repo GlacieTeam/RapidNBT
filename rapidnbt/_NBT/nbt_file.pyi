@@ -11,7 +11,7 @@ from rapidnbt._NBT.compound_tag import CompoundTag
 from rapidnbt._NBT.nbt_compression_level import NbtCompressionLevel
 from rapidnbt._NBT.nbt_compression_type import NbtCompressionType
 from rapidnbt._NBT.nbt_file_format import NbtFileFormat
-from rapidnbt._NBT.snbt_format import SnbtFormat
+from rapidnbt._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
 
 class NbtFile(CompoundTag):
     """
@@ -101,23 +101,35 @@ class NbtFile(CompoundTag):
     @property
     def snbt_format(self) -> Optional[SnbtFormat]:
         """
-        File Snbt format
+        Snbt file format
         """
 
     @snbt_format.setter
     def snbt_format(self, arg0: Optional[SnbtFormat]) -> None:
         """
-        File Snbt format
+        Snbt file format
         """
 
     @property
     def snbt_indent(self) -> Optional[int]:
         """
-        File Snbt indent
+        Snbt file indent
         """
 
     @snbt_indent.setter
     def snbt_indent(self, arg0: Optional[int]) -> None:
         """
-        File Snbt indent
+        Snbt file indent
+        """
+
+    @property
+    def snbt_number_format(self) -> Optional[SnbtNumberFormat]:
+        """
+        Snbt number format
+        """
+
+    @snbt_indent.setter
+    def snbt_number_format(self, arg0: Optional[SnbtNumberFormat]) -> None:
+        """
+        Snbt number format
         """

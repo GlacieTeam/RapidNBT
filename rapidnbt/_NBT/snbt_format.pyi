@@ -5,7 +5,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from enum import IntFlag
+from enum import IntFlag, Enum
 
 class SnbtFormat(IntFlag):
     """
@@ -30,6 +30,13 @@ class SnbtFormat(IntFlag):
     ForceUppercase = 64
     MarkIntTag = 128
     MarkDoubleTag = 256
-    MarkExtra = 384
+    MarkAllTypes = 384
     CommentMarks = 512
     Jsonify = 551
+    MarkSigned = 1024
+
+class SnbtNumberFormat(Enum):
+    Decimal = 0
+    LowerHexadecimal = 1
+    UpperHexadecimal = 2
+    Binary = 3

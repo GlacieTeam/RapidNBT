@@ -330,8 +330,9 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "to_snbt",
             &nbt::CompoundTagVariant::toSnbt,
-            py::arg("snbt_format") = nbt::SnbtFormat::Default,
-            py::arg("indent")      = 4,
+            py::arg("snbt_format")   = nbt::SnbtFormat::Default,
+            py::arg("indent")        = 4,
+            py::arg("number_format") = nbt::SnbtNumberFormat::Default,
             "Convert tag to SNBT string"
         )
         .def("to_json", &nbt::CompoundTagVariant::toJson, py::arg("indent") = 4, "Convert tag to JSON string")

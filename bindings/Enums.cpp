@@ -53,13 +53,22 @@ void bindEnums(py::module& m) {
             .value("MarkIntTag", nbt::SnbtFormat::MarkIntTag)
             .value("MarkDoubleTag", nbt::SnbtFormat::MarkDoubleTag)
             .value("CommentMarks", nbt::SnbtFormat::CommentMarks)
+            .value("MarkSigned", nbt::SnbtFormat::MarkSigned)
             .value("ArrayLineFeed", nbt::SnbtFormat::ArrayLineFeed)
             .value("AlwaysLineFeed", nbt::SnbtFormat::AlwaysLineFeed)
-            .value("MarkExtra", nbt::SnbtFormat::MarkExtra)
+            .value("MarkAllTypes", nbt::SnbtFormat::MarkAllTypes)
             .value("PrettyFilePrint", nbt::SnbtFormat::PrettyFilePrint)
             .value("Classic", nbt::SnbtFormat::Classic)
             .value("Jsonify", nbt::SnbtFormat::Jsonify)
             .value("Default", nbt::SnbtFormat::Default)
+            .export_values()
+            .finalize();
+
+        py::native_enum<nbt::SnbtNumberFormat>(sm, "SnbtNumberFormat", "enum.Enum")
+            .value("Decimal", nbt::SnbtNumberFormat::Decimal)
+            .value("LowerHexadecimal", nbt::SnbtNumberFormat::LowerHexadecimal)
+            .value("UpperHexadecimal", nbt::SnbtNumberFormat::UpperHexadecimal)
+            .value("Binary", nbt::SnbtNumberFormat::Binary)
             .export_values()
             .finalize();
     }

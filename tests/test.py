@@ -17,13 +17,14 @@ from rapidnbt import (
     ByteTag,
     ShortTag,
     SnbtFormat,
+    SnbtNumberFormat,
 )
 
 
 def test1():
     nbt = CompoundTag(
         {
-            "string_tag": "Test String",
+            "string_tag": "测试（非ASCII）",
             "byte_tag": ctypes.c_ubyte(114),
             "bool_tag": False,
             "short_tag": ctypes.c_int16(65536),
@@ -41,7 +42,12 @@ def test1():
     nbt["int_array_tag"] = IntArrayTag([1, 2, 3, 4, 5, 6, 7])
     nbt["long_array_tag"] = LongArrayTag([1, 2, 3, 4, 5, 6, 7])
     nbt["long_array_tag"] = IntTag(2)
-    print(nbt.to_snbt())
+    print(
+        nbt.to_snbt(
+            format=SnbtFormat.Default | SnbtFormat.MarkAllTypes | SnbtFormat.MarkSigned,
+            number_format=SnbtNumberFormat.UpperHexadecimal,
+        )
+    )
     print(f'{nbt["test"]["double_tag"]}')
     print(f'{nbt["not_exist"]["not_exist"]}')
     print(f'{nbt["compound_tag"]}')
@@ -49,7 +55,7 @@ def test1():
 
 
 def test2():
-    snbt = '{"byte_array_tag": [B;49b, 51b, 50b, 55b, 54b, 50b, 55b, 51b, 57b, 50b, 51b],"double_tag": 3.141593,"byte_tag": 114b,    long_array_tag: [L;1l, 2l, 3l, 4l, 5l, 6l, 7l]}'
+    snbt = '{"byte_array_tag": [B;4_9b, 51Sb, 50b, +55b, -54b, 50sB, 0xABsb, 0xFCub, 57ub, 0b1001b, 0x51UB],"double_tag": 3.1_41_5_93,"byte_tag": 114   /*sb*/, "string_tag": "\u6d4b\u8bd5"  , long_array_tag: [L;1UL, 2SL, 3sl, 0x267DFCESl, -5l, 6l, 7l]}'
     nbt = CompoundTag.from_snbt(snbt)
     # print(nbt.to_json())
     bnbt = nbt.to_binary_nbt()
@@ -60,7 +66,7 @@ def test2():
 
 def test3():
     nbt = CompoundTag()
-    nbt.put_string("tag_string", "aaaaa")
+    nbt.put_string("tag_string", "测试（非ASCII）")
     nbt.put_byte("tag_byte", 114)
     nbt.put_short("tag_short", 26378)
     nbt.put_int("tag_int", 890567)
@@ -95,8 +101,8 @@ def test3():
         print(e)
 
     nbt["tag_int_array"].value = IntArrayTag([5, 6, 7, 8, 9, 0])
-    print(f"{nbt["tag_int_array"].value}")
-    print(f"{nbt["tag_int_array"].get()}")
+    print(f'{nbt["tag_int_array"].value}')
+    print(f'{nbt["tag_int_array"].get()}')
     print(nbt.value)
 
 
@@ -128,7 +134,7 @@ def test4():
     ]
     merge_nbt = CompoundTag(
         {
-            "string_tag": "merge string",
+            "string_tag": "测试（非ASCII）",
             "byte_array_tag": b"114514",
             "aaa": {"bbb": [{"c": "d", "3": 4}, {"g": "h", "7": ShortTag(8)}]},
         }
@@ -136,7 +142,7 @@ def test4():
     nbt.merge(merge_nbt, True)
     nbt["test"] = ListTag([-122, 1673892, 9825678])
     nbt["test"] = [233122, 37477]
-    print(nbt.to_snbt(SnbtFormat.Classic | SnbtFormat.MarkExtra))
+    print(nbt.to_snbt(SnbtFormat.Default | SnbtFormat.ForceAscii))
     print(nbt["test"].get_type())
 
 

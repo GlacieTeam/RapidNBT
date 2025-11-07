@@ -8,7 +8,7 @@
 import os
 from typing import Union, Optional
 from rapidnbt._NBT.compound_tag import CompoundTag
-from rapidnbt._NBT.snbt_format import SnbtFormat
+from rapidnbt._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
 from rapidnbt._NBT.nbt_file_format import NbtFileFormat
 from rapidnbt._NBT.nbt_compression_level import NbtCompressionLevel
 from rapidnbt._NBT.nbt_compression_type import NbtCompressionType
@@ -101,6 +101,7 @@ def dump_snbt(
     path: os.PathLike,
     format: SnbtFormat = SnbtFormat.Default,
     indent: int = 4,
+    number_format: SnbtNumberFormat = SnbtNumberFormat.Decimal,
 ) -> bool:
     """
     Save CompoundTag to SNBT (String NBT) file

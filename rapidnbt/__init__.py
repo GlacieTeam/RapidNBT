@@ -8,7 +8,7 @@
 """Python bindings for NBT library"""
 
 from rapidnbt._NBT.tag_type import TagType
-from rapidnbt._NBT.snbt_format import SnbtFormat
+from rapidnbt._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
 from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
 from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.end_tag import EndTag
@@ -33,6 +33,7 @@ from rapidnbt._NBT import nbtio
 __all__ = [
     "TagType",
     "SnbtFormat",
+    "SnbtNumberFormat",
     "CompoundTagVariant",
     "Tag",
     "EndTag",

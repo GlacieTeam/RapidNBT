@@ -167,8 +167,9 @@ void bindNbtIO(py::module& m) {
             &nbt::io::saveSnbtToFile,
             py::arg("nbt"),
             py::arg("path"),
-            py::arg("format") = nbt::SnbtFormat::Default,
-            py::arg("indent") = 4,
+            py::arg("format")        = nbt::SnbtFormat::Default,
+            py::arg("indent")        = 4,
+            py::arg("number_format") = nbt::SnbtNumberFormat::Default,
             R"(Save CompoundTag to SNBT (String NBT) file
         Args:
             nbt (CompoundTag): Tag to save

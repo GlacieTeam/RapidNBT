@@ -48,11 +48,12 @@ void bindTag(py::module& m) {
         )
         .def(
             "to_snbt",
-            [](const nbt::Tag& self, nbt::SnbtFormat format = nbt::SnbtFormat::Default, uint8_t indent = 4) {
-                return self.toSnbt(format, indent);
+            [](const nbt::Tag& self, nbt::SnbtFormat format, uint8_t indent, nbt::SnbtNumberFormat number_format) {
+                return self.toSnbt(format, indent, number_format);
             },
-            py::arg("format") = nbt::SnbtFormat::Default,
-            py::arg("indent") = 4,
+            py::arg("format")        = nbt::SnbtFormat::Default,
+            py::arg("indent")        = 4,
+            py::arg("number_format") = nbt::SnbtNumberFormat::Default,
             "Convert tag to SNBT string"
         )
         .def("to_json", &nbt::Tag::toJson, py::arg("indent") = 4, "Convert tag to JSON string")

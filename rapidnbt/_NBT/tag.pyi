@@ -8,7 +8,7 @@
 from typing import overload
 from abc import ABC, abstractmethod
 from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
-from rapidnbt._NBT.snbt_format import SnbtFormat
+from rapidnbt._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
 from rapidnbt._NBT.tag_type import TagType
 from rapidnbt._NBT.byte_tag import ByteTag
 from rapidnbt._NBT.short_tag import ShortTag
@@ -163,7 +163,12 @@ class Tag(ABC):
         Convert tag to JSON string
         """
 
-    def to_snbt(self, format: SnbtFormat = SnbtFormat.Default, indent: int = 4) -> str:
+    def to_snbt(
+        self,
+        format: SnbtFormat = SnbtFormat.Default,
+        indent: int = 4,
+        number_format: SnbtNumberFormat = SnbtNumberFormat.Decimal,
+    ) -> str:
         """
         Convert tag to SNBT string
         """

@@ -14,12 +14,13 @@ void bindNbtFile(py::module& m) {
 
     py::class_<nbt::NbtFile, nbt::CompoundTag>(sm, "NbtFile")
         .def_readonly("file_path", &nbt::NbtFile::mFilePath, "File path")
-        .def_readwrite("snbt_format", &nbt::NbtFile::mSnbtFormat, "File Snbt format")
-        .def_readwrite("snbt_indent", &nbt::NbtFile::mSnbtIndent, "File Snbt indent")
+        .def_readwrite("snbt_format", &nbt::NbtFile::mSnbtFormat, "Snbt file format")
+        .def_readwrite("snbt_indent", &nbt::NbtFile::mSnbtIndent, "Snbt file indent")
         .def_readwrite("file_format", &nbt::NbtFile::mFileFormat, "Binary file format")
         .def_readwrite("is_snbt", &nbt::NbtFile::mIsSnbtFile, "File is Snbt File")
         .def_readwrite("compression_type", &nbt::NbtFile::mCompressionType, "File compression type")
         .def_readwrite("compression_level", &nbt::NbtFile::mCompressionLevel, "File compression level")
+        .def_readwrite("snbt_number_format", &nbt::NbtFile::mSnbtNumberFormat, "Snbt number format")
 
         .def(
             "flush",

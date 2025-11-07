@@ -28,6 +28,8 @@ pip install rapidnbt
 | Bedrock Network (VarInt Encoding) | Bedrock Edition        | :white_check_mark: |
 | Formatted String (SNBT)           | Bedrock & Java Edition | :white_check_mark: |
 
+**Full SNBT support** - Full SNBT format support, include the new SNBT format since Java Edition 1.21.5
+
 ## Benchmarks 🚀
 Comparing with some popular NBT libraries.  
 
