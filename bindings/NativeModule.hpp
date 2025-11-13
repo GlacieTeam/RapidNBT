@@ -26,9 +26,7 @@ constexpr auto ADDRESS_LENGTH = 2 * sizeof(uintptr_t);
 inline py::bytes        to_pybytes(std::string_view sv) { return py::bytes(sv.data(), sv.size()); }
 inline std::string_view to_cppstringview(py::buffer buffer) {
     py::buffer_info info = buffer.request();
-    const char*     data = static_cast<const char*>(info.ptr);
-    size_t          size = info.size;
-    return std::string_view(data, size);
+    return std::string_view(static_cast<const char*>(info.ptr), info.size);
 }
 
 template <std::integral T>

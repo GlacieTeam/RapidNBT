@@ -15,6 +15,11 @@ class CompoundTagVariant:
     A warpper of all tags, to provide morden API for NBT
     """
 
+    def __bytes__(self) -> bytes:
+        """
+        Implicitly convert to bytes
+        """
+
     def __contains__(self, index: str) -> bool:
         """
         Check if the value is in the CompoundTag.

@@ -599,9 +599,9 @@ void bindCompoundTagVariant(py::module& m) {
             "__bytes__",
             [](nbt::CompoundTagVariant const& self) {
                 if (self.hold(nbt::Tag::Type::ByteArray)) { return to_pybytes(self.as<nbt::ByteArrayTag>()); }
-                throw py::type_error("Tag not hold a floating point number");
+                throw py::type_error("Tag not hold a byte array");
             },
-            "Implicitly convert to float"
+            "Implicitly convert to bytes"
         )
         .def(
             "__eq__",

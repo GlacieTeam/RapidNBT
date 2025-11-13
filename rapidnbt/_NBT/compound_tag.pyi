@@ -10,17 +10,6 @@ from typing import overload, List, Dict, Optional, Any
 from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
-from rapidnbt._NBT.byte_tag import ByteTag
-from rapidnbt._NBT.short_tag import ShortTag
-from rapidnbt._NBT.int_tag import IntTag
-from rapidnbt._NBT.long_tag import LongTag
-from rapidnbt._NBT.float_tag import FloatTag
-from rapidnbt._NBT.double_tag import DoubleTag
-from rapidnbt._NBT.byte_array_tag import ByteArrayTag
-from rapidnbt._NBT.string_tag import StringTag
-from rapidnbt._NBT.list_tag import ListTag
-from rapidnbt._NBT.int_array_tag import IntArrayTag
-from rapidnbt._NBT.long_array_tag import LongArrayTag
 
 class CompoundTag(Tag):
     """
@@ -163,76 +152,10 @@ class CompoundTag(Tag):
         Throw KeyError if not found
         """
 
-    def get_byte_tag(self, key: str) -> Optional[ByteTag]:
+    def get_tag(self, key: str) -> Tag:
         """
-        Get ByteTag
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_byte_array_tag(self, key: str) -> Optional[ByteArrayTag]:
-        """
-        Get ByteArrayTag
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_compound_tag(self, key: str) -> Optional[CompoundTag]:
-        """
-        Get CompoundTag
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_double_tag(self, key: str) -> Optional[DoubleTag]:
-        """
-        Get DoubleTag
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_float_tag(self, key: str) -> Optional[FloatTag]:
-        """
-        Get FloatTag value
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_int_tag(self, key: str) -> Optional[IntTag]:
-        """
-        Get IntTag
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_long_tag(self, key: str) -> Optional[LongTag]:
-        """
-        Get LongTag
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_int_array_tag(self, key: str) -> Optional[IntArrayTag]:
-        """
-        Get IntArrayTag
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_list_tag(self, key: str) -> Optional[ListTag]:
-        """
-        Get ListTag
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_long_array_tag(self, key: str) -> Optional[LongArrayTag]:
-        """
-        Get LongArrayTag
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_short_tag(self, key: str) -> Optional[ShortTag]:
-        """
-        Get ShortTag
-        Throw KeyError if not found or TypeError if wrong type
-        """
-
-    def get_string_tag(self, key: str) -> Optional[StringTag]:
-        """
-        Get StringTag
-        Throw KeyError if not found or TypeError if wrong type
+        Get tag by key
+        Throw KeyError if not found
         """
 
     def get_byte(self, key: str) -> Optional[int]:
@@ -344,71 +267,6 @@ class CompoundTag(Tag):
     def pop(self, key: str) -> bool:
         """
         Remove key from the compound
-        """
-
-    def put(self, key: str, value: Any) -> None:
-        """
-        Put a value into the compound (automatically converted to appropriate tag type)
-        """
-
-    def put_byte(self, key: str, value: int) -> None:
-        """
-        Put a byte (uint8) value
-        """
-
-    def put_byte_array(self, key: str, value: Buffer) -> None:
-        """
-        Put a byte array (list of uint8)
-        """
-
-    def put_compound(self, key: str, value: Any) -> None:
-        """
-        Put a CompoundTag value (or dict that will be converted)
-        """
-
-    def put_double(self, key: str, value: float) -> None:
-        """
-        Put a double value
-        """
-
-    def put_float(self, key: str, value: float) -> None:
-        """
-        Put a float value
-        """
-
-    def put_int(self, key: str, value: int) -> None:
-        """
-        Put an int (int32) value
-        """
-
-    def put_long(self, key: str, value: int) -> None:
-        """
-        Put a long (int64) value
-        """
-
-    def put_int_array(self, key: str, value: List[int]) -> None:
-        """
-        Put an int array (list of int32)
-        """
-
-    def put_list(self, key: str, value: Any) -> None:
-        """
-        Put a ListTag value (or list/tuple that will be converted)
-        """
-
-    def put_long_array(self, key: str, value: List[int]) -> None:
-        """
-        Put a long array (list of int64)
-        """
-
-    def put_short(self, key: str, value: int) -> None:
-        """
-        Put a short (int16) value
-        """
-
-    def put_string(self, key: str, value: str) -> None:
-        """
-        Put a string value
         """
 
     def rename(self, old_key: str, new_key: str) -> bool:

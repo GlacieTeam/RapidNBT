@@ -166,19 +166,14 @@ void bindCompoundTag(py::module& m) {
             "Get tag by key\nThrow KeyError if not found"
         )
         .def(
-            "put",
-            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
-                if (py::isinstance<nbt::CompoundTagVariant>(value)) {
-                    if (!self.contains(key)) { self[key] = *value.cast<nbt::CompoundTagVariant*>(); }
-                } else if (py::isinstance<nbt::Tag>(value)) {
-                    self.put(key, value.cast<nbt::Tag*>()->copy());
-                } else {
-                    self.put(key, makeNativeTag(value));
-                }
+            "get_tag",
+            [](nbt::CompoundTag& self, std::string_view key) -> nbt::Tag* {
+                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
+                return self.get(key);
             },
+            py::return_value_policy::reference_internal,
             py::arg("key"),
-            py::arg("value"),
-            "Put a value into the compound (automatically converted to appropriate tag type)"
+            "Get tag by key\nThrow KeyError if not found"
         )
         .def(
             "set",
@@ -194,67 +189,6 @@ void bindCompoundTag(py::module& m) {
             py::arg("key"),
             py::arg("value"),
             "Set value in the compound (automatically converted to appropriate tag type)"
-        )
-
-        .def("put_byte", &nbt::CompoundTag::putByte, py::arg("key"), py::arg("value"), "Put a byte (uint8) value")
-        .def("put_short", &nbt::CompoundTag::putShort, py::arg("key"), py::arg("value"), "Put a short (int16) value")
-        .def("put_int", &nbt::CompoundTag::putInt, py::arg("key"), py::arg("value"), "Put an int (int32) value")
-        .def("put_long", &nbt::CompoundTag::putLong, py::arg("key"), py::arg("value"), "Put a long (int64) value")
-        .def("put_float", &nbt::CompoundTag::putFloat, py::arg("key"), py::arg("value"), "Put a float value")
-        .def("put_double", &nbt::CompoundTag::putDouble, py::arg("key"), py::arg("value"), "Put a double value")
-        .def("put_string", &nbt::CompoundTag::putString, py::arg("key"), py::arg("value"), "Put a string value")
-        .def(
-            "put_byte_array",
-            [](nbt::CompoundTag& self, std::string_view key, py::buffer value) {
-                self.put(key, nbt::ByteArrayTag(to_cppstringview(value)));
-            },
-            py::arg("key"),
-            py::arg("value"),
-            "Put a byte array (list of uint8)"
-        )
-        .def(
-            "put_int_array",
-            &nbt::CompoundTag::putIntArray,
-            py::arg("key"),
-            py::arg("value"),
-            "Put an int array (list of int32)"
-        )
-        .def(
-            "put_long_array",
-            &nbt::CompoundTag::putLongArray,
-            py::arg("key"),
-            py::arg("value"),
-            "Put a long array (list of int64)"
-        )
-        .def(
-            "put_compound",
-            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
-                if (py::isinstance<nbt::CompoundTag>(value)) {
-                    self.putCompound(key, value.cast<nbt::CompoundTag>());
-                } else if (py::isinstance<py::dict>(value)) {
-                    self.put(key, makeNativeTag(value));
-                } else {
-                    throw py::type_error("Value must be a CompoundTag or dict");
-                }
-            },
-            py::arg("key"),
-            py::arg("value"),
-            "Put a CompoundTag value (or dict that will be converted)"
-        )
-        .def(
-            "put_list",
-            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
-                if (py::isinstance<nbt::ListTag>(value)) {
-                    self.putList(key, value.cast<nbt::ListTag>());
-                } else if (py::isinstance<py::list>(value)) {
-                    self.put(key, makeNativeTag(value));
-                } else {
-                    throw py::type_error("Value must be a ListTag or list/tuple");
-                }
-            },
-            py::arg("key"),
-            py::arg("value"),
-            "Put a ListTag value (or list/tuple that will be converted)"
         )
 
         .def(
@@ -358,147 +292,6 @@ void bindCompoundTag(py::module& m) {
             py::arg("key"),
             py::arg("value"),
             "Set a ListTag value (or list/tuple that will be converted)"
-        )
-
-        .def(
-            "get_byte_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::ByteTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
-                return self.getByte(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get ByteTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_short_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::ShortTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
-                return self.getShort(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get ShortTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_int_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::IntTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold a IntTag"); }
-                return self.getInt(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get IntTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_long_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::LongTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Long)) { throw py::type_error("tag not hold a LongTag"); }
-                return self.getLong(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get LongTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_float_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::FloatTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Float)) { throw py::type_error("tag not hold a FloatTag"); }
-                return self.getFloat(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get FloatTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_double_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::DoubleTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Double)) { throw py::type_error("tag not hold a DoubleTag"); }
-                return self.getDouble(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get DoubleTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_string_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::StringTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
-                return self.getString(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get StringTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_byte_array_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::ByteArrayTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::ByteArray)) {
-                    throw py::type_error("tag not hold a ByteArrayTag");
-                }
-                return self.getByteArray(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get ByteArrayTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_int_array_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::IntArrayTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::IntArray)) {
-                    throw py::type_error("tag not hold a IntArrayTag");
-                }
-                return self.getIntArray(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get IntArrayTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_long_array_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::LongArrayTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::LongArray)) {
-                    throw py::type_error("tag not hold a LongArrayTag");
-                }
-                return self.getLongArray(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get LongArrayTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_compound_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::CompoundTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Compound)) {
-                    throw py::type_error("tag not hold a CompoundTag");
-                }
-                return self.getCompound(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get CompoundTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_list_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::ListTag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold a ListTag"); }
-                return self.getList(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get ListTag\nThrow KeyError if not found or TypeError if wrong type"
         )
 
         .def(
