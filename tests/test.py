@@ -66,40 +66,8 @@ def test2():
 
 def test3():
     nbt = CompoundTag()
-    nbt.set_string("tag_string", "测试（非ASCII）")
-    nbt.set_byte("tag_byte", 114)
-    nbt.set_short("tag_short", 26378)
-    nbt.set_int("tag_int", 890567)
-    nbt.set_long("tag_int64", 3548543263748543827)
-    nbt.set_float("tag_float", 1.2345)
-    nbt.set_double("tag_double", 1.414213562)
-    nbt.set_byte_array("tag_byte_array", b"45678909876")
-    nbt.set_list("tag_list", [nbt, nbt])
-    nbt.set_int_array("tag_int_array", [1, 2, 3, 4, 5, 6, 7])
-    nbt.set_compound("tag_compound", {})
-    print(nbt.to_json())
-    print(f'{nbt.get_string("tag_string")}')
-    print(f'{nbt.get_byte("tag_byte")}')
-    print(f'{nbt.get_short("tag_short")}')
-    print(f'{nbt.get_int("tag_int")}')
-    print(f'{nbt.get_long("tag_int64")}')
-    print(f'{nbt.get_float("tag_float")}')
-    print(f'{nbt.get_double("tag_double")}')
-    print(f'{nbt.get_byte_array("tag_byte_array")}')
-    print(f'{nbt.get_list("tag_list")}')
-    print(f'{nbt.get_compound("tag_compound")}')
-    print(f'{nbt.get_int_array("tag_int_array")}')
-
-    try:
-        print(f'{nbt.get_byte("not exist")}')
-    except KeyError as e:
-        print(e)
-
-    try:
-        print(f'{nbt.get_byte("tag_int_array")}')
-    except TypeError as e:
-        print(e)
-
+    print(nbt["tag_int_array"])
+    print(nbt["tag_int_array"].value)
     nbt["tag_int_array"].value = IntArrayTag([5, 6, 7, 8, 9, 0])
     print(f'{nbt["tag_int_array"].value}')
     print(f'{nbt["tag_int_array"].as_tag()}')

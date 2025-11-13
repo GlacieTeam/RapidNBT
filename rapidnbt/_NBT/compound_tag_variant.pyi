@@ -46,6 +46,11 @@ class CompoundTagVariant:
         Get value by array index
         """
 
+    def __len__(self) -> int:
+        """
+        Get the hash of the tag
+        """
+
     @overload
     def __init__(self) -> None:
         """
@@ -216,6 +221,11 @@ class CompoundTagVariant:
         Get the NBT type ID
         """
 
+    def hash(self) -> int:
+        """
+        Get the hash of the tag
+        """
+
     def hold(self, type: TagType) -> bool:
         """
         Check the NBT type ID
@@ -294,6 +304,11 @@ class CompoundTagVariant:
         Throw TypeError if wrong type
         """
 
+    def load(self, stream: ...) -> None:
+        """
+        Load tag value from a binary stream
+        """
+
     def merge(self, other: CompoundTagVariant, merge_list: bool = False) -> None:
         """
         Merge another CompoundTag into this one
@@ -341,6 +356,11 @@ class CompoundTagVariant:
     ) -> str:
         """
         Convert tag to SNBT string
+        """
+
+    def write(self, stream: ...) -> None:
+        """
+        Write tag to a binary stream
         """
 
     @property

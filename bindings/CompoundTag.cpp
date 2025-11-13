@@ -20,13 +20,7 @@ void bindCompoundTag(py::module& m) {
                 for (auto [k, v] : obj) {
                     std::string key   = py::cast<std::string>(k);
                     auto&       value = static_cast<py::object&>(v);
-                    if (py::isinstance<nbt::CompoundTagVariant>(value)) {
-                        (*tag)[key] = *value.cast<nbt::CompoundTagVariant*>();
-                    } else if (py::isinstance<nbt::Tag>(value)) {
-                        tag->put(key, value.cast<nbt::Tag*>()->copy());
-                    } else {
-                        tag->put(key, makeNativeTag(value));
-                    }
+                    tag->set(key, makeNativeTag(value));
                 }
                 return tag;
             }),
@@ -46,13 +40,7 @@ void bindCompoundTag(py::module& m) {
         .def(
             "__setitem__",
             [](nbt::CompoundTag& self, std::string_view key, py::object const& value) {
-                if (py::isinstance<nbt::CompoundTagVariant>(value)) {
-                    self[key] = *value.cast<nbt::CompoundTagVariant*>();
-                } else if (py::isinstance<nbt::Tag>(value)) {
-                    self[key] = *value.cast<nbt::Tag*>();
-                } else {
-                    self[key] = makeNativeTag(value);
-                }
+                self[key] = makeNativeTag(value);
             },
             py::arg("key"),
             py::arg("value"),
@@ -166,267 +154,11 @@ void bindCompoundTag(py::module& m) {
             "Get tag by key\nThrow KeyError if not found"
         )
         .def(
-            "get_tag",
-            [](nbt::CompoundTag& self, std::string_view key) -> nbt::Tag* {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                return self.get(key);
-            },
-            py::return_value_policy::reference_internal,
-            py::arg("key"),
-            "Get tag by key\nThrow KeyError if not found"
-        )
-        .def(
             "set",
-            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
-                if (py::isinstance<nbt::CompoundTagVariant>(value)) {
-                    self[key] = *value.cast<nbt::CompoundTagVariant*>();
-                } else if (py::isinstance<nbt::Tag>(value)) {
-                    self[key] = *value.cast<nbt::Tag*>()->copy();
-                } else {
-                    self[key] = makeNativeTag(value);
-                }
-            },
+            [](nbt::CompoundTag& self, std::string key, py::object const& value) { self[key] = makeNativeTag(value); },
             py::arg("key"),
             py::arg("value"),
             "Set value in the compound (automatically converted to appropriate tag type)"
-        )
-
-        .def(
-            "set_byte",
-            [](nbt::CompoundTag& self, std::string_view key, uint8_t value) { self[key] = value; },
-            py::arg("key"),
-            py::arg("value"),
-            "Set a byte (uint8) value"
-        )
-        .def(
-            "set_short",
-            [](nbt::CompoundTag& self, std::string_view key, short value) { self[key] = value; },
-            py::arg("key"),
-            py::arg("value"),
-            "Set a short (int16) value"
-        )
-        .def(
-            "set_int",
-            [](nbt::CompoundTag& self, std::string_view key, int value) { self[key] = value; },
-            py::arg("key"),
-            py::arg("value"),
-            "Set an int (int32) value"
-        )
-        .def(
-            "set_long",
-            [](nbt::CompoundTag& self, std::string_view key, int64_t value) { self[key] = value; },
-            py::arg("key"),
-            py::arg("value"),
-            "Set a long (int64) value"
-        )
-        .def(
-            "set_float",
-            [](nbt::CompoundTag& self, std::string_view key, float value) { self[key] = value; },
-            py::arg("key"),
-            py::arg("value"),
-            "Set a float value"
-        )
-        .def(
-            "set_double",
-            [](nbt::CompoundTag& self, std::string_view key, double value) { self[key] = value; },
-            py::arg("key"),
-            py::arg("value"),
-            "Set a double value"
-        )
-        .def(
-            "set_string",
-            [](nbt::CompoundTag& self, std::string_view key, std::string_view value) { self[key] = value; },
-            py::arg("key"),
-            py::arg("value"),
-            "Set a string value"
-        )
-        .def(
-            "set_byte_array",
-            [](nbt::CompoundTag& self, std::string_view key, py::buffer value) {
-                self[key] = nbt::ByteArrayTag(to_cppstringview(value));
-            },
-            py::arg("key"),
-            py::arg("value"),
-            "Set a byte array (list of uint8)"
-        )
-        .def(
-            "set_int_array",
-            [](nbt::CompoundTag& self, std::string_view key, std::vector<int> const& value) { self[key] = value; },
-            py::arg("key"),
-            py::arg("value"),
-            "Set an int array (list of int32)"
-        )
-        .def(
-            "set_long_array",
-            [](nbt::CompoundTag& self, std::string_view key, std::vector<int64_t> const& value) { self[key] = value; },
-            py::arg("key"),
-            py::arg("value"),
-            "Set a long array (list of int64)"
-        )
-        .def(
-            "set_compound",
-            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
-                if (py::isinstance<nbt::CompoundTag>(value)) {
-                    self[key] = value.cast<nbt::CompoundTag>();
-                } else if (py::isinstance<py::dict>(value)) {
-                    self[key] = makeNativeTag(value);
-                } else {
-                    throw py::type_error("Value must be a CompoundTag or dict");
-                }
-            },
-            py::arg("key"),
-            py::arg("value"),
-            "Set a CompoundTag value (or dict that will be converted)"
-        )
-        .def(
-            "set_list",
-            [](nbt::CompoundTag& self, std::string key, py::object const& value) {
-                if (py::isinstance<nbt::ListTag>(value)) {
-                    self[key] = value.cast<nbt::ListTag>();
-                } else if (py::isinstance<py::list>(value)) {
-                    self[key] = makeNativeTag(value);
-                } else {
-                    throw py::type_error("Value must be a ListTag or list/tuple");
-                }
-            },
-            py::arg("key"),
-            py::arg("value"),
-            "Set a ListTag value (or list/tuple that will be converted)"
-        )
-
-        .def(
-            "get_byte",
-            [](nbt::CompoundTag& self, std::string_view key) -> uint8_t {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
-                return self.at(key).as<nbt::ByteTag>().storage();
-            },
-            py::arg("key"),
-            "Get byte value\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_short",
-            [](nbt::CompoundTag& self, std::string_view key) -> short {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
-                return self.at(key).as<nbt::ShortTag>().storage();
-            },
-            py::arg("key"),
-            "Get short value\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_int",
-            [](nbt::CompoundTag& self, std::string_view key) -> int {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold a IntTag"); }
-                return self.at(key).as<nbt::IntTag>().storage();
-            },
-            py::arg("key"),
-            "Get int value\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_long",
-            [](nbt::CompoundTag& self, std::string_view key) -> int64_t {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Long)) { throw py::type_error("tag not hold a LongTag"); }
-                return self.at(key).as<nbt::LongTag>().storage();
-            },
-            py::arg("key"),
-            "Get long value\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_float",
-            [](nbt::CompoundTag& self, std::string_view key) -> float {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Float)) { throw py::type_error("tag not hold a FloatTag"); }
-                return self.at(key).as<nbt::FloatTag>().storage();
-            },
-            py::arg("key"),
-            "Get float value\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_double",
-            [](nbt::CompoundTag& self, std::string_view key) -> double {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Double)) { throw py::type_error("tag not hold a DoubleTag"); }
-                return self.at(key).as<nbt::DoubleTag>().storage();
-            },
-            py::arg("key"),
-            "Get double value\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_string",
-            [](nbt::CompoundTag& self, std::string_view key) -> std::string {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::String)) { throw py::type_error("tag not hold a StringTag"); }
-                return self.at(key).as<nbt::StringTag>().storage();
-            },
-            py::arg("key"),
-            "Get string value\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_byte_array",
-            [](nbt::CompoundTag& self, std::string_view key) -> py::bytes {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::ByteArray)) {
-                    throw py::type_error("tag not hold a ByteArrayTag");
-                }
-                return to_pybytes(self.at(key).as<nbt::ByteArrayTag>());
-            },
-            py::arg("key"),
-            "Get byte array\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_int_array",
-            [](nbt::CompoundTag& self, std::string_view key) -> std::vector<int> {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::IntArray)) {
-                    throw py::type_error("tag not hold a IntArrayTag");
-                }
-                return self.at(key).as<nbt::IntArrayTag>().storage();
-            },
-            py::arg("key"),
-            "Get int array\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_long_array",
-            [](nbt::CompoundTag& self, std::string_view key) -> std::vector<int64_t> {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::LongArray)) {
-                    throw py::type_error("tag not hold a LongArrayTag");
-                }
-                return self.at(key).as<nbt::LongArrayTag>().storage();
-            },
-            py::arg("key"),
-            "Get long array\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_compound",
-            [](nbt::CompoundTag& self, std::string_view key) -> py::dict {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::Compound)) {
-                    throw py::type_error("tag not hold a CompoundTag");
-                }
-                py::dict result;
-                for (auto& [k, v] : self.at(key).as<nbt::CompoundTag>()) { result[py::str(k)] = py::cast(v); }
-                return result;
-            },
-            py::arg("key"),
-            "Get CompoundTag\nThrow KeyError if not found or TypeError if wrong type"
-        )
-        .def(
-            "get_list",
-            [](nbt::CompoundTag& self, std::string_view key) -> py::list {
-                if (!self.contains(key)) { throw py::key_error("tag not exist"); }
-                if (!self.at(key).hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold a ListTag"); }
-                py::list result;
-                for (auto& tag : self.at(key).as<nbt::ListTag>()) {
-                    result.append(py::cast(nbt::CompoundTagVariant(*tag)));
-                }
-                return result;
-            },
-            py::arg("key"),
-            "Get ListTag\nThrow KeyError if not found or TypeError if wrong type"
         )
 
         .def(
@@ -505,13 +237,7 @@ void bindCompoundTag(py::module& m) {
                 for (auto const& [k, v] : value) {
                     std::string key = py::cast<std::string>(k);
                     auto&       val = static_cast<py::object const&>(v);
-                    if (py::isinstance<nbt::CompoundTagVariant>(val)) {
-                        self[key] = *val.cast<nbt::CompoundTagVariant*>();
-                    } else if (py::isinstance<nbt::Tag>(val)) {
-                        self.put(key, val.cast<nbt::Tag*>()->copy());
-                    } else {
-                        self.put(key, makeNativeTag(val));
-                    }
+                    self.set(key, makeNativeTag(val));
                 }
             },
             "Access the dict value of this tag"

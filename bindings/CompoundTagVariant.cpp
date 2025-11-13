@@ -10,7 +10,11 @@
 namespace rapidnbt {
 
 std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
-    if (py::isinstance<py::bool_>(obj)) {
+    if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
+        return obj.cast<nbt::CompoundTagVariant*>()->toUniqueCopy();
+    } else if (py::isinstance<nbt::Tag>(obj)) {
+        return obj.cast<nbt::Tag*>()->copy();
+    } else if (py::isinstance<py::bool_>(obj)) {
         return std::make_unique<nbt::ByteTag>(obj.cast<uint8_t>());
     } else if (py::isinstance<py::int_>(obj)) {
         return std::make_unique<nbt::IntTag>(to_cpp_int<int>(obj, "IntTag"));
@@ -26,13 +30,7 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
         for (auto [k, v] : dict) {
             auto  key   = py::cast<std::string>(k);
             auto& value = static_cast<py::object&>(v);
-            if (py::isinstance<nbt::CompoundTagVariant>(value)) {
-                (*tag)[key] = *value.cast<nbt::CompoundTagVariant*>();
-            } else if (py::isinstance<nbt::Tag>(value)) {
-                tag->put(key, value.cast<nbt::Tag*>()->copy());
-            } else {
-                tag->put(key, makeNativeTag(value));
-            }
+            tag->set(key, makeNativeTag(value));
         }
         return tag;
     } else if (py::isinstance<py::list>(obj)) {
@@ -41,7 +39,7 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
         for (auto t : list) {
             auto& value = static_cast<py::object&>(t);
             auto  type  = tag->getElementType();
-            if (auto val = makeListTagElement(value)) {
+            if (auto val = makeNativeTag(value)) {
                 if (type == val->getType() || type == nbt::Tag::Type::End) {
                     tag->push_back(*val);
                 } else {
@@ -77,10 +75,11 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
     } else if (py::isinstance(obj, ctypes.attr("c_double"))) {
         return std::make_unique<nbt::DoubleTag>(obj.attr("value").cast<double>());
     }
-    py::str typeName = py::type::handle_of(obj).attr("__name__");
-    throw py::type_error(
-        std::format("Invalid tag type: couldn't convert {} instance to any tag type", typeName.cast<std::string>())
-    );
+    auto typeName   = py::type::handle_of(obj).attr("__name__").cast<std::string>();
+    auto typeModule = py::type::handle_of(obj).attr("__module__").cast<std::string>();
+    if (typeModule.starts_with("rapidnbt._NBT")) { typeModule = "rapidnbt"; }
+    if (!typeModule.empty()) { typeName = std::format("{}.{}", typeModule, typeName); }
+    throw py::type_error(std::format("Invalid tag type: couldn't convert {} instance to any tag type", typeName));
 }
 
 void bindCompoundTagVariant(py::module& m) {
@@ -90,13 +89,7 @@ void bindCompoundTagVariant(py::module& m) {
         .def(py::init<>(), "Default Constructor")
         .def(
             py::init([](py::object const& obj) {
-                if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
-                    return std::make_unique<nbt::CompoundTagVariant>(*obj.cast<nbt::CompoundTagVariant*>());
-                } else if (py::isinstance<nbt::Tag>(obj)) {
-                    return std::make_unique<nbt::CompoundTagVariant>(*obj.cast<nbt::Tag*>());
-                } else {
-                    return std::make_unique<nbt::CompoundTagVariant>(makeNativeTag(obj));
-                }
+                return std::make_unique<nbt::CompoundTagVariant>(makeNativeTag(obj));
             }),
             py::arg("value"),
             "Construct from any Python object"
@@ -160,6 +153,7 @@ void bindCompoundTagVariant(py::module& m) {
         )
 
         .def("size", &nbt::CompoundTagVariant::size, "Get the size of the tag")
+        .def("hash", &nbt::CompoundTagVariant::hash, "Get the hash of the tag")
         .def(
             "clear",
             &nbt::CompoundTagVariant::clear,
@@ -208,13 +202,7 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "__setitem__",
             [](nbt::CompoundTagVariant& self, std::string_view key, py::object const& obj) {
-                if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
-                    self[key] = *obj.cast<nbt::CompoundTagVariant*>();
-                } else if (py::isinstance<nbt::Tag>(obj)) {
-                    self[key] = *obj.cast<nbt::Tag*>();
-                } else {
-                    self[key] = makeNativeTag(obj);
-                }
+                self[key] = makeNativeTag(obj);
             },
             py::arg("index"),
             py::arg("value"),
@@ -223,13 +211,7 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "__setitem__",
             [](nbt::CompoundTagVariant& self, size_t index, py::object const& obj) {
-                if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
-                    self[index] = *obj.cast<nbt::CompoundTagVariant*>();
-                } else if (py::isinstance<nbt::Tag>(obj)) {
-                    self[index] = *obj.cast<nbt::Tag*>();
-                } else {
-                    self[index] = *makeNativeTag(obj);
-                }
+                self[index] = *makeNativeTag(obj);
             },
             py::arg("index"),
             py::arg("value"),
@@ -271,7 +253,7 @@ void bindCompoundTagVariant(py::module& m) {
                 if (self.is_null()) { self = nbt::ListTag(); }
                 if (self.hold(nbt::Tag::Type::List)) {
                     auto type = self.as<nbt::ListTag>().getElementType();
-                    if (auto tag = makeListTagElement(obj)) {
+                    if (auto tag = makeNativeTag(obj)) {
                         if (type == tag->getType() || type == nbt::Tag::Type::End) {
                             self.push_back(*tag);
                         } else {
@@ -295,15 +277,7 @@ void bindCompoundTagVariant(py::module& m) {
         )
         .def(
             "assign",
-            [](nbt::CompoundTagVariant& self, py::object const& obj) {
-                if (py::isinstance<nbt::CompoundTagVariant>(obj)) {
-                    self = *obj.cast<nbt::CompoundTagVariant*>();
-                } else if (py::isinstance<nbt::Tag>(obj)) {
-                    self = nbt::CompoundTagVariant(*obj.cast<nbt::Tag*>());
-                } else {
-                    self = makeNativeTag(obj);
-                }
-            },
+            [](nbt::CompoundTagVariant& self, py::object const& obj) { self = makeNativeTag(obj); },
             py::arg("value"),
             "Assign value"
         )
@@ -384,7 +358,7 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "get_long",
             [](nbt::CompoundTagVariant& self) -> int64_t {
-                if (!self.hold(nbt::Tag::Type::Long)) { throw py::type_error("tag not hold an LongTag"); }
+                if (!self.hold(nbt::Tag::Type::Long)) { throw py::type_error("tag not hold a LongTag"); }
                 return self.as<nbt::LongTag>().storage();
             },
             "Get the int64 value\nThrow TypeError if wrong type"
@@ -444,7 +418,7 @@ void bindCompoundTagVariant(py::module& m) {
             [](nbt::CompoundTagVariant& self) -> py::list {
                 if (!self.hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold a ListTag"); }
                 py::list result;
-                for (auto& tag : self.as<nbt::ListTag>()) { result.append(py::cast(nbt::CompoundTagVariant(*tag))); }
+                for (auto& tag : self.as<nbt::ListTag>()) { result.append(py::cast(tag)); }
                 return result;
             },
             "Get the ListTag as a list value\nThrow TypeError if wrong type"
@@ -466,6 +440,19 @@ void bindCompoundTagVariant(py::module& m) {
             "Get the long array value\nThrow TypeError if wrong type"
         )
 
+        .def(
+            "write",
+            [](nbt::CompoundTagVariant& self, bstream::BinaryStream& stream) { self.write(stream); },
+            py::arg("stream"),
+            "Write tag to a binary stream"
+        )
+        .def(
+            "load",
+            [](nbt::CompoundTagVariant& self, bstream::ReadOnlyBinaryStream& stream) { self.load(stream); },
+            py::arg("stream"),
+            "Load tag value from a binary stream"
+        )
+
         .def_property(
             "value",
             [](nbt::CompoundTagVariant& self) -> py::object {
@@ -478,7 +465,7 @@ void bindCompoundTagVariant(py::module& m) {
                             return static_cast<py::object>(result);
                         } else if constexpr (std::is_same_v<T, nbt::ListTag>) {
                             py::list result;
-                            for (auto& tag : value) { result.append(py::cast(nbt::CompoundTagVariant(*tag))); }
+                            for (auto& tag : value) { result.append(py::cast(tag)); }
                             return static_cast<py::object>(result);
                         } else if constexpr (std::is_same_v<T, nbt::StringTag>) {
                             return static_cast<py::object>(to_pybytes(value.storage()));
@@ -501,20 +488,20 @@ void bindCompoundTagVariant(py::module& m) {
                                 if (py::isinstance<py::int_>(value)) {
                                     val.storage() = to_cpp_int<T>(value, tagName);
                                 } else {
-                                    throw py::value_error(std::format("Value for {} must be a int", tagName));
+                                    throw py::value_error(std::format("Value of {} must be a int", tagName));
                                 }
                             } else if constexpr (std::is_floating_point_v<T>) {
                                 if (py::isinstance<py::float_>(value)) {
                                     val.storage() = static_cast<T>(value.cast<double>());
                                 } else {
-                                    throw py::value_error(std::format("Value for {} must be a float", tagName));
+                                    throw py::value_error(std::format("Value of {} must be a float", tagName));
                                 }
                             } else if constexpr (std::is_same_v<T, std::string>) {
                                 if (py::isinstance<py::bytes>(value) || py::isinstance<py::bytearray>(value)
                                     || py::isinstance<py::str>(value)) {
                                     val.storage() = value.cast<std::string>();
                                 } else {
-                                    throw py::value_error("Value for StringTag must be a str, bytes or bytearray");
+                                    throw py::value_error("Value of StringTag must be a str, bytes or bytearray");
                                 }
                             } else if constexpr (std::is_same_v<std::decay_t<decltype(val)>, nbt::ListTag>) {
                                 if (py::isinstance<py::list>(value)) {
@@ -522,7 +509,7 @@ void bindCompoundTagVariant(py::module& m) {
                                     auto tag  = nbt::ListTag();
                                     for (auto t : list) {
                                         auto& e = static_cast<py::object&>(t);
-                                        if (auto ele = makeListTagElement(e)) {
+                                        if (auto ele = makeNativeTag(e)) {
                                             auto type = tag.getElementType();
                                             if (type == ele->getType() || type == nbt::Tag::Type::End) {
                                                 tag.push_back(*ele);
@@ -530,28 +517,28 @@ void bindCompoundTagVariant(py::module& m) {
                                                 throw py::value_error(
                                                     std::format(
                                                         "New tag type must be same as the original element type in the "
-                                                        "ListTag , expected type: TagType.{}",
+                                                        "ListTag, expected type: TagType.{}",
                                                         magic_enum::enum_name(type)
                                                     )
                                                 );
                                             }
                                         } else {
-                                            throw py::value_error("Invalid element for ListTag");
+                                            throw py::value_error("Invalid element of ListTag");
                                         }
                                     }
                                     val = std::move(tag);
                                 } else {
-                                    throw py::value_error("Value for ListTag must be a List[Any]");
+                                    throw py::value_error("Value of ListTag must be a List[Any]");
                                 }
                             } else {
                                 try {
                                     val.storage() = value.cast<T>();
                                 } catch (...) {
-                                    throw py::value_error(std::format("Value for {} must be a List[int]", tagName));
+                                    throw py::value_error(std::format("Value of {} must be a List[int]", tagName));
                                 }
                             }
                         } else if constexpr (std::is_same_v<std::decay_t<decltype(val)>, nbt::EndTag>) {
-                            throw py::value_error("Value of EndTag is always None");
+                            self = makeNativeTag(value);
                         } else if constexpr (std::is_same_v<std::decay_t<decltype(val)>, nbt::CompoundTag>) {
                             if (py::isinstance<py::dict>(value)) {
                                 auto dict = value.cast<py::dict>();
@@ -559,17 +546,11 @@ void bindCompoundTagVariant(py::module& m) {
                                 for (auto [k, v] : dict) {
                                     auto  key = py::cast<std::string>(k);
                                     auto& ele = static_cast<py::object&>(v);
-                                    if (py::isinstance<nbt::CompoundTagVariant>(ele)) {
-                                        tag[key] = *ele.cast<nbt::CompoundTagVariant*>();
-                                    } else if (py::isinstance<nbt::Tag>(ele)) {
-                                        tag.put(key, ele.cast<nbt::Tag*>()->copy());
-                                    } else {
-                                        tag.put(key, makeNativeTag(ele));
-                                    }
+                                    tag.set(key, makeNativeTag(ele));
                                 }
                                 val = std::move(tag);
                             } else {
-                                throw py::value_error("Value for CompoundTag must be a Dict[str, Any]");
+                                throw py::value_error("Value of CompoundTag must be a Dict[str, Any]");
                             }
                         }
                     },
@@ -610,6 +591,7 @@ void bindCompoundTagVariant(py::module& m) {
             "Check if this tag equals another tag"
         )
         .def("__len__", &nbt::CompoundTagVariant::size, "Get the size of the tag")
+        .def("__hash__", &nbt::CompoundTagVariant::hash, "Get the hash of the tag")
         .def(
             "__str__",
             [](nbt::CompoundTagVariant const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },

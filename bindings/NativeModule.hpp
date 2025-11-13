@@ -48,7 +48,6 @@ inline T to_cpp_int(py::int_ value, std::string_view typeName) {
 }
 
 std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj);
-std::unique_ptr<nbt::Tag> makeListTagElement(py::object const& element);
 
 void bindEnums(py::module& m);
 void bindCompoundTagVariant(py::module& m);
