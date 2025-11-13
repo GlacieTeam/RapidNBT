@@ -5,7 +5,8 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from typing import overload, List, Union
+from collections.abc import Buffer
+from typing import overload, List
 from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
@@ -46,6 +47,12 @@ class ByteArrayTag(Tag):
         Construct from a list of bytes (e.g., [1, 2, 3])
         """
 
+    @overload
+    def __init__(self, buf: Buffer) -> None:
+        """
+        Construct from a buffer type
+        """
+
     def __iter__(self) -> List[int]:
         """
         Iterate over bytes in the array
@@ -76,7 +83,7 @@ class ByteArrayTag(Tag):
         Add a byte to the end of the array
         """
 
-    def assign(self, bytes: Union[bytes, bytearray]) -> ByteArrayTag:
+    def assign(self, bytes: Buffer) -> ByteArrayTag:
         """
         Assign new binary data from a list of bytes
         """
@@ -150,7 +157,7 @@ class ByteArrayTag(Tag):
         """
 
     @value.setter
-    def value(self, value: Union[bytes, bytearray]) -> None:
+    def value(self, value: Buffer) -> None:
         """
         Access the byte array as a list of integers (0-255)
         """

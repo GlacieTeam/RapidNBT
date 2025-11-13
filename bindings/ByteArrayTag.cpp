@@ -19,6 +19,13 @@ void bindByteArrayTag(py::module& m) {
             py::arg("arr"),
             "Construct from a list of bytes (e.g., [1, 2, 3])"
         )
+        .def(
+            py::init([](py::buffer buf) {
+                return std::make_unique<nbt::ByteArrayTag>(to_cppstringview(std::move(buf)));
+            }),
+            py::arg("buf"),
+            "Construct from a buffer type"
+        )
 
         .def("get_type", &nbt::ByteArrayTag::getType, "Get the NBT type ID (ByteArray)")
         .def(

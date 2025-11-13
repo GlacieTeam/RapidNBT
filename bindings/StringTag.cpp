@@ -70,7 +70,7 @@ void bindStringTag(py::module& m) {
                     value
                 );
             },
-            "Access the original string content of this tag"
+            "Access the original bytes of this tag"
         )
 
         .def(

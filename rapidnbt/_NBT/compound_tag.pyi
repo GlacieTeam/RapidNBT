@@ -5,7 +5,8 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from typing import overload, List, Dict, Union, Optional, Any
+from collections.abc import Buffer
+from typing import overload, List, Dict, Optional, Any
 from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
@@ -28,7 +29,7 @@ class CompoundTag(Tag):
 
     @staticmethod
     def from_binary_nbt(
-        binary_data: Union[bytes, bytearray],
+        binary_data: Buffer,
         little_endian: bool = True,
         header: bool = False,
     ) -> Optional[CompoundTag]:
@@ -38,7 +39,7 @@ class CompoundTag(Tag):
 
     @staticmethod
     def from_network_nbt(
-        binary_data: Union[bytes, bytearray],
+        binary_data: Buffer,
     ) -> Optional[CompoundTag]:
         """
         Deserialize from Network NBT format
@@ -355,7 +356,7 @@ class CompoundTag(Tag):
         Put a byte (uint8) value
         """
 
-    def put_byte_array(self, key: str, value: Union[bytes, bytearray]) -> None:
+    def put_byte_array(self, key: str, value: Buffer) -> None:
         """
         Put a byte array (list of uint8)
         """
@@ -425,7 +426,7 @@ class CompoundTag(Tag):
         Set a byte (uint8) value
         """
 
-    def set_byte_array(self, key: str, value: Union[bytes, bytearray]) -> None:
+    def set_byte_array(self, key: str, value: Buffer) -> None:
         """
         Set a byte array (list of uint8)
         """

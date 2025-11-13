@@ -6,7 +6,8 @@
 # SPDX-License-Identifier: MPL-2.0
 
 import os
-from typing import Union, Optional
+from collections.abc import Buffer
+from typing import Optional
 from rapidnbt._NBT.compound_tag import CompoundTag
 from rapidnbt._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
 from rapidnbt._NBT.nbt_file_format import NbtFileFormat
@@ -15,7 +16,7 @@ from rapidnbt._NBT.nbt_compression_type import NbtCompressionType
 from rapidnbt._NBT.nbt_file import NbtFile
 
 def detect_content_format(
-    content: Union[bytes, bytearray], strict_match_size: bool = True
+    content: Buffer, strict_match_size: bool = True
 ) -> Optional[NbtFileFormat]:
     """
     Detect NBT format from binary content
@@ -46,7 +47,7 @@ def detect_file_format(
     """
 
 def detect_content_compression_type(
-    content: Union[bytes, bytearray],
+    content: Buffer,
 ) -> NbtCompressionType:
     """
     Detect NBT format from binary content
@@ -206,7 +207,7 @@ def load_snbt(path: os.PathLike) -> Optional[CompoundTag]:
     """
 
 def loads(
-    content: Union[bytes, bytearray],
+    content: Buffer,
     format: Optional[NbtFileFormat] = None,
     strict_match_size: bool = True,
 ) -> Optional[CompoundTag]:
@@ -264,7 +265,7 @@ def open(path: os.PathLike) -> Optional[NbtFile]:
     """
 
 def validate_content(
-    content: Union[bytes, bytearray],
+    content: Buffer,
     format: NbtFileFormat = NbtFileFormat.LITTLE_ENDIAN,
     strict_match_size: bool = True,
 ) -> bool:

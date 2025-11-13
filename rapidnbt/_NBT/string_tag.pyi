@@ -5,7 +5,8 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from typing import overload, Union
+from collections.abc import Buffer
+from typing import overload
 from rapidnbt._NBT.tag import Tag
 from rapidnbt._NBT.tag_type import TagType
 
@@ -42,7 +43,7 @@ class StringTag(Tag):
         """
 
     @overload
-    def __init__(self, str: Union[bytes, bytearray]) -> None:
+    def __init__(self, str: Buffer) -> None:
         """
         Construct from a Python bytes / bytearray
         """
@@ -110,11 +111,11 @@ class StringTag(Tag):
     @property
     def value(self) -> bytes:
         """
-        Access the original string content of this tag
+        Access the original bytes of this tag
         """
 
     @value.setter
-    def value(self, value: Union[bytes, bytearray, str]) -> None:
+    def value(self, value: Buffer) -> None:
         """
-        Access the original string content of this tag
+        Access the original bytes of this tag
         """
