@@ -91,7 +91,6 @@ void bindCompoundTag(py::module& m) {
         .def("get_type", &nbt::CompoundTag::getType, "Get the NBT type ID (Compound)")
         .def("equals", &nbt::CompoundTag::equals, py::arg("other"), "Check if this tag equals another tag")
         .def("copy", &nbt::CompoundTag::copy, "Create a deep copy of this tag")
-        .def("clone", &nbt::CompoundTag::clone, "Create a deep copy of this compound tag")
         .def("hash", &nbt::CompoundTag::hash, "Compute hash value of this tag")
 
         .def(

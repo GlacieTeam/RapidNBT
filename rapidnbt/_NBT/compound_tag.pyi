@@ -124,11 +124,6 @@ class CompoundTag(Tag):
         Remove all elements from the compound
         """
 
-    def clone(self) -> CompoundTag:
-        """
-        Create a deep copy of this compound tag
-        """
-
     @overload
     def contains(self, key: str) -> bool:
         """

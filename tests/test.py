@@ -44,14 +44,14 @@ def test1():
     nbt["long_array_tag"] = IntTag(2)
     print(
         nbt.to_snbt(
-            format=SnbtFormat.Default | SnbtFormat.MarkAllTypes | SnbtFormat.MarkSigned,
+            format=SnbtFormat.Default | SnbtFormat.MarkAllTags | SnbtFormat.MarkSigned,
             number_format=SnbtNumberFormat.UpperHexadecimal,
         )
     )
     print(f'{nbt["test"]["double_tag"]}')
     print(f'{nbt["not_exist"]["not_exist"]}')
     print(f'{nbt["compound_tag"]}')
-    print(f'{nbt["list_tag"][0]}')
+    print(f'{nbt["list_tag"].value}')
 
 
 def test2():

@@ -30,7 +30,7 @@ class SnbtFormat(IntFlag):
     ForceUppercase = 64
     MarkIntTag = 128
     MarkDoubleTag = 256
-    MarkAllTypes = 384
+    MarkAllTags = 384
     CommentMarks = 512
     Jsonify = 551
     MarkSigned = 1024

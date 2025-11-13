@@ -20,7 +20,7 @@ class ListTag(Tag):
         Equality operator (==)
         """
 
-    def __getitem__(self, index: int) -> Tag:
+    def __getitem__(self, index: int) -> CompoundTagVariant:
         """
         Get element at specified index
         """
@@ -80,11 +80,6 @@ class ListTag(Tag):
     def copy(self) -> Tag:
         """
         Create a deep copy of this tag
-        """
-
-    def copy_list(self) -> ListTag:
-        """
-        Create a deep copy of this list (same as copy() but returns ListTag)
         """
 
     def empty(self) -> bool:

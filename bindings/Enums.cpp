@@ -56,7 +56,7 @@ void bindEnums(py::module& m) {
             .value("MarkSigned", nbt::SnbtFormat::MarkSigned)
             .value("ArrayLineFeed", nbt::SnbtFormat::ArrayLineFeed)
             .value("AlwaysLineFeed", nbt::SnbtFormat::AlwaysLineFeed)
-            .value("MarkAllTypes", nbt::SnbtFormat::MarkAllTypes)
+            .value("MarkAllTags", nbt::SnbtFormat::MarkAllTags)
             .value("PrettyFilePrint", nbt::SnbtFormat::PrettyFilePrint)
             .value("Classic", nbt::SnbtFormat::Classic)
             .value("Jsonify", nbt::SnbtFormat::Jsonify)

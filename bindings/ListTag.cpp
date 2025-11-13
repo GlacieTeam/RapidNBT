@@ -62,12 +62,6 @@ void bindListTag(py::module& m) {
             "Check if this tag equals another tag (same elements in same order)"
         )
         .def("copy", &nbt::ListTag::copy, "Create a deep copy of this tag")
-        .def(
-            "copy_list",
-            &nbt::ListTag::copyList,
-            "Create a deep copy of this list (same as copy() but returns ListTag)"
-        )
-        .def("hash", &nbt::ListTag::hash, "Compute hash value of this tag")
 
         .def(
             "write",
@@ -108,7 +102,7 @@ void bindListTag(py::module& m) {
 
         .def(
             "__getitem__",
-            [](nbt::ListTag& self, size_t index) -> nbt::Tag& {
+            [](nbt::ListTag& self, size_t index) -> nbt::CompoundTagVariant& {
                 if (index >= self.size()) { throw py::index_error("Index out of range"); }
                 return self[index];
             },
@@ -193,7 +187,7 @@ void bindListTag(py::module& m) {
             "to_list",
             [](nbt::ListTag& self) -> py::list {
                 py::list result;
-                for (auto& tag : self) { result.append(py::cast(nbt::CompoundTagVariant(*tag))); }
+                for (auto& tag : self) { result.append(py::cast(tag)); }
                 return result;
             }
         )
@@ -202,7 +196,7 @@ void bindListTag(py::module& m) {
             "value",
             [](nbt::ListTag& self) -> py::list {
                 py::list result;
-                for (auto& tag : self) { result.append(py::cast(nbt::CompoundTagVariant(*tag))); }
+                for (auto& tag : self) { result.append(py::cast(tag)); }
                 return result;
             },
             [](nbt::ListTag& self, py::list const& value) {
