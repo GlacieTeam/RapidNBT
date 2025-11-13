@@ -94,6 +94,16 @@ void bindStringTag(py::module& m) {
             "Get character at specified position"
         )
         .def(
+            "__setitem__",
+            [](nbt::StringTag& self, size_t index, char character) {
+                if (index >= self.storage().size()) { throw py::index_error("Index out of range"); }
+                self.storage()[index] = character;
+            },
+            py::arg("index"),
+            py::arg("character"),
+            "Set character at specified position"
+        )
+        .def(
             "__eq__",
             [](nbt::StringTag const& self, const nbt::StringTag& other) { return self.equals(other); },
             py::arg("other"),

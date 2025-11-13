@@ -578,7 +578,7 @@ void bindCompoundTag(py::module& m) {
                 if (!self.at(key).hold(nbt::Tag::Type::ByteArray)) {
                     throw py::type_error("tag not hold a ByteArrayTag");
                 }
-                return to_pybytes(static_cast<std::string_view>(self.at(key).as<nbt::ByteArrayTag>()));
+                return to_pybytes(self.at(key).as<nbt::ByteArrayTag>());
             },
             py::arg("key"),
             "Get byte array\nThrow KeyError if not found or TypeError if wrong type"

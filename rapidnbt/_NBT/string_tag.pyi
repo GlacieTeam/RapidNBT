@@ -58,6 +58,11 @@ class StringTag(Tag):
         Official representation with quoted content
         """
 
+    def __setitem__(self, index: int, character: str) -> None:
+        """
+        Set character at specified position
+        """
+
     def __str__(self) -> str:
         """
         String representation (SNBT minimized format)
