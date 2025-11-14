@@ -22,8 +22,8 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
         return std::make_unique<nbt::StringTag>(obj.cast<std::string>());
     } else if (py::isinstance<py::float_>(obj)) {
         return std::make_unique<nbt::FloatTag>(obj.cast<float>());
-    } else if (py::isinstance<py::bytes>(obj) || py::isinstance<py::bytearray>(obj)) {
-        return std::make_unique<nbt::ByteArrayTag>(nbt::ByteArrayTag(obj.cast<std::string>()));
+    } else if (py::isinstance<py::buffer>(obj)) {
+        return std::make_unique<nbt::ByteArrayTag>(nbt::ByteArrayTag(to_cpp_stringview(obj)));
     } else if (py::isinstance<py::dict>(obj)) {
         auto dict = obj.cast<py::dict>();
         auto tag  = std::make_unique<nbt::CompoundTag>();
