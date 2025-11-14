@@ -21,10 +21,10 @@ pip install rapidnbt
 
 | NBT Format                        | Minecraft Edition      | Support Status     |
 | --------------------------------- | ---------------------- | ------------------ |
-| Little Endian Binary              | Bedrock Edition        | :white_check_mark: |
-| Little Endian Binary with Header  | Bedrock Edition        | :white_check_mark: |
-| Big Endian Binary                 | Java Edition           | :white_check_mark: |
-| Big Endian Binary with Header     | Java Edition           | :white_check_mark: |
+| Little Endian                     | Bedrock Edition        | :white_check_mark: |
+| Little Endian with Header         | Bedrock Edition        | :white_check_mark: |
+| Big Endian                        | Java Edition           | :white_check_mark: |
+| Big Endian with Header            | Java Edition           | :white_check_mark: |
 | Bedrock Network (VarInt Encoding) | Bedrock Edition        | :white_check_mark: |
 | Formatted String (SNBT)           | Bedrock & Java Edition | :white_check_mark: |
 

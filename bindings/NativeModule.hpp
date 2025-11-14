@@ -26,13 +26,13 @@ constexpr auto ADDRESS_LENGTH = 2 * sizeof(uintptr_t);
 
 inline py::bytes to_py_bytes(std::string_view sv) { return py::bytes(sv.data(), sv.size()); }
 
-inline std::string_view to_cpp_stringview(py::buffer buf) {
+inline std::string_view to_cpp_stringview(py::buffer const& buf) {
     py::buffer_info info = buf.request();
     return std::string_view(static_cast<const char*>(info.ptr), info.size);
 }
 
 template <std::integral T>
-inline T to_cpp_int(py::int_ value, std::string_view typeName) {
+inline T to_cpp_int(py::int_ const& value, std::string_view typeName) {
     using UT = std::make_unsigned<T>::type;
     using ST = std::make_signed<T>::type;
     if (value >= py::int_(0)) {

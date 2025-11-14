@@ -62,13 +62,13 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
     }
     auto ctypes = py::module::import("ctypes");
     if (py::isinstance(obj, ctypes.attr("c_int8")) || py::isinstance(obj, ctypes.attr("c_uint8"))) {
-        return std::make_unique<nbt::ByteTag>(obj.attr("value").cast<uint8_t>());
+        return std::make_unique<nbt::ByteTag>(to_cpp_int<uint8_t>(obj.attr("value").cast<py::int_>(), "ByteTag"));
     } else if (py::isinstance(obj, ctypes.attr("c_int16")) || py::isinstance(obj, ctypes.attr("c_uint16"))) {
-        return std::make_unique<nbt::ShortTag>(obj.attr("value").cast<short>());
+        return std::make_unique<nbt::ShortTag>(to_cpp_int<short>(obj.attr("value").cast<py::int_>(), "ShortTag"));
     } else if (py::isinstance(obj, ctypes.attr("c_int32")) || py::isinstance(obj, ctypes.attr("c_uint32"))) {
-        return std::make_unique<nbt::IntTag>(obj.attr("value").cast<int>());
+        return std::make_unique<nbt::IntTag>(to_cpp_int<int>(obj.attr("value").cast<py::int_>(), "IntTag"));
     } else if (py::isinstance(obj, ctypes.attr("c_int64")) || py::isinstance(obj, ctypes.attr("c_uint64"))) {
-        return std::make_unique<nbt::LongTag>(obj.attr("value").cast<int64_t>());
+        return std::make_unique<nbt::LongTag>(to_cpp_int<int64_t>(obj.attr("value").cast<py::int_>(), "LongTag"));
     } else if (py::isinstance(obj, ctypes.attr("c_float"))) {
         return std::make_unique<nbt::FloatTag>(obj.attr("value").cast<float>());
     } else if (py::isinstance(obj, ctypes.attr("c_double"))) {
@@ -181,7 +181,7 @@ void bindCompoundTagVariant(py::module& m) {
         )
         .def(
             "__getitem__",
-            [](nbt::CompoundTagVariant& self, size_t index) -> nbt::Tag& { return self[index]; },
+            [](nbt::CompoundTagVariant& self, size_t index) -> nbt::CompoundTagVariant& { return self[index]; },
             py::arg("index"),
             py::return_value_policy::reference_internal,
             "Get value by object key"
@@ -208,7 +208,7 @@ void bindCompoundTagVariant(py::module& m) {
         .def(
             "__setitem__",
             [](nbt::CompoundTagVariant& self, size_t index, py::object const& obj) {
-                self[index] = *makeNativeTag(obj);
+                self[index] = makeNativeTag(obj);
             },
             py::arg("index"),
             py::arg("value"),

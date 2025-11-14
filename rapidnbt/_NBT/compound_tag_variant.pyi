@@ -28,14 +28,16 @@ class CompoundTagVariant:
 
     def __eq__(self, other: CompoundTagVariant) -> bool:
         """
-        Check if this tag equals another tag"""
+        Check if this tag equals another tag
+        """
 
     def __float__(self) -> float:
         """
-        Implicitly convert to float"""
+        Implicitly convert to float
+        """
 
     @overload
-    def __getitem__(self, index: int) -> Tag:
+    def __getitem__(self, index: int) -> CompoundTagVariant:
         """
         Get value by object key
         """
