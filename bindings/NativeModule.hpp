@@ -12,6 +12,7 @@
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
 #include <pybind11/native_enum.h>
+#include <pybind11/numpy.h>
 #include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -53,6 +54,18 @@ inline T to_cpp_int(py::int_ value, std::string_view typeName) {
             std::numeric_limits<UT>::max()
         )
     );
+}
+
+inline std::string py_type_name(py::object const& obj) {
+    auto typeName   = py::type::handle_of(obj).attr("__name__").cast<std::string>();
+    auto typeModule = py::type::handle_of(obj).attr("__module__").cast<std::string>();
+    if (typeModule.starts_with("rapidnbt._NBT")) {
+        typeModule = "rapidnbt";
+    } else if (typeModule == "builtins") {
+        typeModule.clear();
+    }
+    if (!typeModule.empty()) { typeName = std::format("{}.{}", typeModule, typeName); }
+    return typeName;
 }
 
 std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj);

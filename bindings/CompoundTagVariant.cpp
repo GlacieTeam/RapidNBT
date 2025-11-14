@@ -22,7 +22,7 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
         return std::make_unique<nbt::StringTag>(obj.cast<std::string>());
     } else if (py::isinstance<py::float_>(obj)) {
         return std::make_unique<nbt::FloatTag>(obj.cast<float>());
-    } else if (py::isinstance<py::buffer>(obj)) {
+    } else if (py::isinstance<py::bytes>(obj) || py::isinstance<py::bytearray>(obj)) {
         return std::make_unique<nbt::ByteArrayTag>(nbt::ByteArrayTag(to_cpp_stringview(obj)));
     } else if (py::isinstance<py::dict>(obj)) {
         auto dict = obj.cast<py::dict>();
@@ -33,8 +33,8 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
             tag->set(key, makeNativeTag(value));
         }
         return tag;
-    } else if (py::isinstance<py::list>(obj)) {
-        auto list = obj.cast<py::list>();
+    } else if (py::isinstance<py::list>(obj) || py::isinstance<py::tuple>(obj) || py::isinstance<py::array>(obj)) {
+        auto list = obj.cast<std::vector<py::object>>();
         auto tag  = std::make_unique<nbt::ListTag>();
         for (auto t : list) {
             auto& value = static_cast<py::object&>(t);
@@ -45,8 +45,9 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
                 } else {
                     throw py::value_error(
                         std::format(
-                            "Value for ListTag requires values in the list can convert to a same tag type, "
-                            "expected type: TagType.{}",
+                            "Value for ListTag[{1}] requires values in the list can be converted to a same tag type, "
+                            "received type: {0}, expected types can be converted to {1}Tag",
+                            py_type_name(value),
                             magic_enum::enum_name(type)
                         )
                     );
@@ -73,11 +74,9 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
     } else if (py::isinstance(obj, ctypes.attr("c_double"))) {
         return std::make_unique<nbt::DoubleTag>(obj.attr("value").cast<double>());
     }
-    auto typeName   = py::type::handle_of(obj).attr("__name__").cast<std::string>();
-    auto typeModule = py::type::handle_of(obj).attr("__module__").cast<std::string>();
-    if (typeModule.starts_with("rapidnbt._NBT")) { typeModule = "rapidnbt"; }
-    if (!typeModule.empty()) { typeName = std::format("{}.{}", typeModule, typeName); }
-    throw py::type_error(std::format("Invalid tag type: couldn't convert {} instance to any tag type", typeName));
+    throw py::type_error(
+        std::format("Invalid tag type: couldn't convert {} instance to any tag type", py_type_name(obj))
+    );
 }
 
 void bindCompoundTagVariant(py::module& m) {
@@ -257,8 +256,9 @@ void bindCompoundTagVariant(py::module& m) {
                         } else {
                             throw py::value_error(
                                 std::format(
-                                    "New tag type must be same as the original element type in the ListTag, expected "
-                                    "type: TagType.{}",
+                                    "New tag type must be same as the original element type in the ListTag[{1}], "
+                                    "received type: {0}, expected types can be converted to {1}Tag",
+                                    py_type_name(obj),
                                     magic_enum::enum_name(type)
                                 )
                             );
@@ -486,7 +486,7 @@ void bindCompoundTagVariant(py::module& m) {
                                 if (py::isinstance<py::int_>(value)) {
                                     val.storage() = to_cpp_int<T>(value, tagName);
                                 } else {
-                                    throw py::value_error(std::format("Value of {} must be a int", tagName));
+                                    throw py::value_error(std::format("Value of {} must be an int", tagName));
                                 }
                             } else if constexpr (std::is_floating_point_v<T>) {
                                 if (py::isinstance<py::float_>(value)) {
@@ -515,7 +515,9 @@ void bindCompoundTagVariant(py::module& m) {
                                                 throw py::value_error(
                                                     std::format(
                                                         "New tag type must be same as the original element type in the "
-                                                        "ListTag, expected type: TagType.{}",
+                                                        "ListTag[{1}], received type: {0}, expected types can be "
+                                                        "converted to {1}Tag",
+                                                        py_type_name(e),
                                                         magic_enum::enum_name(type)
                                                     )
                                                 );

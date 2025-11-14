@@ -26,8 +26,9 @@ void bindListTag(py::module& m) {
                         } else {
                             throw py::value_error(
                                 std::format(
-                                    "Value for ListTag requires values in the list can convert to a same tag type, "
-                                    "expected type: TagType.{}",
+                                    "Value for ListTag[{1}] requires values in the list can be converted to a same tag "
+                                    "type, received type: {0}, expected types can be converted to {1}Tag",
+                                    py_type_name(value),
                                     magic_enum::enum_name(type)
                                 )
                             );
@@ -74,8 +75,9 @@ void bindListTag(py::module& m) {
                     } else {
                         throw py::value_error(
                             std::format(
-                                "New tag type must be same as the original element type in the ListTag, expected type: "
-                                "TagType.{}",
+                                "New tag type must be same as the original element type in the ListTag[{1}], "
+                                "received type: {0}, expected types can be converted to {1}Tag",
+                                py_type_name(element),
                                 magic_enum::enum_name(type)
                             )
                         );
@@ -151,8 +153,9 @@ void bindListTag(py::module& m) {
                     } else {
                         throw py::value_error(
                             std::format(
-                                "New tag type must be same as the original element type in the ListTag, expected type: "
-                                "TagType.{}",
+                                "New tag type must be same as the original element type in the ListTag[{1}], "
+                                "received type: {0}, expected types can be converted to {1}Tag",
+                                py_type_name(element),
                                 magic_enum::enum_name(type)
                             )
                         );
@@ -192,8 +195,9 @@ void bindListTag(py::module& m) {
                         } else {
                             throw py::value_error(
                                 std::format(
-                                    "Value for ListTag requires values in the list can convert to a same tag type, "
-                                    "expected type: TagType.{}",
+                                    "Value for ListTag[{1}] requires values in the list can be converted to a same tag "
+                                    "type, received type: {0}, expected types can be converted to {1}Tag",
+                                    py_type_name(val),
                                     magic_enum::enum_name(type)
                                 )
                             );
