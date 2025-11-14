@@ -173,16 +173,16 @@ void bindCompoundTag(py::module& m) {
 
         .def(
             "to_network_nbt",
-            [](nbt::CompoundTag const& self) { return to_pybytes(self.toNetworkNbt()); },
+            [](nbt::CompoundTag const& self) { return to_py_bytes(self.toNetworkNbt()); },
             "Serialize to Network NBT format (used in Minecraft networking)"
         )
         .def(
             "to_binary_nbt",
             [](nbt::CompoundTag const& self, bool little_endian, bool header) {
                 if (header) {
-                    return to_pybytes(self.toBinaryNbtWithHeader(little_endian));
+                    return to_py_bytes(self.toBinaryNbtWithHeader(little_endian));
                 } else {
-                    return to_pybytes(self.toBinaryNbt(little_endian));
+                    return to_py_bytes(self.toBinaryNbt(little_endian));
                 }
             },
             py::arg("little_endian") = true,
@@ -245,7 +245,7 @@ void bindCompoundTag(py::module& m) {
 
         .def_static(
             "from_network_nbt",
-            [](py::buffer value) { return nbt::CompoundTag::fromNetworkNbt(to_cppstringview(value)); },
+            [](py::buffer value) { return nbt::CompoundTag::fromNetworkNbt(to_cpp_stringview(value)); },
             py::arg("binary_data"),
             "Deserialize from Network NBT format"
         )
@@ -253,9 +253,9 @@ void bindCompoundTag(py::module& m) {
             "from_binary_nbt",
             [](py::buffer value, bool little_endian, bool header) {
                 if (header) {
-                    return nbt::CompoundTag::fromBinaryNbtWithHeader(to_cppstringview(value), little_endian);
+                    return nbt::CompoundTag::fromBinaryNbtWithHeader(to_cpp_stringview(value), little_endian);
                 } else {
-                    return nbt::CompoundTag::fromBinaryNbt(to_cppstringview(value), little_endian);
+                    return nbt::CompoundTag::fromBinaryNbt(to_cpp_stringview(value), little_endian);
                 }
             },
             py::arg("binary_data"),

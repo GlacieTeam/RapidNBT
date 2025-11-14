@@ -16,7 +16,7 @@ void bindStringTag(py::module& m) {
         .def(py::init<>(), "Construct an empty StringTag")
         .def(py::init<std::string>(), py::arg("str"), "Construct from a Python string")
         .def(
-            py::init([](py::buffer buffer) { return std::make_unique<nbt::StringTag>(to_cppstringview(buffer)); }),
+            py::init([](py::buffer buffer) { return std::make_unique<nbt::StringTag>(to_cpp_stringview(buffer)); }),
             py::arg("str"),
             "Construct from a Python bytes / bytearray"
         )
@@ -62,7 +62,7 @@ void bindStringTag(py::module& m) {
                 std::visit(
                     [&](auto&& val) {
                         if constexpr (std::is_same_v<std::decay_t<decltype(val)>, py::buffer>) {
-                            self.storage() = to_cppstringview(val);
+                            self.storage() = to_cpp_stringview(val);
                         } else {
                             self.storage() = val.template cast<std::string>();
                         }

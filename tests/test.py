@@ -18,6 +18,7 @@ from rapidnbt import (
     ShortTag,
     SnbtFormat,
     SnbtNumberFormat,
+    LongTag,
 )
 
 
@@ -25,14 +26,14 @@ def test1():
     nbt = CompoundTag(
         {
             "string_tag": "测试（非ASCII）",
-            "byte_tag": ctypes.c_ubyte(114),
+            "byte_tag": ctypes.c_uint8(114),
             "bool_tag": False,
-            "short_tag": ctypes.c_int16(65536),
+            "short_tag": ShortTag(65535),
             "int_tag": 114514,
             "test_list": ["237892", "homo", "114514"],
         }
     )
-    nbt["test"]["long_tag"] = ctypes.c_int64(1145141919810)
+    nbt["test"]["long_tag"] = LongTag(1145141919810)
     nbt["test"]["float_tag"] = 114.514
     nbt["test"]["double_tag"] = ctypes.c_double(3.1415926535897)
     nbt["byte_array_tag"] = b"13276273923"

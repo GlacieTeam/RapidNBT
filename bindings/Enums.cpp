@@ -105,7 +105,7 @@ void bindEnums(py::module& m) {
         py::native_enum<nbt::NbtCompressionLevel>(
             sm,
             "NbtCompressionLevel",
-            "enum.Enum",
+            "enum.IntEnum",
             "Enumeration of compression levels"
         )
             .value("DEFAULT", nbt::NbtCompressionLevel::Default)

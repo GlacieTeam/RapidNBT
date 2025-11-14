@@ -14,7 +14,7 @@ void bindNbtIO(py::module& m) {
         .def(
             "detect_content_format",
             [](py::buffer buffer, bool strict_match_size) {
-                return nbt::io::detectContentFormat(to_cppstringview(buffer), strict_match_size);
+                return nbt::io::detectContentFormat(to_cpp_stringview(buffer), strict_match_size);
             },
             py::arg("content"),
             py::arg("strict_match_size") = true,
@@ -43,7 +43,7 @@ void bindNbtIO(py::module& m) {
         .def(
             "detect_content_compression_type",
             [](py::buffer buffer) -> nbt::NbtCompressionType {
-                return nbt::io::detectContentCompressionType(to_cppstringview(buffer));
+                return nbt::io::detectContentCompressionType(to_cpp_stringview(buffer));
             },
             py::arg("content"),
             "Detect NBT compression type from binary content",
@@ -68,7 +68,7 @@ void bindNbtIO(py::module& m) {
         .def(
             "loads",
             [](py::buffer buffer, std::optional<nbt::NbtFileFormat> format, bool strict_match_size) {
-                return nbt::io::parseFromContent(to_cppstringview(buffer), format, strict_match_size);
+                return nbt::io::parseFromContent(to_cpp_stringview(buffer), format, strict_match_size);
             },
             py::arg("content"),
             py::arg("format")            = std::nullopt,
@@ -104,7 +104,7 @@ void bindNbtIO(py::module& m) {
                nbt::NbtCompressionType  compressionType,
                nbt::NbtCompressionLevel compressionLevel,
                std::optional<int>       headerVersion) {
-                return to_pybytes(nbt::io::saveAsBinary(nbt, format, compressionType, compressionLevel, headerVersion));
+                return to_py_bytes(nbt::io::saveAsBinary(nbt, format, compressionType, compressionLevel, headerVersion));
             },
             py::arg("nbt"),
             py::arg("format")            = nbt::NbtFileFormat::LittleEndian,
@@ -198,7 +198,7 @@ void bindNbtIO(py::module& m) {
         .def(
             "validate_content",
             [](py::buffer buffer, nbt::NbtFileFormat format, bool strict_match_size) {
-                return nbt::io::validateContent(to_cppstringview(buffer), format, strict_match_size);
+                return nbt::io::validateContent(to_cpp_stringview(buffer), format, strict_match_size);
             },
             py::arg("content"),
             py::arg("format")            = nbt::NbtFileFormat::LittleEndian,

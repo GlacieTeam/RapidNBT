@@ -21,7 +21,7 @@ void bindByteArrayTag(py::module& m) {
         )
         .def(
             py::init([](py::buffer buf) {
-                return std::make_unique<nbt::ByteArrayTag>(to_cppstringview(std::move(buf)));
+                return std::make_unique<nbt::ByteArrayTag>(to_cpp_stringview(std::move(buf)));
             }),
             py::arg("buf"),
             "Construct from a buffer type"
@@ -52,8 +52,8 @@ void bindByteArrayTag(py::module& m) {
 
         .def_property(
             "value",
-            [](nbt::ByteArrayTag& self) -> py::bytes { return to_pybytes(static_cast<std::string_view>(self)); },
-            [](nbt::ByteArrayTag& self, py::buffer value) { self = to_cppstringview(value); },
+            [](nbt::ByteArrayTag& self) -> py::bytes { return to_py_bytes(static_cast<std::string_view>(self)); },
+            [](nbt::ByteArrayTag& self, py::buffer value) { self = to_cpp_stringview(value); },
             "Access the byte array as a list of integers (0-255)"
         )
         .def(
@@ -107,7 +107,7 @@ void bindByteArrayTag(py::module& m) {
         .def(
             "assign",
             [](nbt::ByteArrayTag& self, py::buffer value) {
-                self = to_cppstringview(value);
+                self = to_cpp_stringview(value);
                 return self;
             },
             py::arg("bytes"),

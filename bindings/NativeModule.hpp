@@ -23,9 +23,10 @@ namespace rapidnbt {
 
 constexpr auto ADDRESS_LENGTH = 2 * sizeof(uintptr_t);
 
-inline py::bytes        to_pybytes(std::string_view sv) { return py::bytes(sv.data(), sv.size()); }
-inline std::string_view to_cppstringview(py::buffer buffer) {
-    py::buffer_info info = buffer.request();
+inline py::bytes to_py_bytes(std::string_view sv) { return py::bytes(sv.data(), sv.size()); }
+
+inline std::string_view to_cpp_stringview(py::buffer buf) {
+    py::buffer_info info = buf.request();
     return std::string_view(static_cast<const char*>(info.ptr), info.size);
 }
 
@@ -43,7 +44,14 @@ inline T to_cpp_int(py::int_ value, std::string_view typeName) {
         }
     }
     throw py::value_error(
-        std::format("Integer out of range for {0}, value: {1}", typeName, py::str(value).cast<std::string>())
+        std::format(
+            "Integer out of range for {0}, received value: {1}, "
+            "expected value range: {2}(signed min) ~ {3}(unsigned max)",
+            typeName,
+            py::str(value).cast<std::string>(),
+            std::numeric_limits<ST>::min(),
+            std::numeric_limits<UT>::max()
+        )
     );
 }
 

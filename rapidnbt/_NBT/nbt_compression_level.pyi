@@ -5,9 +5,9 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from enum import Enum
+from enum import IntEnum
 
-class NbtCompressionLevel(Enum):
+class NbtCompressionLevel(IntEnum):
     """
     Enumeration of compression levels
     """
