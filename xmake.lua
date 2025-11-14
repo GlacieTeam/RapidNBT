@@ -37,9 +37,14 @@ target("_NBT")
             "/utf-8",
             "/W4",
             "/O2",
-            "/Ob3"
+            "/Ob3",
+            "/GL"
+        )
+        add_shflags(
+            "/LTCG"
         )
     else
+        set_policy("build.optimization.lto", true)
         add_cxflags(
             "-Wall",
             "-pedantic",
@@ -47,9 +52,13 @@ target("_NBT")
             "-fPIC",
             "-O3",
             "-fvisibility=hidden",
-            "-fvisibility-inlines-hidden"
+            "-fvisibility-inlines-hidden",
+            "-flto"
         )
-        add_shflags("-static-libstdc++")
+        add_shflags(
+            "-static-libstdc++",
+            "-flto"
+        )
 
         if is_plat("linux") then 
             add_shflags(
