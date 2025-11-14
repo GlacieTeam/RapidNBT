@@ -49,7 +49,7 @@ inline T to_cpp_int(py::int_ const& value, std::string_view typeName) {
             "Integer out of range for {0}, received value: {1}, "
             "expected value range: {2}(signed min) ~ {3}(unsigned max)",
             typeName,
-            py::str(value).cast<std::string>(),
+            py::str(static_cast<py::object>(value)).cast<std::string>(),
             std::numeric_limits<ST>::min(),
             std::numeric_limits<UT>::max()
         )
