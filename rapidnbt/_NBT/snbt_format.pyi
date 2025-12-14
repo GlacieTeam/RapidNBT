@@ -16,26 +16,26 @@ class SnbtFormat(IntFlag):
     """
 
     Minimize = 0
-    CompoundLineFeed = 1
-    ListArrayLineFeed = 2
-    PrettyFilePrint = 3
-    Default = 3
-    BinaryArrayLineFeed = 4
-    ArrayLineFeed = 6
-    AlwaysLineFeed = 7
-    ForceLineFeedIgnoreIndent = 8
-    ForceAscii = 16
-    ForceKeyQuote = 32
-    Classic = 35
-    ForceValueQuote = 64
-    ForceQuote = 96
-    ForceUppercase = 128
-    MarkIntTag = 256
-    MarkDoubleTag = 512
-    MarkAllTags = 768
-    CommentMarks = 1024
-    Jsonify = 1127
-    MarkSigned = 2048
+    CompoundLineFeed = 1 << 0
+    ListArrayLineFeed = 1 << 1
+    BinaryArrayLineFeed = 1 << 2
+    ForceLineFeedIgnoreIndent = 1 << 3
+    ForceAscii = 1 << 4
+    ForceKeyQuote = 1 << 5
+    ForceValueQuote = 1 << 6
+    ForceUppercase = 1 << 7
+    MarkIntTag = 1 << 8
+    MarkDoubleTag = 1 << 9
+    CommentMarks = 1 << 10
+    MarkSigned = 1 << 11
+    PrettyFilePrint = CompoundLineFeed | ListArrayLineFeed
+    ArrayLineFeed = ListArrayLineFeed | BinaryArrayLineFeed
+    AlwaysLineFeed = CompoundLineFeed | ArrayLineFeed
+    ForceQuote = ForceKeyQuote | ForceValueQuote
+    Classic = PrettyFilePrint | ForceQuote
+    MarkAllTags = MarkIntTag | MarkDoubleTag
+    Jsonify = AlwaysLineFeed | ForceQuote | CommentMarks
+    Default = PrettyFilePrint
 
 class SnbtNumberFormat(Enum):
     Decimal = 0
