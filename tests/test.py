@@ -19,6 +19,7 @@ from rapidnbt import (
     SnbtFormat,
     SnbtNumberFormat,
     LongTag,
+    nbtio,
 )
 
 
@@ -125,3 +126,5 @@ if __name__ == "__main__":
     print("-" * 25, "Test4", "-" * 25)
     test4()
     print("-" * 25, "END", "-" * 25)
+    print(nbtio.loads_snbt("{count: 0b  , c:x }"))
+    print(nbtio.loads_snbt("{count: 0b101001b}"))
