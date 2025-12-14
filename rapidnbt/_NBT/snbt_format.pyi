@@ -25,15 +25,17 @@ class SnbtFormat(IntFlag):
     AlwaysLineFeed = 7
     ForceLineFeedIgnoreIndent = 8
     ForceAscii = 16
-    ForceQuote = 32
+    ForceKeyQuote = 32
     Classic = 35
-    ForceUppercase = 64
-    MarkIntTag = 128
-    MarkDoubleTag = 256
-    MarkAllTags = 384
-    CommentMarks = 512
-    Jsonify = 551
-    MarkSigned = 1024
+    ForceValueQuote = 64
+    ForceQuote = 96
+    ForceUppercase = 128
+    MarkIntTag = 256
+    MarkDoubleTag = 512
+    MarkAllTags = 768
+    CommentMarks = 1024
+    Jsonify = 1127
+    MarkSigned = 2048
 
 class SnbtNumberFormat(Enum):
     Decimal = 0
