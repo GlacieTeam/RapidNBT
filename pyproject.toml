@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rapidnbt"
-version = "1.3.3"
+version = "1.3.4"
 authors = [{ name = "GlacieTeam" }]
 description = "Python bindings for High-Performance NBT library"
 readme = "README.md"
