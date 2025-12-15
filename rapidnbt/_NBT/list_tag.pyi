@@ -67,9 +67,19 @@ class ListTag(Tag):
         String representation (SNBT minimized format)
         """
 
-    def append(self, element: Any) -> None:
+    def append(self, element: Any, check_type: bool = True) -> None:
         """
         Append a Tag element to the list
+        Throw TypeError if wrong type and check_type is True
+
+        Args:
+            value (Any): value append to ListTag
+            check_type (bool): check value type is same as the type that ListTag holds
+        """
+
+    def check_and_fix_list_elements(self) -> bool:
+        """
+        Check the whether elements in this ListTag is the same, and fix it."
         """
 
     def clear(self) -> None:
@@ -107,9 +117,14 @@ class ListTag(Tag):
         Compute hash value of this tag
         """
 
-    def insert(self, index: int, element: Any) -> None:
+    def insert(self, index: int, element: Any, check_type: bool = True) -> None:
         """
         Insert element at specified position
+        Throw TypeError if wrong type and check_type is True
+
+        Args:
+            value (Any): value append to ListTag
+            check_type (bool): check value type is same as the type that ListTag holds
         """
 
     def load(self, stream: ...) -> None:

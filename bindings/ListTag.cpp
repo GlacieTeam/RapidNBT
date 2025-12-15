@@ -49,24 +49,34 @@ void bindListTag(py::module& m) {
 
         .def(
             "append",
-            [](nbt::ListTag& self, py::object const& element) {
-                auto type = self.getElementType();
-                auto tag  = makeNativeTag(element);
-                if (type == tag->getType() || type == nbt::Tag::Type::End) {
-                    self.push_back(*tag);
+            [](nbt::ListTag& self, py::object const& element, bool checkType) {
+                auto tag = makeNativeTag(element);
+                if (checkType) {
+                    auto type = self.getElementType();
+                    if (type == tag->getType() || type == nbt::Tag::Type::End) {
+                        self.push_back(std::move(tag));
+                    } else {
+                        throw py::value_error(
+                            std::format(
+                                "New tag type must be same as the original element type in the ListTag[{1}], "
+                                "received type: {0}, expect types can be converted to {1}Tag",
+                                py_type_name(element),
+                                magic_enum::enum_name(type)
+                            )
+                        );
+                    }
                 } else {
-                    throw py::value_error(
-                        std::format(
-                            "New tag type must be same as the original element type in the ListTag[{1}], "
-                            "received type: {0}, expected types can be converted to {1}Tag",
-                            py_type_name(element),
-                            magic_enum::enum_name(type)
-                        )
-                    );
+                    self.push_back(std::move(tag));
                 }
             },
             py::arg("element"),
-            "Append a Tag element to the list"
+            py::arg("check_type") = true,
+            "Append a Tag element if self is ListTag"
+            "Throw TypeError if wrong type and check_type is True"
+            ""
+            "Args:"
+            "    value (Any): value append to ListTag"
+            "    check_type (bool): check value type is same as the type that ListTag holds"
         )
 
         .def(
@@ -121,28 +131,43 @@ void bindListTag(py::module& m) {
 
         .def(
             "insert",
-            [](nbt::ListTag& self, size_t index, py::object const& element) {
+            [](nbt::ListTag& self, size_t index, py::object const& element, bool checkType) {
                 if (index > self.size()) { throw py::index_error("Index out of range"); }
                 auto it = self.begin();
                 std::advance(it, index);
-                auto type = self.getElementType();
-                auto tag  = makeNativeTag(element);
-                if (type == tag->getType() || type == nbt::Tag::Type::End) {
-                    self.storage().insert(it, std::move(tag));
+                auto tag = makeNativeTag(element);
+                if (checkType) {
+                    auto type = self.getElementType();
+                    if (type == tag->getType() || type == nbt::Tag::Type::End) {
+                        self.storage().insert(it, std::move(tag));
+                    } else {
+                        throw py::value_error(
+                            std::format(
+                                "New tag type must be same as the original element type in the ListTag[{1}], "
+                                "received type: {0}, expect types can be converted to {1}Tag",
+                                py_type_name(element),
+                                magic_enum::enum_name(type)
+                            )
+                        );
+                    }
                 } else {
-                    throw py::value_error(
-                        std::format(
-                            "New tag type must be same as the original element type in the ListTag[{1}], "
-                            "received type: {0}, expected types can be converted to {1}Tag",
-                            py_type_name(element),
-                            magic_enum::enum_name(type)
-                        )
-                    );
+                    self.storage().insert(it, std::move(tag));
                 }
             },
             py::arg("index"),
             py::arg("element"),
+            py::arg("check_type") = true,
             "Insert element at specified position"
+            "Throw TypeError if wrong type and check_type is True"
+            ""
+            "Args:"
+            "    value (Any): value append to ListTag"
+            "    check_type (bool): check value type is same as the type that ListTag holds"
+        )
+        .def(
+            "check_and_fix_list_elements",
+            &nbt::ListTag::checkAndFixElements,
+            "Check the whether elements in this ListTag is the same, and fix it."
         )
         .def(
             "to_list",

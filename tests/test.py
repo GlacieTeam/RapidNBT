@@ -129,7 +129,9 @@ if __name__ == "__main__":
     test = nbtio.loads_snbt(
         """{
             count: 0b  , // comments
-            c:'+67b', /*comments*/ d: test ,
+            c:'+67b', /*commen
+            hjkhk
+            ts*/ d: test ,
             list1: [{a:b}, 12345],
             list2: [65422, 12345],
             list3: [hsnjan, 12345],
@@ -138,5 +140,6 @@ if __name__ == "__main__":
     print(test["c"].get_type())
     print(test.to_snbt(SnbtFormat.Default | SnbtFormat.ForceValueQuote))
     print(nbtio.loads_snbt("{count: 0b101001b}"))
-    test["list2"].append("han")
+    test["list2"].append("han", False)
+    test["list2"].check_and_fix_list_elements()
     print(test.to_snbt())

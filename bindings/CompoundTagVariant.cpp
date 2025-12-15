@@ -224,29 +224,48 @@ void bindCompoundTagVariant(py::module& m) {
         )
         .def(
             "append",
-            [](nbt::CompoundTagVariant& self, py::object const& obj) {
+            [](nbt::CompoundTagVariant& self, py::object const& obj, bool checkType) {
                 if (self.is_null()) { self = nbt::ListTag(); }
                 if (self.hold(nbt::Tag::Type::List)) {
-                    auto type = self.as<nbt::ListTag>().getElementType();
-                    auto tag  = makeNativeTag(obj);
-                    if (type == tag->getType() || type == nbt::Tag::Type::End) {
-                        self.push_back(*tag);
+                    auto tag = makeNativeTag(obj);
+                    if (checkType) {
+                        auto type = self.as<nbt::ListTag>().getElementType();
+                        if (type == tag->getType() || type == nbt::Tag::Type::End) {
+                            self.push_back(std::move(tag));
+                        } else {
+                            throw py::value_error(
+                                std::format(
+                                    "New tag type must be same as the original element type in the ListTag[{1}], "
+                                    "received type: {0}, expect types can be converted to {1}Tag",
+                                    py_type_name(obj),
+                                    magic_enum::enum_name(type)
+                                )
+                            );
+                        }
                     } else {
-                        throw py::value_error(
-                            std::format(
-                                "New tag type must be same as the original element type in the ListTag[{1}], "
-                                "received type: {0}, expected types can be converted to {1}Tag",
-                                py_type_name(obj),
-                                magic_enum::enum_name(type)
-                            )
-                        );
+                        self.push_back(std::move(tag));
                     }
                 } else {
                     throw py::type_error("tag not hold an array");
                 }
             },
             py::arg("value"),
-            "Append a Tag element if self is ListTag\nThrow TypeError if wrong type"
+            py::arg("check_type") = true,
+            "Append a Tag element if self is ListTag"
+            "Throw TypeError if wrong type and check_type is True"
+            ""
+            "Args:"
+            "    value (Any): value append to ListTag"
+            "    check_type (bool): check value type is same as the type that ListTag holds"
+        )
+        .def(
+            "check_and_fix_list_elements",
+            [](nbt::CompoundTagVariant& self) -> bool {
+                if (!self.hold(nbt::Tag::Type::List)) { throw py::type_error("tag not hold an array"); }
+                return self.as<nbt::ListTag>().checkAndFixElements();
+            },
+            "Check the whether elements in this ListTag is the same, and fix it."
+            "Throw type error is self is not a ListTag."
         )
         .def(
             "assign",

@@ -102,10 +102,14 @@ class CompoundTagVariant:
         String representation (SNBT minimized format)
         """
 
-    def append(self, value: Any) -> None:
+    def append(self, value: Any, check_type: bool = True) -> None:
         """
         Append a Tag element if self is ListTag
-        Throw TypeError if wrong type
+        Throw TypeError if wrong type and check_type is True
+
+        Args:
+            value (Any): value append to ListTag
+            check_type (bool): check value type is same as the type that ListTag holds
         """
 
     def assign(self, value: Any) -> None:
@@ -116,6 +120,12 @@ class CompoundTagVariant:
     def as_tag(self) -> Tag:
         """
         Convert to a Tag
+        """
+
+    def check_and_fix_list_elements(self) -> bool:
+        """
+        Check the whether elements in this ListTag is the same, and fix it."
+        Throw type error is self is not a ListTag.
         """
 
     def get_byte(self, signed: bool = False) -> int:
