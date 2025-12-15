@@ -24,8 +24,8 @@ void bindLongTag(py::module& m) {
 
         .def(
             "assign",
-            [](nbt::LongTag& self, int64_t value) -> nbt::LongTag& {
-                self = value;
+            [](nbt::LongTag& self, py::int_ value) -> nbt::LongTag& {
+                self = to_cpp_int<int64_t>(value, "LongTag");
                 return self;
             },
             py::arg("value"),
@@ -50,9 +50,20 @@ void bindLongTag(py::module& m) {
             "Load tag value from a binary stream"
         )
 
+        .def(
+            "get_signed",
+            [](nbt::LongTag& self) -> py::int_ { return self.storage(); },
+            "Get the integer value as a signed value"
+        )
+        .def(
+            "get_unsigned",
+            [](nbt::LongTag& self) -> py::int_ { return static_cast<uint64_t>(self.storage()); },
+            "Get the integer value as an unsigned value"
+        )
+
         .def_property(
             "value",
-            [](nbt::LongTag& self) -> int64_t { return self.storage(); },
+            [](nbt::LongTag& self) -> py::int_ { return self.storage(); },
             [](nbt::LongTag& self, py::int_ value) { self.storage() = to_cpp_int<int64_t>(value, "LongTag"); },
             "Access the integer value of this tag"
         )

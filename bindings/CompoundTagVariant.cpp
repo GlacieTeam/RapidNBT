@@ -331,34 +331,42 @@ void bindCompoundTagVariant(py::module& m) {
 
         .def(
             "get_byte",
-            [](nbt::CompoundTagVariant& self) -> uint8_t {
+            [](nbt::CompoundTagVariant& self, bool isSigned) -> uint8_t {
                 if (!self.hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
-                return self.as<nbt::ByteTag>().storage();
+                return isSigned ? static_cast<int8_t>(self.as<nbt::ByteTag>().storage())
+                                : self.as<nbt::ByteTag>().storage();
             },
+            py::arg("signed") = false,
             "Get the byte value\nThrow TypeError if wrong type"
         )
         .def(
             "get_short",
-            [](nbt::CompoundTagVariant& self) -> short {
+            [](nbt::CompoundTagVariant& self, bool isSigned) -> short {
                 if (!self.hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
-                return self.as<nbt::ShortTag>().storage();
+                return isSigned ? self.as<nbt::ShortTag>().storage()
+                                : static_cast<uint16_t>(self.as<nbt::ShortTag>().storage());
             },
+            py::arg("signed") = true,
             "Get the short value\nThrow TypeError if wrong type"
         )
         .def(
             "get_int",
-            [](nbt::CompoundTagVariant& self) -> int {
+            [](nbt::CompoundTagVariant& self, bool isSigned) -> int {
                 if (!self.hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold an IntTag"); }
-                return self.as<nbt::IntTag>().storage();
+                return isSigned ? self.as<nbt::IntTag>().storage()
+                                : static_cast<uint32_t>(self.as<nbt::IntTag>().storage());
             },
+            py::arg("signed") = true,
             "Get the int value\nThrow TypeError if wrong type"
         )
         .def(
             "get_long",
-            [](nbt::CompoundTagVariant& self) -> int64_t {
+            [](nbt::CompoundTagVariant& self, bool isSigned) -> int64_t {
                 if (!self.hold(nbt::Tag::Type::Long)) { throw py::type_error("tag not hold a LongTag"); }
-                return self.as<nbt::LongTag>().storage();
+                return isSigned ? self.as<nbt::LongTag>().storage()
+                                : static_cast<uint64_t>(self.as<nbt::LongTag>().storage());
             },
+            py::arg("signed") = true,
             "Get the int64 value\nThrow TypeError if wrong type"
         )
         .def(

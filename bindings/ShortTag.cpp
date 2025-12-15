@@ -24,8 +24,8 @@ void bindShortTag(py::module& m) {
 
         .def(
             "assign",
-            [](nbt::ShortTag& self, short value) -> nbt::ShortTag& {
-                self = value;
+            [](nbt::ShortTag& self, py::int_ value) -> nbt::ShortTag& {
+                self = to_cpp_int<short>(value, "ShortTag");
                 return self;
             },
             py::arg("value"),
@@ -50,9 +50,20 @@ void bindShortTag(py::module& m) {
             "Load tag value from a binary stream"
         )
 
+        .def(
+            "get_signed",
+            [](nbt::ShortTag& self) -> py::int_ { return self.storage(); },
+            "Get the integer value as a signed value"
+        )
+        .def(
+            "get_unsigned",
+            [](nbt::ShortTag& self) -> py::int_ { return static_cast<uint16_t>(self.storage()); },
+            "Get the integer value as an unsigned value"
+        )
+
         .def_property(
             "value",
-            [](nbt::ShortTag& self) -> short { return self.storage(); },
+            [](nbt::ShortTag& self) -> py::int_ { return self.storage(); },
             [](nbt::ShortTag& self, py::int_ value) { self.storage() = to_cpp_int<short>(value, "ShortTag"); },
             "Access the integer value of this tag"
         )

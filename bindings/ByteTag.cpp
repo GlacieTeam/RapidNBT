@@ -24,8 +24,8 @@ void bindByteTag(py::module& m) {
 
         .def(
             "assign",
-            [](nbt::ByteTag& self, uint8_t value) -> nbt::ByteTag& {
-                self = value;
+            [](nbt::ByteTag& self, py::int_ value) -> nbt::ByteTag& {
+                self = to_cpp_int<uint8_t>(value, "ByteTag");
                 return self;
             },
             py::arg("value"),
@@ -50,9 +50,20 @@ void bindByteTag(py::module& m) {
             "Load tag value from a binary stream"
         )
 
+        .def(
+            "get_signed",
+            [](nbt::ByteTag& self) -> py::int_ { return static_cast<int8_t>(self.storage()); },
+            "Get the integer value as a signed value"
+        )
+        .def(
+            "get_unsigned",
+            [](nbt::ByteTag& self) -> py::int_ { return self.storage(); },
+            "Get the integer value as an unsigned value"
+        )
+
         .def_property(
             "value",
-            [](nbt::ByteTag& self) -> uint8_t { return self.storage(); },
+            [](nbt::ByteTag& self) -> py::int_ { return self.storage(); },
             [](nbt::ByteTag& self, py::int_ value) { self.storage() = to_cpp_int<uint8_t>(value, "ByteTag"); },
             "Access the integer value of this tag"
         )

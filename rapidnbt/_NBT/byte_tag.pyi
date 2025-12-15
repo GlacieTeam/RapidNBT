@@ -71,9 +71,19 @@ class ByteTag(Tag):
         Check if this tag equals another tag
         """
 
+    def get_signed(self) -> int:
+        """
+        Get the integer value as a signed value
+        """
+
     def get_type(self) -> TagType:
         """
         Get the NBT type ID (Byte)
+        """
+
+    def get_unsigned(self) -> int:
+        """
+        Get the integer value as an unsigned value
         """
 
     def hash(self) -> int:

@@ -72,7 +72,8 @@ class CompoundTagVariant:
 
     def __iter__(self) -> List[CompoundTagVariant]:
         """
-        Iterate over tags in the tag variant"""
+        Iterate over tags in the tag variant
+        """
 
     def __len__(self) -> int:
         """
@@ -108,14 +109,16 @@ class CompoundTagVariant:
         """
 
     def assign(self, value: Any) -> None:
-        """Assign value"""
+        """
+        Assign value
+        """
 
     def as_tag(self) -> Tag:
         """
         Convert to a Tag
         """
 
-    def get_byte(self) -> int:
+    def get_byte(self, signed: bool = False) -> int:
         """
         Get the byte value
         Throw TypeError if wrong type
@@ -151,13 +154,13 @@ class CompoundTagVariant:
         Throw TypeError if wrong type
         """
 
-    def get_int(self) -> int:
+    def get_int(self, signed: bool = True) -> int:
         """
         Get the int value
         Throw TypeError if wrong type
         """
 
-    def get_long(self) -> int:
+    def get_long(self, signed: bool = True) -> int:
         """
         Get the int64 value
         Throw TypeError if wrong type
@@ -181,7 +184,7 @@ class CompoundTagVariant:
         Throw TypeError if wrong type
         """
 
-    def get_short(self) -> int:
+    def get_short(self, signed: bool = True) -> int:
         """
         Get the short value
         Throw TypeError if wrong type
