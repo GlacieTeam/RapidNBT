@@ -15,9 +15,7 @@ void bindByteTag(py::module& m) {
     py::class_<nbt::ByteTag, nbt::Tag>(sm, "ByteTag")
         .def(py::init<>(), "Construct an ByteTag with default value (0)")
         .def(
-            py::init([](py::int_ value) {
-                return std::make_unique<nbt::ByteTag>(to_cpp_int<uint8_t>(value, "ByteTag"));
-            }),
+            py::init([](py::int_ value) { return std::make_unique<nbt::ByteTag>(to_cpp_int<uint8_t>(value, "ByteTag")); }),
             py::arg("value"),
             "Construct an ByteTag from an integer value"
         )
@@ -83,13 +81,7 @@ void bindByteTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::ByteTag const& self) {
-                return std::format(
-                    "<rapidnbt.ByteTag object at 0x{0:0{1}X}>",
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::ByteTag const& self) { return std::format("<rapidnbt.ByteTag object at 0x{0:0{1}X}>", ADDRESS); },
             "Official string representation"
         );
 }

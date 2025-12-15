@@ -15,9 +15,7 @@ void bindShortTag(py::module& m) {
     py::class_<nbt::ShortTag, nbt::Tag>(sm, "ShortTag", "A tag contains a short")
         .def(py::init<>(), "Construct an ShortTag with default value (0)")
         .def(
-            py::init([](py::int_ value) {
-                return std::make_unique<nbt::ShortTag>(to_cpp_int<short>(value, "ShortTag"));
-            }),
+            py::init([](py::int_ value) { return std::make_unique<nbt::ShortTag>(to_cpp_int<short>(value, "ShortTag")); }),
             py::arg("value"),
             "Construct an ShortTag from an integer value"
         )
@@ -83,14 +81,7 @@ void bindShortTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::ShortTag const& self) {
-                return std::format(
-                    "<rapidnbt.ShortTag({0}) object at 0x{1:0{2}X}>",
-                    self.storage(),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::ShortTag const& self) { return std::format("<rapidnbt.ShortTag({0}) object at 0x{1:0{2}X}>", self.storage(), ADDRESS); },
             "Official string representation"
         );
 }

@@ -16,12 +16,7 @@ void bindEndTag(py::module& m) {
         .def(py::init<>(), "Construct an EndTag")
 
         .def("get_type", &nbt::EndTag::getType, "Get the NBT type ID (End)")
-        .def(
-            "equals",
-            &nbt::EndTag::equals,
-            py::arg("other"),
-            "Check if this tag equals another tag (all EndTags are equal)"
-        )
+        .def("equals", &nbt::EndTag::equals, py::arg("other"), "Check if this tag equals another tag (all EndTags are equal)")
         .def("copy", &nbt::EndTag::copy, "Create a deep copy of this tag")
         .def("hash", &nbt::EndTag::hash, "Compute hash value of this tag")
         .def(
@@ -44,7 +39,11 @@ void bindEndTag(py::module& m) {
             [](nbt::EndTag const& self) { return self.toSnbt(nbt::SnbtFormat::Minimize); },
             "String representation (SNBT minimized format)"
         )
-        .def("__repr__", [](nbt::EndTag const&) { return "rapidnbt.EndTag"; }, "Official string representation");
+        .def(
+            "__repr__",
+            [](nbt::EndTag const& self) { return std::format("<rapidnbt.EndTag object at 0x{0:0{1}X}>", ADDRESS); },
+            "Official string representation"
+        );
 }
 
 } // namespace rapidnbt

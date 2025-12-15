@@ -75,14 +75,7 @@ void bindTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](const nbt::Tag& self) {
-                return std::format(
-                    "<rapidnbt.Tag(type={0}) object at 0x{1:0{2}X}>",
-                    magic_enum::enum_name(self.getType()),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](const nbt::Tag& self) { return std::format("<rapidnbt.Tag(type={0}) object at 0x{1:0{2}X}>", ENUM(self.getType()), ADDRESS); },
             "Official string representation"
         );
 }

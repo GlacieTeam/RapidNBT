@@ -22,7 +22,8 @@ namespace py = pybind11;
 
 namespace rapidnbt {
 
-constexpr auto ADDRESS_LENGTH = 2 * sizeof(uintptr_t);
+#define ADDRESS reinterpret_cast<uintptr_t>(&self), 2 * sizeof(uintptr_t)
+#define ENUM(x) magic_enum::enum_name(x)
 
 inline py::bytes to_py_bytes(std::string_view sv) { return py::bytes(sv.data(), sv.size()); }
 
@@ -36,13 +37,9 @@ inline T to_cpp_int(py::int_ const& value, std::string_view typeName) {
     using UT = std::make_unsigned<T>::type;
     using ST = std::make_signed<T>::type;
     if (value >= py::int_(0)) {
-        if (value >= py::int_(std::numeric_limits<UT>::min()) && value <= py::int_(std::numeric_limits<UT>::max())) {
-            return value.cast<UT>();
-        }
+        if (value >= py::int_(std::numeric_limits<UT>::min()) && value <= py::int_(std::numeric_limits<UT>::max())) { return value.cast<UT>(); }
     } else {
-        if (value >= py::int_(std::numeric_limits<ST>::min()) && value <= py::int_(std::numeric_limits<ST>::max())) {
-            return value.cast<ST>();
-        }
+        if (value >= py::int_(std::numeric_limits<ST>::min()) && value <= py::int_(std::numeric_limits<ST>::max())) { return value.cast<ST>(); }
     }
     throw py::value_error(
         std::format(

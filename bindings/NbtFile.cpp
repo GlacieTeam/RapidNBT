@@ -33,21 +33,12 @@ void bindNbtFile(py::module& m) {
 
         .def(
             "__str__",
-            [](nbt::NbtFile const& self) {
-                return std::format("NbtFile at {}", std::filesystem::absolute(self.mFilePath).string());
-            },
+            [](nbt::NbtFile const& self) { return std::format("NbtFile at {}", std::filesystem::absolute(self.mFilePath).string()); },
             "String representation"
         )
         .def(
             "__repr__",
-            [](nbt::NbtFile const& self) {
-                return std::format(
-                    "<rapidnbt.NbtFile(size={0}) object at 0x{1:0{2}X}>",
-                    self.size(),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::NbtFile const& self) { return std::format("<rapidnbt.NbtFile(size={0}) object at 0x{1:0{2}X}>", self.size(), ADDRESS); },
             "Official string representation"
         )
 

@@ -25,9 +25,7 @@ void bindCompoundTag(py::module& m) {
                 return tag;
             }),
             py::arg("pairs"),
-            "Construct from a Dict[str, Any]",
-            "Example:",
-            "    CompoundTag([\" key1 \": 42, \" key2 \": \" value \"])"
+            "Construct from a Dict[str, Any]\nExample:\n    CompoundTag([\" key1 \": 42, \" key2 \": \" value \"])"
         )
 
         .def(
@@ -39,9 +37,7 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "__setitem__",
-            [](nbt::CompoundTag& self, std::string_view key, py::object const& value) {
-                self[key] = makeNativeTag(value);
-            },
+            [](nbt::CompoundTag& self, std::string_view key, py::object const& value) { self[key] = makeNativeTag(value); },
             py::arg("key"),
             py::arg("value"),
             "Set value by key"
@@ -112,21 +108,12 @@ void bindCompoundTag(py::module& m) {
             &nbt::CompoundTag::merge,
             py::arg("other"),
             py::arg("merge_list") = false,
-            "Merge another CompoundTag into this one",
-            "",
-            "Arguments:",
-            "    other: CompoundTag to merge from",
-            "    merge_list: If true, merge list contents instead of replacing"
+            "Merge another CompoundTag into this one\n\nArguments:\n    other: CompoundTag to merge from\n    merge_list: If true, merge list contents instead "
+            "of replacing"
         )
         .def("empty", &nbt::CompoundTag::empty, "Check if the compound is empty")
         .def("clear", &nbt::CompoundTag::clear, "Remove all elements from the compound")
-        .def(
-            "rename",
-            &nbt::CompoundTag::rename,
-            py::arg("old_key"),
-            py::arg("new_key"),
-            "Rename a key in the compound"
-        )
+        .def("rename", &nbt::CompoundTag::rename, py::arg("old_key"), py::arg("new_key"), "Rename a key in the compound")
 
         .def(
             "contains",
@@ -136,9 +123,7 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "contains",
-            [](nbt::CompoundTag const& self, std::string_view key, nbt::Tag::Type type) {
-                return self.contains(key, type);
-            },
+            [](nbt::CompoundTag const& self, std::string_view key, nbt::Tag::Type type) { return self.contains(key, type); },
             py::arg("key"),
             py::arg("type"),
             "Check if key exists and value type is the specific type"
@@ -214,14 +199,7 @@ void bindCompoundTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::CompoundTag const& self) {
-                return std::format(
-                    "<rapidnbt.CompoundTag(size={0}) object at 0x{1:0{2}X}>",
-                    self.size(),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::CompoundTag const& self) { return std::format("<rapidnbt.CompoundTag(size={0}) object at 0x{1:0{2}X}>", self.size(), ADDRESS); },
             "Official string representation"
         )
 
@@ -263,20 +241,8 @@ void bindCompoundTag(py::module& m) {
             py::arg("header")        = false,
             "Deserialize from Binary NBT format"
         )
-        .def_static(
-            "from_snbt",
-            &nbt::CompoundTag::fromSnbt,
-            py::arg("snbt"),
-            py::arg("parsed_length") = std::nullopt,
-            "Parse from String NBT (SNBT) format"
-        )
-        .def_static(
-            "from_json",
-            &nbt::CompoundTag::fromJson,
-            py::arg("snbt"),
-            py::arg("parsed_length") = std::nullopt,
-            "Parse from JSON string"
-        );
+        .def_static("from_snbt", &nbt::CompoundTag::fromSnbt, py::arg("snbt"), py::arg("parsed_length") = std::nullopt, "Parse from String NBT (SNBT) format")
+        .def_static("from_json", &nbt::CompoundTag::fromJson, py::arg("snbt"), py::arg("parsed_length") = std::nullopt, "Parse from JSON string");
 }
 
 } // namespace rapidnbt

@@ -14,13 +14,7 @@ void bindLongArrayTag(py::module& m) {
 
     py::class_<nbt::LongArrayTag, nbt::Tag>(sm, "LongArrayTag")
         .def(py::init<>(), "Construct an empty LongArrayTag")
-        .def(
-            py::init<std::vector<int64_t> const&>(),
-            py::arg("values"),
-            R"(Construct from a list of integers
-            Example:
-                LongArrayTag([1, 2, 3]))"
-        )
+        .def(py::init<std::vector<int64_t> const&>(), py::arg("values"), "Construct from a list of integers\nExample:\n    LongArrayTag([1, 2, 3]))")
 
         .def("get_type", &nbt::LongArrayTag::getType, "Get the NBT type ID (int array)")
         .def("equals", &nbt::LongArrayTag::equals, py::arg("other"), "Check if this tag equals another tag")
@@ -50,10 +44,7 @@ void bindLongArrayTag(py::module& m) {
             "reserve",
             &nbt::LongArrayTag::reserve,
             py::arg("capacity"),
-            R"(Reserve storage capacity for the array
-            
-            Arguments:
-                capacity: Minimum capacity to reserv))"
+            "Reserve storage capacity for the array\n\nArguments:\n    capacity: Minimum capacity to reserv))"
         )
         .def("clear", &nbt::LongArrayTag::clear, "Remove all elements from the array")
         .def(
@@ -80,7 +71,7 @@ void bindLongArrayTag(py::module& m) {
             "pop",
             py::overload_cast<size_t>(&nbt::LongArrayTag::remove),
             py::arg("index"),
-            "Remove element at specified index\n"
+            "Remove element at specified index"
             "Returns True if successful, False if index out of range"
         )
         .def(
@@ -88,12 +79,8 @@ void bindLongArrayTag(py::module& m) {
             py::overload_cast<size_t, size_t>(&nbt::LongArrayTag::remove),
             py::arg("start_index"),
             py::arg("end_index"),
-            R"(Remove elements in the range [start_index, end_index)
-            Arguments:
-                start_index: First index to remove (inclusive)
-                end_index: End index (exclusive)
-            Returns:
-                True if successful, False if indices out of range)"
+            "Remove elements in the range [start_index, end_index)\nArguments:\n    start_index: First index to remove (inclusive)\n    end_index: End index "
+            "(exclusive)\nReturns:\nTrue if successful, False if indices out of range"
         )
         .def(
             "assign",
@@ -102,8 +89,7 @@ void bindLongArrayTag(py::module& m) {
                 return self;
             },
             py::arg("values"),
-            R"(Assign new values to the array
-            Returns the modified array)"
+            "Assign new values to the array\nReturns the modified array)"
         )
 
         .def_property(
@@ -121,14 +107,9 @@ void bindLongArrayTag(py::module& m) {
         .def("__hash__", &nbt::LongArrayTag::hash, "Compute hash value for Python hashing operations")
         .def(
             "__iter__",
-            [](nbt::LongArrayTag const& self) {
-                return py::make_iterator(self.storage().begin(), self.storage().end());
-            },
+            [](nbt::LongArrayTag const& self) { return py::make_iterator(self.storage().begin(), self.storage().end()); },
             py::keep_alive<0, 1>(),
-            R"(Iterate over elements in the array
-            Example:
-                for value in int_array:
-                    print(value))"
+            "Iterate over elements in the array\nExample:\n    for value in int_array:\nprint(value)"
         )
         .def(
             "__contains__",
@@ -147,14 +128,7 @@ void bindLongArrayTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::LongArrayTag const& self) {
-                return std::format(
-                    "<rapidnbt.LongArrayTag(size={0}) object at 0x{1:0{2}X}>",
-                    self.size(),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::LongArrayTag const& self) { return std::format("<rapidnbt.LongArrayTag(size={0}) object at 0x{1:0{2}X}>", self.size(), ADDRESS); },
             "Official string representation"
         );
 }

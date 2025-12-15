@@ -14,26 +14,15 @@ void bindByteArrayTag(py::module& m) {
 
     py::class_<nbt::ByteArrayTag, nbt::Tag>(sm, "ByteArrayTag")
         .def(py::init<>(), "Construct an empty ByteArrayTag")
+        .def(py::init<std::vector<uint8_t> const&>(), py::arg("arr"), "Construct from a list of bytes (e.g., [1, 2, 3])")
         .def(
-            py::init<std::vector<uint8_t> const&>(),
-            py::arg("arr"),
-            "Construct from a list of bytes (e.g., [1, 2, 3])"
-        )
-        .def(
-            py::init([](py::buffer buf) {
-                return std::make_unique<nbt::ByteArrayTag>(to_cpp_stringview(std::move(buf)));
-            }),
+            py::init([](py::buffer buf) { return std::make_unique<nbt::ByteArrayTag>(to_cpp_stringview(std::move(buf))); }),
             py::arg("buf"),
             "Construct from a buffer type"
         )
 
         .def("get_type", &nbt::ByteArrayTag::getType, "Get the NBT type ID (ByteArray)")
-        .def(
-            "equals",
-            &nbt::ByteArrayTag::equals,
-            py::arg("other"),
-            "Check if this tag equals another tag (same bytes and type)"
-        )
+        .def("equals", &nbt::ByteArrayTag::equals, py::arg("other"), "Check if this tag equals another tag (same bytes and type)")
         .def("copy", &nbt::ByteArrayTag::copy, "Create a deep copy of this tag")
         .def("hash", &nbt::ByteArrayTag::hash, "Compute hash value of this tag")
 
@@ -117,9 +106,7 @@ void bindByteArrayTag(py::module& m) {
 
         .def(
             "__bytes__",
-            [](nbt::ByteArrayTag const& self) {
-                return py::bytes(reinterpret_cast<const char*>(self.data()), self.size());
-            },
+            [](nbt::ByteArrayTag const& self) { return py::bytes(reinterpret_cast<const char*>(self.data()), self.size()); },
             "Convert to Python bytes object"
         )
         .def("__len__", &nbt::ByteArrayTag::size, "Get number of bytes in the array")
@@ -138,14 +125,7 @@ void bindByteArrayTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::ByteArrayTag const& self) {
-                return std::format(
-                    "<rapidnbt.ByteArrayTag(size={0}) object at 0x{1:0{2}X}>",
-                    self.size(),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::ByteArrayTag const& self) { return std::format("<rapidnbt.ByteArrayTag(size={0}) object at 0x{1:0{2}X}>", self.size(), ADDRESS); },
             "Official string representation"
         );
 }

@@ -28,13 +28,13 @@ AllowShortBlocksOnASingleLine: Always
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakAfterDefinitionReturnType: None
-AlwaysBreakTemplateDeclarations: 'Yes'
+AlwaysBreakTemplateDeclarations: "Yes"
 BinPackArguments: false
 BinPackParameters: false
 BreakBeforeBraces: Custom
 BreakBeforeBinaryOperators: NonAssignment
-ColumnLimit: 120
-CommentPragmas: '^ IWYU pragma:'
+ColumnLimit: 160
+CommentPragmas: "^ IWYU pragma:"
 ConstructorInitializerIndentWidth: 0
 IndentWidth: 4
 Language: Cpp

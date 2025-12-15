@@ -22,12 +22,7 @@ void bindStringTag(py::module& m) {
         )
 
         .def("get_type", &nbt::StringTag::getType, "Get the NBT type ID (String)")
-        .def(
-            "equals",
-            &nbt::StringTag::equals,
-            py::arg("other"),
-            "Check if this tag equals another tag (same content and type)"
-        )
+        .def("equals", &nbt::StringTag::equals, py::arg("other"), "Check if this tag equals another tag (same content and type)")
         .def("copy", &nbt::StringTag::copy, "Create a deep copy of this tag")
         .def("hash", &nbt::StringTag::hash, "Compute hash value of this tag (based on string content)")
 
@@ -117,14 +112,7 @@ void bindStringTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::StringTag const& self) {
-                return std::format(
-                    "<rapidnbt.StringTag({0}) object at 0x{1:0{2}X}>",
-                    self.storage(),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::StringTag const& self) { return std::format("<rapidnbt.StringTag({0}) object at 0x{1:0{2}X}>", self.storage(), ADDRESS); },
             "Official representation with quoted content"
         );
 }

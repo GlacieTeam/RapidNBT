@@ -26,8 +26,7 @@ from rapidnbt import (
 def test1():
     nbt = CompoundTag(
         {
-            "string_tag": "测试（非ASCII）",
-            "byte_tag": ctypes.c_uint8(114),
+            "string_tag": "测试（非ASCII）\nbyte_tag": ctypes.c_uint8(114),
             "bool_tag": False,
             "short_tag": ShortTag(65535),
             "int_tag": 114514,
@@ -104,9 +103,7 @@ def test4():
     ]
     merge_nbt = CompoundTag(
         {
-            "string_tag": "测试（非ASCII）",
-            "byte_array_tag": b"114514",
-            "aaa": {"bbb": [{"c": "d", "3": 4}, {"g": "h", "7": ShortTag(8)}]},
+            "string_tag": "测试（非ASCII）\nbyte_array_tag": b"114514\naaa": {"bbb": [{"c": "d", "3": 4}, {"g": "h", "7": ShortTag(8)}]},
         }
     )
     nbt.merge(merge_nbt, True)
@@ -129,12 +126,13 @@ if __name__ == "__main__":
     test = nbtio.loads_snbt(
         """{
             count: 0b  , // comments
+            "test": -0x2a5d9fsl,
             c:'+67b', /*commen
             hjkhk
             ts*/ d: test ,
             list1: [{a:b}, 12345],
             list2: [65422, 12345],
-            list3: [hsnjan, 12345],
+            list3: [65432, 12345],
             }"""
     )
     print(test["c"].get_type())

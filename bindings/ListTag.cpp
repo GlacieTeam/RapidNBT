@@ -26,12 +26,7 @@ void bindListTag(py::module& m) {
         )
 
         .def("get_type", &nbt::ListTag::getType, "Get the NBT type ID (List)")
-        .def(
-            "equals",
-            &nbt::ListTag::equals,
-            py::arg("other"),
-            "Check if this tag equals another tag (same elements in same order)"
-        )
+        .def("equals", &nbt::ListTag::equals, py::arg("other"), "Check if this tag equals another tag (same elements in same order)")
         .def("copy", &nbt::ListTag::copy, "Create a deep copy of this tag")
 
         .def(
@@ -61,7 +56,7 @@ void bindListTag(py::module& m) {
                                 "New tag type must be same as the original element type in the ListTag[{1}], "
                                 "received type: {0}, expect types can be converted to {1}Tag",
                                 py_type_name(element),
-                                magic_enum::enum_name(type)
+                                ENUM(type)
                             )
                         );
                     }
@@ -71,12 +66,8 @@ void bindListTag(py::module& m) {
             },
             py::arg("element"),
             py::arg("check_type") = true,
-            "Append a Tag element if self is ListTag"
-            "Throw TypeError if wrong type and check_type is True"
-            ""
-            "Args:"
-            "    value (Any): value append to ListTag"
-            "    check_type (bool): check value type is same as the type that ListTag holds"
+            "Append a Tag element if self is ListTag\nThrow TypeError if wrong type and check_type is True\n\nArgs:\n    value (Any): value append to "
+            "ListTag\n    check_type (bool): check value type is same as the type that ListTag holds"
         )
 
         .def(
@@ -122,12 +113,7 @@ void bindListTag(py::module& m) {
             "Remove elements in the range [start_index, end_index)"
         )
         .def("clear", &nbt::ListTag::clear, "Remove all elements from the list")
-        .def(
-            "merge",
-            &nbt::ListTag::merge,
-            py::arg("other"),
-            "Merge another ListTag into this one (appends all elements)"
-        )
+        .def("merge", &nbt::ListTag::merge, py::arg("other"), "Merge another ListTag into this one (appends all elements)")
 
         .def(
             "insert",
@@ -143,10 +129,10 @@ void bindListTag(py::module& m) {
                     } else {
                         throw py::value_error(
                             std::format(
-                                "New tag type must be same as the original element type in the ListTag[{1}], "
-                                "received type: {0}, expect types can be converted to {1}Tag",
+                                "New tag type must be same as the original element type in the ListTag[{1}], received type: {0}, expect types can be converted "
+                                "to {1}Tag",
                                 py_type_name(element),
-                                magic_enum::enum_name(type)
+                                ENUM(type)
                             )
                         );
                     }
@@ -157,18 +143,10 @@ void bindListTag(py::module& m) {
             py::arg("index"),
             py::arg("element"),
             py::arg("check_type") = true,
-            "Insert element at specified position"
-            "Throw TypeError if wrong type and check_type is True"
-            ""
-            "Args:"
-            "    value (Any): value append to ListTag"
-            "    check_type (bool): check value type is same as the type that ListTag holds"
+            "Insert element at specified position\nThrow TypeError if wrong type and check_type is True\n\nArgs:\n    value (Any): value append to ListTag\n   "
+            " check_type (bool): check value type is same as the type that ListTag holds"
         )
-        .def(
-            "check_and_fix_list_elements",
-            &nbt::ListTag::checkAndFixElements,
-            "Check the whether elements in this ListTag is the same, and fix it."
-        )
+        .def("check_and_fix_list_elements", &nbt::ListTag::checkAndFixElements, "Check the whether elements in this ListTag is the same, and fix it.")
         .def(
             "to_list",
             [](nbt::ListTag& self) -> py::list {
@@ -211,14 +189,7 @@ void bindListTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::ListTag const& self) {
-                return std::format(
-                    "<rapidnbt.ListTag(size={0}) object at 0x{1:0{2}X}>",
-                    self.size(),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::ListTag const& self) { return std::format("<rapidnbt.ListTag(size={0}) object at 0x{1:0{2}X}>", self.size(), ADDRESS); },
             "Official string representation"
         );
 }

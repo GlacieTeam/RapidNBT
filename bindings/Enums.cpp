@@ -35,10 +35,7 @@ void bindEnums(py::module& m) {
     {
         auto sm = m.def_submodule(
             "snbt_format",
-            R"(The SNBT format enum
-            You can use | operation to combime flags
-            Example:
-                format = SnbtFormat.Classic | SnbtFormat.ForceUppercase)"
+            "The SNBT format enum\nYou can use | operation to combime flags\nExample:\n    format = SnbtFormat.Classic | SnbtFormat.ForceUppercase"
         );
 
         py::native_enum<nbt::SnbtFormat>(sm, "SnbtFormat", "enum.IntFlag")
@@ -89,12 +86,7 @@ void bindEnums(py::module& m) {
     {
         auto sm = m.def_submodule("nbt_compression_type");
 
-        py::native_enum<nbt::NbtCompressionType>(
-            sm,
-            "NbtCompressionType",
-            "enum.Enum",
-            "Enumeration of compression types for NBT serialization"
-        )
+        py::native_enum<nbt::NbtCompressionType>(sm, "NbtCompressionType", "enum.Enum", "Enumeration of compression types for NBT serialization")
             .value("NONE", nbt::NbtCompressionType::None)
             .value("GZIP", nbt::NbtCompressionType::Gzip)
             .value("ZLIB", nbt::NbtCompressionType::Zlib)
@@ -104,12 +96,7 @@ void bindEnums(py::module& m) {
     {
         auto sm = m.def_submodule("nbt_compression_level");
 
-        py::native_enum<nbt::NbtCompressionLevel>(
-            sm,
-            "NbtCompressionLevel",
-            "enum.IntEnum",
-            "Enumeration of compression levels"
-        )
+        py::native_enum<nbt::NbtCompressionLevel>(sm, "NbtCompressionLevel", "enum.IntEnum", "Enumeration of compression levels")
             .value("DEFAULT", nbt::NbtCompressionLevel::Default)
             .value("NO_COMPRESSION", nbt::NbtCompressionLevel::NoCompression)
             .value("BEST_SPEED", nbt::NbtCompressionLevel::BestSpeed)

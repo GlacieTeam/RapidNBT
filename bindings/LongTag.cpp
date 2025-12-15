@@ -15,9 +15,7 @@ void bindLongTag(py::module& m) {
     py::class_<nbt::LongTag, nbt::Tag>(sm, "LongTag")
         .def(py::init<>(), "Construct an LongTag with default value (0)")
         .def(
-            py::init([](py::int_ value) {
-                return std::make_unique<nbt::LongTag>(to_cpp_int<int64_t>(value, "LongTag"));
-            }),
+            py::init([](py::int_ value) { return std::make_unique<nbt::LongTag>(to_cpp_int<int64_t>(value, "LongTag")); }),
             py::arg("value"),
             "Construct an LongTag from an integer value"
         )
@@ -83,14 +81,7 @@ void bindLongTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::LongTag const& self) {
-                return std::format(
-                    "<rapidnbt.LongTag({0}) object at 0x{1:0{2}X}>",
-                    self.storage(),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::LongTag const& self) { return std::format("<rapidnbt.LongTag({0}) object at 0x{1:0{2}X}>", self.storage(), ADDRESS); },
             "Official string representation"
         );
 }

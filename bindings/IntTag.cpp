@@ -81,14 +81,7 @@ void bindIntTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::IntTag const& self) {
-                return std::format(
-                    "<rapidnbt.IntTag({0}) object at 0x{1:0{2}X}>",
-                    self.storage(),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::IntTag const& self) { return std::format("<rapidnbt.IntTag({0}) object at 0x{1:0{2}X}>", self.storage(), ADDRESS); },
             "Official string representation"
         );
 }

@@ -66,14 +66,7 @@ void bindFloatTag(py::module& m) {
         )
         .def(
             "__repr__",
-            [](nbt::FloatTag const& self) {
-                return std::format(
-                    "<rapidnbt.FloatTag({0}) object at 0x{1:0{2}X}>",
-                    self.storage(),
-                    reinterpret_cast<uintptr_t>(&self),
-                    ADDRESS_LENGTH
-                );
-            },
+            [](nbt::FloatTag const& self) { return std::format("<rapidnbt.FloatTag({0}) object at 0x{1:0{2}X}>", self.storage(), ADDRESS); },
             "Official string representation including type information"
         );
 }
