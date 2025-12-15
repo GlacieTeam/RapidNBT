@@ -23,7 +23,15 @@ class CompoundTag(Tag):
         header: bool = False,
     ) -> Optional[CompoundTag]:
         """
-        Deserialize from binary NBT format
+        Deserialize from Binary NBT format
+        """
+
+    @staticmethod
+    def from_json(
+        snbt: str, parsed_length: Optional[int] = None
+    ) -> Optional[CompoundTag]:
+        """
+        Parse from JSON string
         """
 
     @staticmethod

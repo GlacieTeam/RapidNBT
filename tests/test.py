@@ -126,8 +126,17 @@ if __name__ == "__main__":
     print("-" * 25, "Test4", "-" * 25)
     test4()
     print("-" * 25, "END", "-" * 25)
-    test = nbtio.loads_snbt("{count: 0b  , c:'+67b', d: test }")
+    test = nbtio.loads_snbt(
+        """{
+            count: 0b  , // comments
+            c:'+67b', /*comments*/ d: test ,
+            list1: [{a:b}, 12345],
+            list2: [65422, 12345],
+            list3: [hsnjan, 12345],
+            }"""
+    )
     print(test["c"].get_type())
-    print(test.to_snbt())
     print(test.to_snbt(SnbtFormat.Default | SnbtFormat.ForceValueQuote))
     print(nbtio.loads_snbt("{count: 0b101001b}"))
+    test["list2"].append("han")
+    print(test.to_snbt())

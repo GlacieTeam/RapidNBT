@@ -240,11 +240,24 @@ def loads_base64(
         CompoundTag or None if parsing fails
     """
 
+def loads_json(
+    content: str, parsed_length: Optional[int] = None
+) -> Optional[CompoundTag]:
+    """
+    Parse CompoundTag from JSON
+
+    Args:
+        content (str): JSON content
+
+    Returns:
+        CompoundTag or None if parsing fails
+    """
+
 def loads_snbt(
     content: str, parsed_length: Optional[int] = None
 ) -> Optional[CompoundTag]:
     """
-    Parse CompoundTag from SNBT (String NBT) file
+    Parse CompoundTag from SNBT (String NBT)
 
     Args:
         content (str): SNBT content

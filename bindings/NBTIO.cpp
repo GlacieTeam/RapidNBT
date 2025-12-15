@@ -104,7 +104,9 @@ void bindNbtIO(py::module& m) {
                nbt::NbtCompressionType  compressionType,
                nbt::NbtCompressionLevel compressionLevel,
                std::optional<int>       headerVersion) {
-                return to_py_bytes(nbt::io::saveAsBinary(nbt, format, compressionType, compressionLevel, headerVersion));
+                return to_py_bytes(
+                    nbt::io::saveAsBinary(nbt, format, compressionType, compressionLevel, headerVersion)
+                );
             },
             py::arg("nbt"),
             py::arg("format")            = nbt::NbtFileFormat::LittleEndian,
@@ -156,7 +158,18 @@ void bindNbtIO(py::module& m) {
             &nbt::io::parseSnbtFromContent,
             py::arg("content"),
             py::arg("parsed_length") = std::nullopt,
-            R"(Parse CompoundTag from SNBT (String NBT) file
+            R"(Parse CompoundTag from SNBT (String NBT)
+        Args:
+            content (str): SNBT content
+        Returns:
+            CompoundTag or None if parsing fails)"
+        )
+        .def(
+            "loads_json",
+            &nbt::CompoundTag::fromJson,
+            py::arg("content"),
+            py::arg("parsed_length") = std::nullopt,
+            R"(Parse CompoundTag from JSON
         Args:
             content (str): SNBT content
         Returns:

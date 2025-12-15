@@ -27,35 +27,13 @@ std::unique_ptr<nbt::Tag> makeNativeTag(py::object const& obj) {
     } else if (py::isinstance<py::dict>(obj)) {
         auto dict = obj.cast<py::dict>();
         auto tag  = std::make_unique<nbt::CompoundTag>();
-        for (auto [k, v] : dict) {
-            auto  key   = py::cast<std::string>(k);
-            auto& value = static_cast<py::object&>(v);
-            tag->set(key, makeNativeTag(value));
-        }
+        for (auto [k, v] : dict) { tag->set(py::cast<std::string>(k), makeNativeTag(static_cast<py::object&>(v))); }
         return tag;
     } else if (py::isinstance<py::list>(obj) || py::isinstance<py::tuple>(obj) || py::isinstance<py::array>(obj)) {
         auto list = obj.cast<std::vector<py::object>>();
         auto tag  = std::make_unique<nbt::ListTag>();
-        for (auto t : list) {
-            auto& value = static_cast<py::object&>(t);
-            auto  type  = tag->getElementType();
-            if (auto val = makeNativeTag(value)) {
-                if (type == val->getType() || type == nbt::Tag::Type::End) {
-                    tag->push_back(*val);
-                } else {
-                    throw py::value_error(
-                        std::format(
-                            "Value for ListTag[{1}] requires values in the list can be converted to a same tag type, "
-                            "received type: {0}, expected types can be converted to {1}Tag",
-                            py_type_name(value),
-                            magic_enum::enum_name(type)
-                        )
-                    );
-                }
-            } else {
-                throw py::value_error("Invalid element for ListTag");
-            }
-        }
+        for (auto t : list) { tag->push_back(makeNativeTag(static_cast<py::object&>(t))); }
+        tag->checkAndFixElements();
         return tag;
     } else if (py::isinstance<py::none>(obj)) {
         return std::make_unique<nbt::EndTag>();
@@ -109,7 +87,7 @@ void bindCompoundTagVariant(py::module& m) {
             "    ByteArrayTag, IntArrayTag, LongArrayTag"
         )
         .def("is_boolean", &nbt::CompoundTagVariant::is_boolean, "Check whether the tag is a ByteTag")
-        .def("is_null", &nbt::CompoundTagVariant::is_null, "Check whether the tag is an EndTag")
+        .def("is_null", &nbt::CompoundTagVariant::is_null, "Check whether the tag is an EndTag (Tag not exists)")
         .def(
             "is_number_float",
             &nbt::CompoundTagVariant::is_number_float,
@@ -250,21 +228,18 @@ void bindCompoundTagVariant(py::module& m) {
                 if (self.is_null()) { self = nbt::ListTag(); }
                 if (self.hold(nbt::Tag::Type::List)) {
                     auto type = self.as<nbt::ListTag>().getElementType();
-                    if (auto tag = makeNativeTag(obj)) {
-                        if (type == tag->getType() || type == nbt::Tag::Type::End) {
-                            self.push_back(*tag);
-                        } else {
-                            throw py::value_error(
-                                std::format(
-                                    "New tag type must be same as the original element type in the ListTag[{1}], "
-                                    "received type: {0}, expected types can be converted to {1}Tag",
-                                    py_type_name(obj),
-                                    magic_enum::enum_name(type)
-                                )
-                            );
-                        }
+                    auto tag  = makeNativeTag(obj);
+                    if (type == tag->getType() || type == nbt::Tag::Type::End) {
+                        self.push_back(*tag);
                     } else {
-                        throw py::value_error("Invalid element for ListTag");
+                        throw py::value_error(
+                            std::format(
+                                "New tag type must be same as the original element type in the ListTag[{1}], "
+                                "received type: {0}, expected types can be converted to {1}Tag",
+                                py_type_name(obj),
+                                magic_enum::enum_name(type)
+                            )
+                        );
                     }
                 } else {
                     throw py::type_error("tag not hold an array");
@@ -331,7 +306,7 @@ void bindCompoundTagVariant(py::module& m) {
 
         .def(
             "get_byte",
-            [](nbt::CompoundTagVariant& self, bool isSigned) -> uint8_t {
+            [](nbt::CompoundTagVariant& self, bool isSigned) -> py::int_ {
                 if (!self.hold(nbt::Tag::Type::Byte)) { throw py::type_error("tag not hold a ByteTag"); }
                 return isSigned ? static_cast<int8_t>(self.as<nbt::ByteTag>().storage())
                                 : self.as<nbt::ByteTag>().storage();
@@ -341,7 +316,7 @@ void bindCompoundTagVariant(py::module& m) {
         )
         .def(
             "get_short",
-            [](nbt::CompoundTagVariant& self, bool isSigned) -> short {
+            [](nbt::CompoundTagVariant& self, bool isSigned) -> py::int_ {
                 if (!self.hold(nbt::Tag::Type::Short)) { throw py::type_error("tag not hold a ShortTag"); }
                 return isSigned ? self.as<nbt::ShortTag>().storage()
                                 : static_cast<uint16_t>(self.as<nbt::ShortTag>().storage());
@@ -351,7 +326,7 @@ void bindCompoundTagVariant(py::module& m) {
         )
         .def(
             "get_int",
-            [](nbt::CompoundTagVariant& self, bool isSigned) -> int {
+            [](nbt::CompoundTagVariant& self, bool isSigned) -> py::int_ {
                 if (!self.hold(nbt::Tag::Type::Int)) { throw py::type_error("tag not hold an IntTag"); }
                 return isSigned ? self.as<nbt::IntTag>().storage()
                                 : static_cast<uint32_t>(self.as<nbt::IntTag>().storage());
@@ -361,7 +336,7 @@ void bindCompoundTagVariant(py::module& m) {
         )
         .def(
             "get_long",
-            [](nbt::CompoundTagVariant& self, bool isSigned) -> int64_t {
+            [](nbt::CompoundTagVariant& self, bool isSigned) -> py::int_ {
                 if (!self.hold(nbt::Tag::Type::Long)) { throw py::type_error("tag not hold a LongTag"); }
                 return isSigned ? self.as<nbt::LongTag>().storage()
                                 : static_cast<uint64_t>(self.as<nbt::LongTag>().storage());
@@ -513,27 +488,8 @@ void bindCompoundTagVariant(py::module& m) {
                                 if (py::isinstance<py::list>(value)) {
                                     auto list = value.cast<py::list>();
                                     auto tag  = nbt::ListTag();
-                                    for (auto t : list) {
-                                        auto& e = static_cast<py::object&>(t);
-                                        if (auto ele = makeNativeTag(e)) {
-                                            auto type = tag.getElementType();
-                                            if (type == ele->getType() || type == nbt::Tag::Type::End) {
-                                                tag.push_back(*ele);
-                                            } else {
-                                                throw py::value_error(
-                                                    std::format(
-                                                        "New tag type must be same as the original element type in the "
-                                                        "ListTag[{1}], received type: {0}, expected types can be "
-                                                        "converted to {1}Tag",
-                                                        py_type_name(e),
-                                                        magic_enum::enum_name(type)
-                                                    )
-                                                );
-                                            }
-                                        } else {
-                                            throw py::value_error("Invalid element of ListTag");
-                                        }
-                                    }
+                                    for (auto t : list) { tag.push_back(makeNativeTag(static_cast<py::object&>(t))); }
+                                    tag.checkAndFixElements();
                                     val = std::move(tag);
                                 } else {
                                     throw py::value_error("Value of ListTag must be a List[Any]");

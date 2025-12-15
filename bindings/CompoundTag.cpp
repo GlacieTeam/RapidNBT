@@ -261,7 +261,7 @@ void bindCompoundTag(py::module& m) {
             py::arg("binary_data"),
             py::arg("little_endian") = true,
             py::arg("header")        = false,
-            "Deserialize from binary NBT format"
+            "Deserialize from Binary NBT format"
         )
         .def_static(
             "from_snbt",
@@ -269,6 +269,13 @@ void bindCompoundTag(py::module& m) {
             py::arg("snbt"),
             py::arg("parsed_length") = std::nullopt,
             "Parse from String NBT (SNBT) format"
+        )
+        .def_static(
+            "from_json",
+            &nbt::CompoundTag::fromJson,
+            py::arg("snbt"),
+            py::arg("parsed_length") = std::nullopt,
+            "Parse from JSON string"
         );
 }
 

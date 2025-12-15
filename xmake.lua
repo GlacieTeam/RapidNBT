@@ -3,7 +3,7 @@ add_rules("mode.debug", "mode.release")
 add_repositories("groupmountain-repo https://github.com/GroupMountain/xmake-repo.git")
 
 add_requires(
-    "nbt 2.6.2",
+    "nbt 2.6.3",
     "pybind11-header 3.0.1",
     "magic_enum 0.9.7",
     "xmake-scripts 1.1.0"

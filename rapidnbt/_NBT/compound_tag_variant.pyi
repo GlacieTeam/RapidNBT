@@ -255,7 +255,7 @@ class CompoundTagVariant:
 
     def is_null(self) -> bool:
         """
-        Check whether the tag is an EndTag
+        Check whether the tag is an EndTag (Tag not exists)
         """
 
     def is_number(self) -> bool:
