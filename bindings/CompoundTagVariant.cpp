@@ -459,7 +459,7 @@ void bindCompoundTagVariant(py::module& m) {
                                 if (py::isinstance<py::list>(value)) {
                                     auto list = value.cast<py::list>();
                                     auto tag  = nbt::ListTag();
-                                    for (auto t : list) { tag.push_back(makeNativeTag(t.cast<py::object&>())); }
+                                    for (auto t : list) { tag.push_back(makeNativeTag(t.cast<py::object>())); }
                                     tag.checkAndFixElements();
                                     val = std::move(tag);
                                 } else {

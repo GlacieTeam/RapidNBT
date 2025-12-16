@@ -7,6 +7,8 @@
 
 import os
 import sys
+import struct
+import platform
 import sysconfig
 import shutil
 import subprocess
@@ -19,14 +21,14 @@ EXTENSION_FILENAME = "_NBT"
 
 
 class XMakeBuild(build_ext):
-    def _clean(self):
+    def _clean(self) -> None:
         for root, _, files in os.walk(f"./{PACKAGE_NAME}"):
             for file_name in files:
                 file_path = os.path.join(root, file_name)
                 if file_path.endswith((".so", ".pyd")):
                     os.remove(file_path)
 
-    def _copy_binary(self):
+    def _copy_binary(self) -> None:
         shutil.copy(
             f"./build/bin/{EXTENSION_FILENAME}",
             os.path.join(
@@ -34,13 +36,27 @@ class XMakeBuild(build_ext):
             ),
         )
 
-    def run(self):
+    def get_arch(self) -> str:
+        machine = platform.machine().lower()
+        is_32bit = struct.calcsize("P") == 4
+        is_arm = ("arm" in machine) or ("aarch" in machine)
+        arch = ""
+        if is_arm:
+            arch = "arm" if is_32bit else "arm64"
+        else:
+            if sys.platform == "win32":
+                arch = "x86" if is_32bit else "x64"
+            else:
+                arch = "x86" if is_32bit else "x86_64"
+        return arch
+
+    def run(self) -> None:
         self._clean()
         includedir = sysconfig.get_path("include")
         if sys.platform == "win32":
             linkdir = f"{sysconfig.get_config_var('installed_base')}\\libs"
         else:
-            linkdir = f"{sysconfig.get_config_var('LIBDIR')}/{sysconfig.get_config_var('MULTIARCH')}"
+            linkdir = sysconfig.get_config_var("LIBDIR")
         subprocess.run(
             [
                 "xmake",
@@ -49,6 +65,7 @@ class XMakeBuild(build_ext):
                 f"--pyincludedir={includedir}",
                 f"--pylinkdir={linkdir}",
                 f"--pyinfo={sys.version}",
+                f"--arch={self.get_arch()}",
                 "-y",
                 "--root",
             ],
