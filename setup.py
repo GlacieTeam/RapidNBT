@@ -37,6 +37,9 @@ class XMakeBuild(build_ext):
         )
 
     def get_arch(self) -> str:
+        if sys.platform == "darwin":
+            return "arm64"
+
         machine = platform.machine().lower()
         is_32bit = struct.calcsize("P") == 4
         is_arm = ("arm" in machine) or ("aarch" in machine)
@@ -48,8 +51,6 @@ class XMakeBuild(build_ext):
                 arch = "x86" if is_32bit else "x64"
             else:
                 arch = "x86" if is_32bit else "x86_64"
-        if sys.platform == "darwin":
-            arch = "arm64,x86_64"
         return arch
 
     def run(self) -> None:
