@@ -58,3 +58,9 @@ before-all = [
     "curl -fsSL https://xmake.io/shget.text | bash",
     "ln -s ~/.local/bin/xmake /usr/local/bin/xmake",
 ]
+
+[tool.cibuildwheel.macos]
+archs = ["universal2"]
+repair-wheel-command = [
+    "delocate-wheel --require-archs arm64 x86_64 -w {dest_dir} {wheel}",
+]

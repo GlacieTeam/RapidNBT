@@ -48,6 +48,8 @@ class XMakeBuild(build_ext):
                 arch = "x86" if is_32bit else "x64"
             else:
                 arch = "x86" if is_32bit else "x86_64"
+        if sys.platform == "darwin":
+            arch = "arm64,x86_64"
         return arch
 
     def run(self) -> None:
