@@ -7,9 +7,9 @@
 
 from collections.abc import Buffer
 from typing import overload, List, Dict, Optional, Any
-from rapidnbt._NBT.tag import Tag
-from rapidnbt._NBT.tag_type import TagType
-from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
+from .tag import Tag
+from .tag_type import TagType
+from .compound_tag_variant import CompoundTagVariant
 
 class CompoundTag(Tag):
     """

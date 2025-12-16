@@ -5,141 +5,55 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-import ctypes
-from bstream import BinaryStream
-from rapidnbt import (
-    IntArrayTag,
-    ListTag,
-    LongArrayTag,
-    CompoundTag,
-    IntTag,
-    StringTag,
-    ByteTag,
-    ShortTag,
-    SnbtFormat,
-    SnbtNumberFormat,
-    LongTag,
-    nbtio,
-)
+import os
+import shutil
+import subprocess
+from setuptools import Distribution, setup
+from setuptools.command.build_ext import build_ext
+from setuptools.command.build_py import build_py
+
+PACKAGE_NAME = "rapidnbt"
+EXTENSION_FILENAME = "_NBT"
 
 
-def test1():
-    nbt = CompoundTag(
-        {
-            "string_tag": "测试（非ASCII）",
-            "byte_tag": ctypes.c_uint8(114),
-            "bool_tag": False,
-            "short_tag": ShortTag(65535),
-            "int_tag": 114514,
-            "test_list": ["237892", "homo", "114514"],
-        }
-    )
-    nbt["test"]["long_tag"] = LongTag(1145141919810)
-    nbt["test"]["float_tag"] = 114.514
-    nbt["test"]["double_tag"] = ctypes.c_double(3.1415926535897)
-    nbt["byte_array_tag"] = b"13276273923"
-    nbt["list_tag"] = ["aaaaa", "bbbbb"]
-    nbt["list_tag"].append("Homo")
-    nbt["compound_tag"] = nbt
-    nbt["int_array_tag"] = IntArrayTag([1, 2, 3, 4, 5, 6, 7])
-    nbt["long_array_tag"] = LongArrayTag([1, 2, 3, 4, 5, 6, 7])
-    nbt["long_array_tag"] = IntTag(2)
-    print(
-        nbt.to_snbt(
-            format=SnbtFormat.Default | SnbtFormat.MarkAllTags | SnbtFormat.MarkSigned,
-            number_format=SnbtNumberFormat.UpperHexadecimal,
+class XMakeBuild(build_ext):
+    def _clean(self):
+        for root, _, files in os.walk(f"./{PACKAGE_NAME}"):
+            for file_name in files:
+                file_path = os.path.join(root, file_name)
+                if file_path.endswith((".so", ".pyd")):
+                    os.remove(file_path)
+
+    def _copy_binary(self):
+        shutil.copy(
+            f"./build/bin/{EXTENSION_FILENAME}",
+            os.path.join(
+                f"./{PACKAGE_NAME}", self.get_ext_filename(EXTENSION_FILENAME)
+            ),
         )
-    )
-    print(f'{nbt["test"]["double_tag"]}')
-    print(f'{nbt["not_exist"]["not_exist"]}')
-    print(f'{nbt["compound_tag"]}')
-    print(f'{nbt["list_tag"].value}')
+
+    def run(self):
+        self._clean()
+        subprocess.run(["xmake", "f", "--mode=release", "-y", "--root"], check=True)
+        subprocess.run(["xmake", "--all", "-y", "--root"], check=True)
+        self._copy_binary()
 
 
-def test2():
-    snbt = '{"byte_array_tag": [B;4_9b, 51Sb, 50b, +55b, -54b, 50sB, 0xABsb, 0xFCub, 57ub, 0b1001b, 0x51UB],"double_tag": 3.1_41_5_93,"byte_tag": 114   /*sb*/, "string_tag": "\u6d4b\u8bd5"  , long_array_tag: [L;1UL, 2SL, 3sl, 0x267DFCESl, -5l, 6l, 7l]}'
-    nbt = CompoundTag.from_snbt(snbt)
-    # print(nbt.to_json())
-    bnbt = nbt.to_binary_nbt()
-    print(bnbt.hex())
-    rnbt = CompoundTag.from_binary_nbt(bnbt)
-    print(rnbt.to_snbt())
+class XmakeDistribution(Distribution):
+    def has_ext_modules(self):
+        return True
 
 
-def test3():
-    nbt = CompoundTag()
-    print(nbt["tag_int_array"])
-    print(nbt["tag_int_array"].value)
-    nbt["tag_int_array"].value = IntArrayTag([5, 6, 7, 8, 9, 0])
-    print(f'{nbt["tag_int_array"].value}')
-    print(f'{nbt["tag_int_array"].as_tag()}')
-    print(nbt.value)
+class XmakeCommand(build_py):
+    def run(self):
+        self.run_command("build_ext")
+        super().run()
 
 
-def test4():
-    testnbt = CompoundTag(
-        {
-            "string_tag": StringTag("Test String"),
-            "byte_tag": ByteTag(114),
-            "short_tag": ShortTag(19132),
-            "int_tag": IntTag(114514),
-        }
-    )
-    stream = BinaryStream()
-    print(testnbt.to_snbt())
-    stream.write_byte(23)
-    testnbt.serialize(stream)
-    buffer = stream.data()
-    print(
-        f"{buffer.hex()} | {buffer.hex() == '170a000108627974655f746167720307696e745f746167a4fd0d020973686f72745f746167bc4a080a737472696e675f7461670b5465737420537472696e6700'}"
-    )
-    print(f"{stream.get_byte()}")
-    nbt = CompoundTag()
-    nbt.deserialize(stream)
-    print(f"{nbt.to_snbt()}")
-    nbt["aaa"]["bbb"] = [
-        {"a": "b", "1": "2"},
-        {"c": "d", "3": 4},
-        {"e": "f", "5": True},
-    ]
-    merge_nbt = CompoundTag(
-        {
-            "string_tag": "测试（非ASCII）",
-            "byte_array_tag": b"114514",
-            "aaa": {"bbb": [{"c": "d", "3": 4}, {"g": "h", "7": ShortTag(8)}]},
-        }
-    )
-    nbt.merge(merge_nbt, True)
-    nbt["test"] = ListTag([-122, 1673892, 9825678])
-    nbt["test"] = [233122, 37477]
-    print(nbt.to_snbt(SnbtFormat.Default | SnbtFormat.ForceAscii))
-    print(nbt["test"].get_type())
-
-
-if __name__ == "__main__":
-    print("-" * 25, "Test1", "-" * 25)
-    test1()
-    print("-" * 25, "Test2", "-" * 25)
-    test2()
-    print("-" * 25, "Test3", "-" * 25)
-    test3()
-    print("-" * 25, "Test4", "-" * 25)
-    test4()
-    print("-" * 25, "END", "-" * 25)
-    test = nbtio.loads_snbt(
-        """{
-            count: 0b  , // comments
-            c:'+67b', /*commen
-            hjkhk
-            ts*/ d: test ,
-            list1: [{a:b}, 12345],
-            list2: [65422, 12345],
-            list3: [hsnjan, 12345],
-            }"""
-    )
-    print(test["c"].get_type())
-    print(test.to_snbt(SnbtFormat.Default | SnbtFormat.ForceValueQuote))
-    print(nbtio.loads_snbt("{count: 0b101001b}"))
-    test["list2"].append("han", False)
-    test["list2"].check_and_fix_list_elements()
-    print(test.to_snbt())
+setup(
+    cmdclass={
+        "build_ext": XMakeBuild,
+        "build_py": XmakeCommand,
+    },
+    distclass=XmakeDistribution,
+)

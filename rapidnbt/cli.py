@@ -8,7 +8,7 @@
 import os
 from argparse import ArgumentParser
 from pathlib import Path
-from rapidnbt import CompoundTag, NbtCompressionType, NbtFileFormat, nbtio, SnbtFormat
+from . import CompoundTag, NbtCompressionType, NbtFileFormat, nbtio, SnbtFormat
 
 
 def Info(output: str):  # pylint: disable=invalid-name

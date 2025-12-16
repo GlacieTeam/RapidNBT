@@ -6,8 +6,8 @@
 # SPDX-License-Identifier: MPL-2.0
 
 from abc import ABC, abstractmethod
-from rapidnbt._NBT.tag_type import TagType
-from rapidnbt._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
+from .tag_type import TagType
+from .snbt_format import SnbtFormat, SnbtNumberFormat
 
 class Tag(ABC):
     """

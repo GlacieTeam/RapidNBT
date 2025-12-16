@@ -7,11 +7,11 @@
 
 from typing import Any, Optional
 from pathlib import Path
-from rapidnbt._NBT.compound_tag import CompoundTag
-from rapidnbt._NBT.nbt_compression_level import NbtCompressionLevel
-from rapidnbt._NBT.nbt_compression_type import NbtCompressionType
-from rapidnbt._NBT.nbt_file_format import NbtFileFormat
-from rapidnbt._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
+from .compound_tag import CompoundTag
+from .nbt_compression_level import NbtCompressionLevel
+from .nbt_compression_type import NbtCompressionType
+from .nbt_file_format import NbtFileFormat
+from .snbt_format import SnbtFormat, SnbtNumberFormat
 
 class NbtFile(CompoundTag):
     """

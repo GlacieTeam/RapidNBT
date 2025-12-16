@@ -7,8 +7,8 @@
 
 from collections.abc import Buffer
 from typing import overload
-from rapidnbt._NBT.tag import Tag
-from rapidnbt._NBT.tag_type import TagType
+from .tag import Tag
+from .tag_type import TagType
 
 class StringTag(Tag):
     """

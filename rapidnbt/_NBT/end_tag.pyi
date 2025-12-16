@@ -5,8 +5,8 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
-from rapidnbt._NBT.tag import Tag
-from rapidnbt._NBT.tag_type import TagType
+from .tag import Tag
+from .tag_type import TagType
 
 class EndTag(Tag):
     """

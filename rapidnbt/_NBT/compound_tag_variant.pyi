@@ -6,9 +6,9 @@
 # SPDX-License-Identifier: MPL-2.0
 
 from typing import overload, List, Any, Dict
-from rapidnbt._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
-from rapidnbt._NBT.tag_type import TagType
-from rapidnbt._NBT.tag import Tag
+from .snbt_format import SnbtFormat, SnbtNumberFormat
+from .tag_type import TagType
+from .tag import Tag
 
 class CompoundTagVariant:
     """

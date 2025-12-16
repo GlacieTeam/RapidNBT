@@ -6,8 +6,8 @@
 # SPDX-License-Identifier: MPL-2.0
 
 from typing import overload
-from rapidnbt._NBT.tag import Tag
-from rapidnbt._NBT.tag_type import TagType
+from .tag import Tag
+from .tag_type import TagType
 
 class ByteTag(Tag):
     """

@@ -7,28 +7,28 @@
 
 """Python bindings for NBT library"""
 
-from rapidnbt._NBT.tag_type import TagType
-from rapidnbt._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
-from rapidnbt._NBT.compound_tag_variant import CompoundTagVariant
-from rapidnbt._NBT.tag import Tag
-from rapidnbt._NBT.end_tag import EndTag
-from rapidnbt._NBT.byte_tag import ByteTag
-from rapidnbt._NBT.short_tag import ShortTag
-from rapidnbt._NBT.int_tag import IntTag
-from rapidnbt._NBT.long_tag import LongTag
-from rapidnbt._NBT.float_tag import FloatTag
-from rapidnbt._NBT.double_tag import DoubleTag
-from rapidnbt._NBT.byte_array_tag import ByteArrayTag
-from rapidnbt._NBT.string_tag import StringTag
-from rapidnbt._NBT.list_tag import ListTag
-from rapidnbt._NBT.compound_tag import CompoundTag
-from rapidnbt._NBT.int_array_tag import IntArrayTag
-from rapidnbt._NBT.long_array_tag import LongArrayTag
-from rapidnbt._NBT.nbt_file_format import NbtFileFormat
-from rapidnbt._NBT.nbt_compression_level import NbtCompressionLevel
-from rapidnbt._NBT.nbt_compression_type import NbtCompressionType
-from rapidnbt._NBT.nbt_file import NbtFile
-from rapidnbt._NBT import nbtio
+from ._NBT.tag_type import TagType
+from ._NBT.snbt_format import SnbtFormat, SnbtNumberFormat
+from ._NBT.compound_tag_variant import CompoundTagVariant
+from ._NBT.tag import Tag
+from ._NBT.end_tag import EndTag
+from ._NBT.byte_tag import ByteTag
+from ._NBT.short_tag import ShortTag
+from ._NBT.int_tag import IntTag
+from ._NBT.long_tag import LongTag
+from ._NBT.float_tag import FloatTag
+from ._NBT.double_tag import DoubleTag
+from ._NBT.byte_array_tag import ByteArrayTag
+from ._NBT.string_tag import StringTag
+from ._NBT.list_tag import ListTag
+from ._NBT.compound_tag import CompoundTag
+from ._NBT.int_array_tag import IntArrayTag
+from ._NBT.long_array_tag import LongArrayTag
+from ._NBT.nbt_file_format import NbtFileFormat
+from ._NBT.nbt_compression_level import NbtCompressionLevel
+from ._NBT.nbt_compression_type import NbtCompressionType
+from ._NBT.nbt_file import NbtFile
+from ._NBT import nbtio
 
 __all__ = [
     "TagType",
