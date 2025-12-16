@@ -6,6 +6,8 @@
 # SPDX-License-Identifier: MPL-2.0
 
 import os
+import sys
+import sysconfig
 import shutil
 import subprocess
 from setuptools import Distribution, setup
@@ -34,7 +36,25 @@ class XMakeBuild(build_ext):
 
     def run(self):
         self._clean()
-        subprocess.run(["xmake", "f", "--mode=release", "-y", "--root"], check=True)
+        includedir = sysconfig.get_path("include")
+        if sys.platform == "win32":
+            linkdir = f"{sysconfig.get_config_var('installed_base')}\\libs"
+        else:
+            linkdir = f"{sysconfig.get_config_var('LIBDIR')}/{sysconfig.get_config_var('MULTIARCH')}"
+        subprocess.run(
+            [
+                "xmake",
+                "f",
+                "--mode=release",
+                f"--pyincludedir={includedir}",
+                f"--pylinkdir={linkdir}",
+                f"--pyinfo={sys.version}",
+                f"--pyversion={sysconfig.get_python_version()}",
+                "-y",
+                "--root",
+            ],
+            check=True,
+        )
         subprocess.run(["xmake", "--all", "-y", "--root"], check=True)
         self._copy_binary()
 

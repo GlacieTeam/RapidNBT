@@ -5,13 +5,32 @@ add_repositories("groupmountain-repo https://github.com/GroupMountain/xmake-repo
 add_requires(
     "nbt 2.6.3",
     "pybind11-header 3.0.1",
-    "magic_enum 0.9.7",
-    "xmake-scripts 1.1.0"
+    "magic_enum 0.9.7"
 )
 
 if is_plat("windows") and not has_config("vs_runtime") then
     set_runtimes("MD")
 end
+
+option("pyincludedir")
+    set_default("unset")
+    set_values({})
+option_end()
+
+option("pylinkdir")
+    set_default("unset")
+    set_values({})
+option_end()
+
+option("pyinfo")
+    set_default("unset")
+    set_values({})
+option_end()
+
+option("pyversion")
+    set_default("unset")
+    set_values({})
+option_end()
 
 target("_NBT")
     set_languages("c++23")
@@ -24,9 +43,10 @@ target("_NBT")
         "nbt",
         "magic_enum"
     )
-    add_rules("@xmake-scripts/python3")
     add_includedirs("bindings")
     add_files("bindings/**.cpp")
+    add_includedirs(get_config("pyincludedir"))
+    add_linkdirs(get_config("pylinkdir"))
     if is_plat("windows") then
         add_defines(
             "NOMINMAX",
@@ -63,8 +83,10 @@ target("_NBT")
         if is_plat("linux") then 
             add_shflags(
                 "-static-libgcc",
-                "-Wl,--exclude-libs,ALL"
+                "-Wl,--exclude-libs,ALL",
+                "-Wl,--no-undefined"
             )
+            add_links("python" .. get_config("pyversion"))
         end
         if is_plat("macosx") then
             add_mxflags(
@@ -82,3 +104,8 @@ target("_NBT")
             )
         end
     end
+    before_build(function (tagret) 
+        cprint("${bright green}[Python]:${reset} version: " .. get_config("pyinfo"))
+        cprint("${bright green}[Python]:${reset} include: " .. get_config("pyincludedir"))
+        cprint("${bright green}[Python]:${reset} links: " .. get_config("pylinkdir"))
+    end)
