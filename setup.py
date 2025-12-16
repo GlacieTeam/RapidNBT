@@ -49,7 +49,6 @@ class XMakeBuild(build_ext):
                 f"--pyincludedir={includedir}",
                 f"--pylinkdir={linkdir}",
                 f"--pyinfo={sys.version}",
-                f"--pyversion={sysconfig.get_python_version()}",
                 "-y",
                 "--root",
             ],

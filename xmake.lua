@@ -27,11 +27,6 @@ option("pyinfo")
     set_values({})
 option_end()
 
-option("pyversion")
-    set_default("unset")
-    set_values({})
-option_end()
-
 target("_NBT")
     set_languages("c++23")
     set_kind("shared")
@@ -83,10 +78,8 @@ target("_NBT")
         if is_plat("linux") then 
             add_shflags(
                 "-static-libgcc",
-                "-Wl,--exclude-libs,ALL",
-                "-Wl,--no-undefined"
+                "-Wl,--exclude-libs,ALL"
             )
-            add_links("python" .. get_config("pyversion"))
         end
         if is_plat("macosx") then
             add_mxflags(
