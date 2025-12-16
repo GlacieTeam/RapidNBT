@@ -41,8 +41,8 @@ target("_NBT")
     add_includedirs("bindings")
     add_files("bindings/**.cpp")
     add_includedirs(get_config("pyincludedir"))
-    add_linkdirs(get_config("pylinkdir"))
     if is_plat("windows") then
+        add_linkdirs(get_config("pylinkdir"))
         add_defines(
             "NOMINMAX",
             "UNICODE"
@@ -100,5 +100,7 @@ target("_NBT")
     before_build(function (tagret) 
         cprint("${bright green}[Python]:${reset} version: " .. get_config("pyinfo"))
         cprint("${bright green}[Python]:${reset} include: " .. get_config("pyincludedir"))
-        cprint("${bright green}[Python]:${reset} links: " .. get_config("pylinkdir"))
+        if is_plat("windows") then 
+            cprint("${bright green}[Python]:${reset} links: " .. get_config("pylinkdir"))
+        end
     end)
