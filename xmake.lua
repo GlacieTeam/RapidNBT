@@ -22,11 +22,6 @@ option("pylinkdir")
     set_values({})
 option_end()
 
-option("pyinfo")
-    set_default("unset")
-    set_values({})
-option_end()
-
 target("_NBT")
     set_languages("c++23")
     set_kind("shared")
@@ -97,10 +92,3 @@ target("_NBT")
             )
         end
     end
-    before_build(function (tagret) 
-        cprint("${bright green}[Python]:${reset} version: " .. get_config("pyinfo"))
-        cprint("${bright green}[Python]:${reset} include: " .. get_config("pyincludedir"))
-        if is_plat("windows") then 
-            cprint("${bright green}[Python]:${reset} links: " .. get_config("pylinkdir"))
-        end
-    end)

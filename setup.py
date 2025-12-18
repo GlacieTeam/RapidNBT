@@ -55,25 +55,23 @@ class XMakeBuild(build_ext):
 
     def run(self) -> None:
         self._clean()
-        includedir = sysconfig.get_path("include")
+
+        xmake = shutil.which("xmake")
+        if not xmake:
+            pass
+
+        command = ["xmake", "f", "--mode=release"]
+        command.append(f"--pyincludedir={sysconfig.get_path('include')}")
         if sys.platform == "win32":
-            linkdir = f"{sysconfig.get_config_var('installed_base')}\\libs"
-        else:
-            linkdir = sysconfig.get_config_var("LIBDIR")
-        subprocess.run(
-            [
-                "xmake",
-                "f",
-                "--mode=release",
-                f"--pyincludedir={includedir}",
-                f"--pylinkdir={linkdir}",
-                f"--pyinfo={sys.version}",
-                f"--arch={self.get_arch()}",
-                "-y",
-                "--root",
-            ],
-            check=True,
-        )
+            intalll_dir = sysconfig.get_config_var("installed_base")
+            command.append(f"--pylinkdir={intalll_dir}\\libs")
+        command += [
+            f"--arch={self.get_arch()}",
+            "-y",
+            "--root",
+        ]
+        subprocess.run(command, check=True)
+        print(sys.version)
         subprocess.run(["xmake", "--all", "-y", "--root"], check=True)
         self._copy_binary()
 
